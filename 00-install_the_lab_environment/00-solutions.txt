@@ -1,0 +1,127 @@
+Solutions for lab 00 : install the lab environment
+==================================================
+:author: Louis Coilliot
+:icons:
+:data-uri:
+:iconsdir: /home/lofic/Documents/icons/asciidoc
+
+
+LAB 00-2 : create a bridge (persistent after reboot). 
+-----------------------------------------------------
+
+In `/etc/sysconfig/network-scripts/ifcfg-eth0` :
+[source, conf]
+DEVICE=eth0
+HWADDR=...
+BRIDGE=br0
+NM_CONTROLLED=no
+ONBOOT=yes
+
+In `/etc/sysconfig/network-scripts/ifcfg-br0` :
+[source, conf]
+--------------------------------------------------------------------------------
+DEVICE=br0
+TYPE=Bridge
+BOOTPROTO=dhcp
+NM_CONTROLLED=no
+ONBOOT=yes
+--------------------------------------------------------------------------------
+
+CAUTION: Bridge with an uppercase on the B
+
+
+LAB 00-3 : mount the iso image.
+-------------------------------
+
+--------------------------------------------------------------------------------
+mkdir -p /mnt/iso
+mount -o loop rhel-server-6.0-x86_64-dvd.iso /mnt/iso
+mount
+--------------------------------------------------------------------------------
+
+In `/etc/fstab` : 
+--------------------------------------------------------------------------------
+/rhel-server-6.0-x86_64-dvd.iso /mnt/iso iso9660 defaults,loop,ro 0 0
+--------------------------------------------------------------------------------
+
+Then :
+[source, sh]
+mount -a
+
+
+
+LAB 00-4 : Install Apache and publish the content of the OS install DVD.
+------------------------------------------------------------------------
+
+In `/etc/apache2/sites-available/installs` :
+--------------------------------------------------------------------------------
+Alias /el6dvd /mnt/iso
+<Directory "/mnt/iso">
+  Options Indexes FollowSymLinks
+  AllowOverride All
+  Order allow,deny
+  Allow from all
+</Directory>
+--------------------------------------------------------------------------------
+
+
+Don't forget the directive `FollowSymLinks`
+
+Let's publish also a kickstart file now.
+
+In `/etc/apache2/sites-available/ks` :
+--------------------------------------------------------------------------------
+Alias /ks /var/www/ks
+<Directory "/var/www/ks">
+  Options Indexes
+  AllowOverride All
+  Order allow,deny
+  Allow from all
+</Directory>
+--------------------------------------------------------------------------------
+
+Then (on Debian/Ubuntu) :
+[source, sh]
+a2ensite ks installs 
+
+
+
+LAB 00-5 : install two virtual machines. 
+----------------------------------------
+[source, sh]
+LANG=C virt-manager
+
+Connect to localhost (QEMU)
+
+Create a new virtual machine
+
+Name: rhel6-infra
+
+Choose how you would like to install the operating system: Network install
+(HTTP, ...)
+
+URL : http://1.2.3.4/el6dvd/
+
+URL options, Kickstart URL : http://1.2.3.4/ks/ks-rhel6.cfg
+
+Enable storage for this virtual machine
+
+Select : managed or other existing storage
+
+Set the logical volume (example : /dev/vg0/vmlab)
+
+RAM : 1 GB (change it to 512 MB after the install)
+
+Check that your bridge `br0` is selected.
+
+
+LAB 00-6 : write a script to revert the vm to a clean original state.
+---------------------------------------------------------------------
+
+`revert-lab.sh` :
+--------------------------------------------------------------------------------
+virsh destroy lab
+sudo lvremove /dev/vg0/vmlabsnap
+sudo lvcreate -s -L+500M -n vmlabsnap /dev/vg0/vmlab
+--------------------------------------------------------------------------------
+

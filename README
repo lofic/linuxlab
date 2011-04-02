@@ -1,0 +1,11 @@
+- Objectives
+The same as here :
+https://www.redhat.com/certification/rhce/objectives/
+https://www.redhat.com/courses/rh300_rhce_rapid_track_course_and_rhce_exam/details/
+
+- How to get the labs
+git clone https://github.com/lofic/linuxlab.git
+
+- How to update with the latest version
+cd linuxlab
+git pull

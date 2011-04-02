@@ -1,0 +1,83 @@
+Lab 01 : publish a yum repository
+=================================
+:author: Louis Coilliot
+:numbered:
+:icons:
+:data-uri:
+:iconsdir: /home/lofic/Documents/icons/asciidoc
+
+Introduction
+------------
+`yum` is a software package manager. It uses package repositories.
+
+The yum repositories provide a central place to get the packages for all the
+systems.
+
+By default, Centos and Fedora ship with some online internet repositories set
+and ready to use, for installations and updates.
+
+But not RHEL, because the preferred method is the RHN (Red Hat Network),
+and it comes with the subscription.
+
+There are some interests in RHN for production systems (especially updates),
+but we will work with yum for the labs.
+
+To sum up, our RHEL 6 systems for the labs are not registered in the RHN and do
+not have default yum repositories.
+
+So let's publish a repository and set it in our systems.
+
+Publish a repository with Apache
+--------------------------------
+In a repository, you find the rpm packages and some metadata with indexes and
+dependency informations.
+
+The command `createrepo` creates the metadata in a subfolder named `repodata`.
+
+You already have a repository set in the iso image of the RHEL 6 installation
+DVD and we will use this.
+
+We will provide the repository via a web server and http.
+
+IMPORTANT: LAB 01-1 : publish the repository from the RHEL 6 DVD  
+
+This is very similar to the lab 00-4.
+
+Use your persistent mount point set in lab 00-3.
+
+You need to publish the folder that contains the subfolder `repodata`.
+
+The URL should be http://yourwebsrv/repos/el6/x86_64/base
+
+
+Check with:
+[source,sh]
+wget http://yourwebsrv/repos/el6/x86_64/base/repodata/repomd.xml
+
+IMPORTANT: LAB 01-2 : set your repository in the lab and infra virtual machines 
+
+You need to define a `.repo` file in `/etc/yum.repos.d`
+
+[TIP]
+.Don't panic
+================================================================================
+********************************************************************************
+You'll find every help you need in `man yum.conf`, section 
+`[repository] OPTIONS`
+********************************************************************************
+================================================================================
+
+Check with:
+[source,sh]
+--------------------------------------------------------------------------------
+yum clean all
+yum repolist
+yum install vim
+--------------------------------------------------------------------------------
+
+The rpm packages can be signed, so you can verify the authenticity.
+
+[WARNING]
+You should NOT use `yum --nogpgcheck` and you should NOT set `gpgcheck=0` in the
+definition of your repository. Don't mess up with security.
+If some keys are missing, you should add them.

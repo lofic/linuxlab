@@ -1,0 +1,43 @@
+Solutions for lab 01 : publish a yum repository 
+===============================================
+:author: Louis Coilliot
+:icons:
+:data-uri:
+:iconsdir: /home/lofic/Documents/icons/asciidoc
+
+
+LAB 01-1 : publish the repository from the RHEL 6 DVD
+-----------------------------------------------------
+
+In `/etc/apache2/sites-available/repos` :
+--------------------------------------------------------------------------------
+Alias /repos/el6/x86_64/base /mnt/iso
+<Directory "/mnt/iso">
+ Options Indexes FollowSymLinks
+ AllowOverride All
+ Order allow,deny
+ Allow from all
+</Directory>
+--------------------------------------------------------------------------------
+
+Then (on Debian/Ubuntu) :
+[source, sh]
+a2ensite repos 
+
+
+LAB 01-2 : set your repository in the virtual machines 
+------------------------------------------------------
+
+In `/etc/yum.repos.d/el6base.repo` :
+--------------------------------------------------------------------------------
+[el6base]
+Name = RHEL 6 x86_64 base
+baseurl=http://1.2.3.4/repos/el6/x86_64/base
+--------------------------------------------------------------------------------
+
+We want to verify the signature of the packages, so we import the key :
+[source, sh]
+rpm --import /etc/pki/rpm-gpg/RPM-GPG-KEY-redhat-release
+
+
+
