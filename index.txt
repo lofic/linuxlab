@@ -1,0 +1,20 @@
+Linux labs
+==========
+:author: Louis Coilliot
+:icons:
+:data-uri:
+:iconsdir: /home/lofic/Documents/icons/asciidoc
+
+
+LAB 00 : Install the lab environment 
+------------------------------------
+http://lofic.github.com/linuxlab/00-install_the_lab_environment.html
+
+http://lofic.github.com/linuxlab/00-solutions.html
+
+
+LAB 01 : Publish a yum repository 
+---------------------------------
+http://lofic.github.com/linuxlab/01-publish_a_yum_repository.html
+
+http://lofic.github.com/linuxlab/01-solutions.html
