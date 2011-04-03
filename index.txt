@@ -12,10 +12,10 @@ link:00-install_the_lab_environment.html[Lab]
 
 link:00-solutions.html[Solution]
 
-linik:https://github.com/lofic/linuxlab/tree/master/00-install_the_lab_environment/resources[Resources]
+link:https://github.com/lofic/linuxlab/tree/master/00-install_the_lab_environment/resources[Resources]
 
 LAB 01 : Publish a yum repository 
 ---------------------------------
-http://lofic.github.com/linuxlab/01-publish_a_yum_repository.html
+link:01-publish_a_yum_repository.html[Lab]
 
-http://lofic.github.com/linuxlab/01-solutions.html
+link:01-solutions.html[Solutions]
