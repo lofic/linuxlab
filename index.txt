@@ -12,6 +12,7 @@ http://lofic.github.com/linuxlab/00-install_the_lab_environment.html
 
 http://lofic.github.com/linuxlab/00-solutions.html
 
+https://github.com/lofic/linuxlab/tree/master/00-install_the_lab_environment/resources
 
 LAB 01 : Publish a yum repository 
 ---------------------------------
