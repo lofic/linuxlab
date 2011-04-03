@@ -8,11 +8,11 @@ Linux labs
 
 LAB 00 : Install the lab environment 
 ------------------------------------
-http://lofic.github.com/linuxlab/00-install_the_lab_environment.html
+link:00-install_the_lab_environment.html[Lab]
 
-http://lofic.github.com/linuxlab/00-solutions.html
+link:00-solutions.html[Solution]
 
-https://github.com/lofic/linuxlab/tree/master/00-install_the_lab_environment/resources
+linik:https://github.com/lofic/linuxlab/tree/master/00-install_the_lab_environment/resources[Resources]
 
 LAB 01 : Publish a yum repository 
 ---------------------------------
