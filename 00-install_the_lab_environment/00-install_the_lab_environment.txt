@@ -255,6 +255,22 @@ for syntax examples.
 
 Install KVM and KVM tools
 -------------------------
+
+Bios
+~~~~
+You need to enable the option `Virtualization Technology` in the BIOS.
+
+In your system, test with :
+[source, shell]
+modprobe kvm-intel
+
+or
+[source, shell]
+modprobe kvm-amd
+
+depending on your hardware.
+
+
 In Debian/Ubuntu
 ~~~~~~~~~~~~~~~~
 

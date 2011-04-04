@@ -1464,7 +1464,24 @@ for syntax examples.</p></div>
 </div>
 <h2 id="_install_kvm_and_kvm_tools">6. Install KVM and KVM tools</h2>
 <div class="sectionbody">
-<h3 id="_in_debian_ubuntu_3">6.1. In Debian/Ubuntu</h3><div style="clear:left"></div>
+<h3 id="_bios">6.1. Bios</h3><div style="clear:left"></div>
+<div class="paragraph"><p>You need to enable the option <tt>Virtualization Technology</tt> in the BIOS.</p></div>
+<div class="paragraph"><p>In your system, test with :</p></div>
+<div class="listingblock">
+<div class="content"><!-- Generator: GNU source-highlight 3.1.3
+by Lorenzo Bettini
+http://www.lorenzobettini.it
+http://www.gnu.org/software/src-highlite -->
+<pre><tt>modprobe kvm-intel</tt></pre></div></div>
+<div class="paragraph"><p>or</p></div>
+<div class="listingblock">
+<div class="content"><!-- Generator: GNU source-highlight 3.1.3
+by Lorenzo Bettini
+http://www.lorenzobettini.it
+http://www.gnu.org/software/src-highlite -->
+<pre><tt>modprobe kvm-amd</tt></pre></div></div>
+<div class="paragraph"><p>depending on your hardware.</p></div>
+<h3 id="_in_debian_ubuntu_3">6.2. In Debian/Ubuntu</h3><div style="clear:left"></div>
 <div class="listingblock">
 <div class="content"><!-- Generator: GNU source-highlight 3.1.3
 by Lorenzo Bettini
@@ -1475,7 +1492,7 @@ apt-get install libvirt-bin virtinst virt-manager
 apt-get install uml-utilities <span style="font-style: italic"><span style="color: #9A1900"># (for tunctl)</span></span>
 apt-get install kvm-pxe</tt></pre></div></div>
 <div class="paragraph"><p>Add your user to the groups <tt>kvm</tt> and <tt>libvirtd</tt></p></div>
-<h3 id="_in_a_redhat_like_os_3">6.2. In a RedHat-like OS</h3><div style="clear:left"></div>
+<h3 id="_in_a_redhat_like_os_3">6.3. In a RedHat-like OS</h3><div style="clear:left"></div>
 <div class="paragraph"><p>Try this:</p></div>
 <div class="listingblock">
 <div class="content"><!-- Generator: GNU source-highlight 3.1.3
@@ -1878,7 +1895,7 @@ EhMLafIpRCMusu8Oy9/Vf7HZzFU60RG++T8BBgAkirX2O+Vn5gAAAABJRU5ErkJggg==" />
 <div id="footnotes"><hr /></div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2011-04-02 11:45:43 CEST
+Last updated 2011-04-04 10:17:48 CEST
 </div>
 </div>
 </body>
