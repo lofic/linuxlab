@@ -19,3 +19,4 @@ LAB 01 : Publish a yum repository
 link:01-publish_a_yum_repository.html[Lab]
 
 link:01-solutions.html[Solutions]
+
