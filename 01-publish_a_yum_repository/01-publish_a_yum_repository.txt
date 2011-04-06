@@ -10,6 +10,9 @@ Introduction
 ------------
 `yum` is a software package manager. It uses package repositories.
 
+It is a high layer client-server wrapper for rpm which manages rpm repositories
+and automatic installation of dependencies.
+
 The yum repositories provide a central place to get the packages for all the
 systems.
 

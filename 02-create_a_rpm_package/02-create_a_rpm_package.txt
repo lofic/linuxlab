@@ -1,0 +1,200 @@
+Lab 02 : create a rpm package 
+=============================
+:author: Louis Coilliot
+:numbered:
+:icons:
+:data-uri:
+:iconsdir: /home/lofic/Documents/icons/asciidoc
+
+Introduction
+------------
+This will be a guided tour.
+
+A rpm is a package for a piece of software
+handling (those are highlights) :
+
+- the versioning;
+- a list of files installed by the package;
+- a clean install/uninstall;
+- the upgrades;
+- the dependencies between the softwares;
+- queries and checks;
+- multiple architectures and OS versions.
+
+A package contains in one archive :
+
+- some meta information;
++
+i.e. description, version, dependencies, packager, changelog.
+
+- binaries or source code files;
+- other files: data; configuration files;
+- a recipe for installing the software.
++
+handling actions during the different steps of the install/upgrade/uninstall
+process.
+
+We will create two very basic packages, a package containing a script and a
+package with a binary that we must compile during the build.
+
+Install the required packages
+-----------------------------
+From the previous lab, you should have configured a yum repository.
+It could be a good idea to include it in your clean template machine.
+
+`rpmbuild` is the program used to build a source or binary package.
+
+[source,sh]
+yum install rpm-build rpmdevtools vim
+
+Set the environment
+-------------------
+From the previous lab, you should have configured a yum repository.
+
+Create a local account named pkgbuild
+[source,sh]
+--------------------------------------------------------------------------------
+adduser pkgbuild
+passwd pkgbuild
+--------------------------------------------------------------------------------
+
+Switch to this user
+[source,sh]
+--------------------------------------------------------------------------------
+su - pkgbuild
+--------------------------------------------------------------------------------
+
+Create the build tree
+[source,sh]
+--------------------------------------------------------------------------------
+cd
+rpmdev-setuptree
+ls -l rpmbuild 
+--------------------------------------------------------------------------------
+
+Macroscopic build procedure
+---------------------------
+In `SOURCES`, create the target tree for the package.
+
+Create a folder with the name of the package.
+
+Put the files of the software in this folder (like in a chrooted environment).
+
+e.g. `SOURCES/helloworldsh-1/usr/local/bin/helloworld.sh`. The package is named
+helloworldsh, and the script will be installed in `/usr/local/bin/helloworld.sh`
+
+In `SPECS`, create the `.spec` file, from a template.
+
+A `.spec` file is a specification file for building a rpm package, with the meta
+information and the recipe for the build.
+
+Edit the entries in the `.spec` file.
+
+Set the file and folder list, ownerships and permissions.
+
+First package
+-------------
+To package some scripts, configuration files, data, there is no compilation
+required. We'll start with this.
+
+IMPORTANT: LAB 02-1 : create a package (noarch)
+
+We will create a package named helloworldsh, installing
+`/usr/local/bin/helloworld.sh`
+
+[source,sh]
+--------------------------------------------------------------------------------
+# 1° Create the source tree
+cd ~/rpmbuild/SOURCES
+mkdir -p helloworldsh-1/usr/local/bin/
+echo 'echo Hello Wold' > helloworldsh-1/usr/local/bin/helloworld.sh
+cd ~/rpmbuild/SOURCES
+tar cvzf helloworldsh-1.tgz helloworldsh-1
+#
+# 2° Create the spec file
+cd ~/rpmbuild/SPECS
+rpmdev-newspec helloworldsh
+--------------------------------------------------------------------------------
+
+To create a .spec skeleton, you can use `rpmdev-newspec whatever.spec`, or 
+`vim whatever.spec`. `vim` has a plugin for creating/editing rpm spec files.
+
+Edit your spec file and set the entries.
+
+This is a a basic working example (check also in the folder resources) :
+[source,spec]
+--------------------------------------------------------------------------------
+Name:               helloworldsh
+Version:            1 
+Release:            1%{?dist}
+Summary:            A script which says 'Hello World'
+Group:              Misc 
+License:            GPL 
+Source0:            helloworldsh-1.tgz 
+BuildRoot:          %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+BuildArchitectures: noarch
+Requires:           bash  
+
+%description
+This package was made for the purpose a training lab.
+
+%prep
+rm -rf $RPM_BUILD_ROOT
+mkdir -p $RPM_BUILD_ROOT
+
+%setup -q
+
+
+%build
+cp -ra * $RPM_BUILD_ROOT
+
+#configure
+
+%install
+
+%clean
+rm -rf $RPM_BUILD_ROOT
+
+%changelog
+* Mon Apr  4 2011 Louis Coilliot 
+- creation
+
+%files
+%defattr(-,root,root,-)
+%attr(0755,root,root) /usr/local/bin/helloworld.sh
+--------------------------------------------------------------------------------
+
+Then, build the package :
+[source,sh]
+--------------------------------------------------------------------------------
+cd ~/rpmbuild/SPECS
+rpmbuild -bb helloworldsh.spec
+find ~/rpmbuild/RPMS
+--------------------------------------------------------------------------------
+
+Sign your packages
+------------------
+The rpm packages can be signed, so you can verify the authenticity.
+
+You can use your GPG private key to sign packages.
+
+Everything is explained here :
+ 
+link:http://fedoranews.org/tchung/gpg/[How to sign your custom RPM package with
+GPG Key]
+
+IMPORTANT: LAB 02-3 : sign your 2 packages
+
+Check with `rpm --checksig`
+
+WARNING: Creating and registering gpg keys is a serious matter. If you create
+a key for the purpose of this lab, then don't put real informations for the ID,
+the name and the email. If you use your personal key, don't let other people
+get the private part of the key. 
+
+You can check my public key
+link:http://pgp.mit.edu:11371/pks/lookup?search=coilliot&op=index[here].
+
+It is also very useful for signing and/or encrypting mails.
+
+
