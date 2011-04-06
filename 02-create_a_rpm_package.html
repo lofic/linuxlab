@@ -636,7 +636,7 @@ It could be a good idea to include it in your clean template machine.</p></div>
 by Lorenzo Bettini
 http://www.lorenzobettini.it
 http://www.gnu.org/software/src-highlite -->
-<pre><tt>yum install rpm-build rpmdevtools vim</tt></pre></div></div>
+<pre><tt>yum install rpm-build rpmdevtools rpmlint vim</tt></pre></div></div>
 </div>
 <h2 id="_set_the_environment">3. Set the environment</h2>
 <div class="sectionbody">
@@ -810,8 +810,7 @@ http://www.gnu.org/software/src-highlite -->
 <pre><tt><span style="font-style: italic"><span style="color: #9A1900"># 1° Create the source tree</span></span>
 cd <span style="color: #990000">~</span>/rpmbuild/SOURCES
 mkdir -p helloworldsh-<span style="color: #993399">1</span>/usr/local/bin<span style="color: #990000">/</span>
-echo <span style="color: #FF0000">'echo Hello Wold'</span> <span style="color: #990000">&gt;</span> helloworldsh-<span style="color: #993399">1</span>/usr/local/bin/helloworld<span style="color: #990000">.</span>sh
-cd <span style="color: #990000">~</span>/rpmbuild/SOURCES
+echo <span style="color: #FF0000">'echo Hello World'</span> <span style="color: #990000">&gt;</span> helloworldsh-<span style="color: #993399">1</span>/usr/local/bin/helloworld<span style="color: #990000">.</span>sh
 tar cvzf helloworldsh-<span style="color: #993399">1</span><span style="color: #990000">.</span>tgz helloworldsh-<span style="color: #993399">1</span>
 <span style="font-style: italic"><span style="color: #9A1900">#</span></span>
 <span style="font-style: italic"><span style="color: #9A1900"># 2° Create the spec file</span></span>
@@ -871,10 +870,238 @@ by Lorenzo Bettini
 http://www.lorenzobettini.it
 http://www.gnu.org/software/src-highlite -->
 <pre><tt>cd <span style="color: #990000">~</span>/rpmbuild/SPECS
+rpmlint helloworldsh<span style="color: #990000">.</span>spec
 rpmbuild -bb helloworldsh<span style="color: #990000">.</span>spec
 find <span style="color: #990000">~</span>/rpmbuild/RPMS</tt></pre></div></div>
 </div>
-<h2 id="_sign_your_packages">6. Sign your packages</h2>
+<h2 id="_binary_package_from_source_code">6. Binary package from source code</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>Now we will compile a source code and package the resulting binary.</p></div>
+<div class="paragraph"><p>Some prerequisites :</p></div>
+<div class="listingblock">
+<div class="content"><!-- Generator: GNU source-highlight 3.1.3
+by Lorenzo Bettini
+http://www.lorenzobettini.it
+http://www.gnu.org/software/src-highlite -->
+<pre><tt>yum -y install gcc make</tt></pre></div></div>
+<div class="admonitionblock">
+<table><tr>
+<td class="icon">
+<img alt="Important" src="data:image/png;base64,
+iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJ
+bWFnZVJlYWR5ccllPAAADUFpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdp
+bj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+Cjx4OnhtcG1ldGEgeG1sbnM6
+eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDQuMi4yLWMwNjMgNTMu
+MzUyNjI0LCAyMDA4LzA3LzMwLTE4OjA1OjQxICAgICAgICAiPgogPHJkZjpSREYgeG1sbnM6cmRm
+PSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4KICA8cmRmOkRl
+c2NyaXB0aW9uIHJkZjphYm91dD0iIgogICAgeG1sbnM6ZGM9Imh0dHA6Ly9wdXJsLm9yZy9kYy9l
+bGVtZW50cy8xLjEvIgogICAgeG1sbnM6eG1wUmlnaHRzPSJodHRwOi8vbnMuYWRvYmUuY29tL3hh
+cC8xLjAvcmlnaHRzLyIKICAgIHhtbG5zOnBob3Rvc2hvcD0iaHR0cDovL25zLmFkb2JlLmNvbS9w
+aG90b3Nob3AvMS4wLyIKICAgIHhtbG5zOklwdGM0eG1wQ29yZT0iaHR0cDovL2lwdGMub3JnL3N0
+ZC9JcHRjNHhtcENvcmUvMS4wL3htbG5zLyIKICAgeG1wUmlnaHRzOldlYlN0YXRlbWVudD0iIgog
+ICBwaG90b3Nob3A6QXV0aG9yc1Bvc2l0aW9uPSIiPgogICA8ZGM6cmlnaHRzPgogICAgPHJkZjpB
+bHQ+CiAgICAgPHJkZjpsaSB4bWw6bGFuZz0ieC1kZWZhdWx0Ii8+CiAgICA8L3JkZjpBbHQ+CiAg
+IDwvZGM6cmlnaHRzPgogICA8ZGM6Y3JlYXRvcj4KICAgIDxyZGY6U2VxPgogICAgIDxyZGY6bGkv
+PgogICAgPC9yZGY6U2VxPgogICA8L2RjOmNyZWF0b3I+CiAgIDxkYzp0aXRsZT4KICAgIDxyZGY6
+QWx0PgogICAgIDxyZGY6bGkgeG1sOmxhbmc9IngtZGVmYXVsdCI+ZGlhZ25vc3RpY19sYWJvcmF0
+b3J5PC9yZGY6bGk+CiAgICA8L3JkZjpBbHQ+CiAgIDwvZGM6dGl0bGU+CiAgIDx4bXBSaWdodHM6
+VXNhZ2VUZXJtcz4KICAgIDxyZGY6QWx0PgogICAgIDxyZGY6bGkgeG1sOmxhbmc9IngtZGVmYXVs
+dCIvPgogICAgPC9yZGY6QWx0PgogICA8L3htcFJpZ2h0czpVc2FnZVRlcm1zPgogICA8SXB0YzR4
+bXBDb3JlOkNyZWF0b3JDb250YWN0SW5mbwogICAgSXB0YzR4bXBDb3JlOkNpQWRyRXh0YWRyPSIi
+CiAgICBJcHRjNHhtcENvcmU6Q2lBZHJDaXR5PSIiCiAgICBJcHRjNHhtcENvcmU6Q2lBZHJSZWdp
+b249IiIKICAgIElwdGM0eG1wQ29yZTpDaUFkclBjb2RlPSIiCiAgICBJcHRjNHhtcENvcmU6Q2lB
+ZHJDdHJ5PSIiCiAgICBJcHRjNHhtcENvcmU6Q2lUZWxXb3JrPSIiCiAgICBJcHRjNHhtcENvcmU6
+Q2lFbWFpbFdvcms9IiIKICAgIElwdGM0eG1wQ29yZTpDaVVybFdvcms9IiIvPgogIDwvcmRmOkRl
+c2NyaXB0aW9uPgogPC9yZGY6UkRGPgo8L3g6eG1wbWV0YT4KICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+IAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAog
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgIAo8P3hwYWNrZXQgZW5kPSJ3Ij8+81+wHgAA
+CpJJREFUeNq8WguMVFcZ/u6dO7s7O7uwC+yWrZYurfRhqbSNmhYlqGmJBh9FYyrFB7FWu1q1oomh
+2hKUJsZU00psaonUxhAaQ4kYSrE0pQVtEaywQKEFKu8SSnmzMzs7997j/597zp1z7p3ZWbbgkH/P
+nXvvnPP97//8B2fzlq1wHAf8ofGHNHydxm4aQ31/+B/Bs77nOYSQF64Q4iiNS4geoes+IjiKgQlE
+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" />
+</td>
+<td class="content">LAB 02-2 : create a package (binary)</td>
+</tr></table>
+</div>
+<div class="paragraph"><p>We will create a package named helloworldbin, installing
+<tt>/usr/local/bin/helloworld</tt>.</p></div>
+<div class="paragraph"><p>This is compiled from a program written in C, <tt>helloworld.c</tt> :</p></div>
+<div class="listingblock">
+<div class="content"><!-- Generator: GNU source-highlight 3.1.3
+by Lorenzo Bettini
+http://www.lorenzobettini.it
+http://www.gnu.org/software/src-highlite -->
+<pre><tt><span style="font-weight: bold"><span style="color: #000080">#include</span></span> <span style="color: #FF0000">&lt;stdio.h&gt;</span>
+<span style="color: #009900">void</span> <span style="font-weight: bold"><span style="color: #000000">main</span></span><span style="color: #990000">()</span> <span style="color: #FF0000">{</span> <span style="font-weight: bold"><span style="color: #000000">printf</span></span> <span style="color: #990000">(</span><span style="color: #FF0000">"Hello World</span><span style="color: #CC33CC">\n</span><span style="color: #FF0000">"</span><span style="color: #990000">);</span> <span style="color: #FF0000">}</span></tt></pre></div></div>
+<div class="paragraph"><p>We use a <tt>Makefile</tt> to compile and install it :</p></div>
+<div class="listingblock">
+<div class="content"><!-- Generator: GNU source-highlight 3.1.3
+by Lorenzo Bettini
+http://www.lorenzobettini.it
+http://www.gnu.org/software/src-highlite -->
+<pre><tt>helloworld<span style="color: #990000">:</span> helloworld<span style="color: #990000">.</span>c
+        gcc helloworld<span style="color: #990000">.</span>c -o helloworld
+<span style="font-style: italic"><span style="color: #9A1900">#   ^-- you need a tab here, not spaces</span></span>
+
+<span style="color: #009900">INST_LOCATION</span><span style="color: #990000">=</span>/usr/local/bin
+
+install<span style="color: #990000">:</span> helloworld-install
+
+helloworld-install<span style="color: #990000">:</span>
+        mkdir -p <span style="color: #009900">$(BUILDROOT)$(INST_LOCATION)</span>
+        cp helloworld <span style="color: #009900">$(BUILDROOT)$(INST_LOCATION)</span>
+        chmod <span style="color: #993399">755</span> <span style="color: #009900">$(BUILDROOT)$(INST_LOCATION)</span>/helloworld
+<span style="font-style: italic"><span style="color: #9A1900">#   ^-- you need a tab here, not spaces</span></span></tt></pre></div></div>
+<div class="paragraph"><p>You can get <tt>helloworld.c</tt> and <tt>Makefile</tt> in the resources for this lab.</p></div>
+<div class="paragraph"><p>Put <tt>helloworld.c</tt> and <tt>Makefile</tt> in the user&#8217;s home directory.</p></div>
+<div class="listingblock">
+<div class="content"><!-- Generator: GNU source-highlight 3.1.3
+by Lorenzo Bettini
+http://www.lorenzobettini.it
+http://www.gnu.org/software/src-highlite -->
+<pre><tt><span style="font-style: italic"><span style="color: #9A1900"># 1° Create the source tree</span></span>
+cd <span style="color: #990000">~</span>/rpmbuild/SOURCES
+mkdir -p helloworldbin-<span style="color: #993399">1</span>
+cp <span style="color: #990000">~/</span>{helloworld<span style="color: #990000">.</span>c<span style="color: #990000">,</span>Makefile} helloworldbin-<span style="color: #993399">1</span><span style="color: #990000">/</span>
+<span style="font-style: italic"><span style="color: #9A1900"># Just in case :</span></span>
+sed -i <span style="color: #FF0000">'s/^[ ][ ]*/</span><span style="color: #CC33CC">\t</span><span style="color: #FF0000">/g'</span> helloworldbin-<span style="color: #993399">1</span>/Makefile
+tar cvzf helloworldbin-<span style="color: #993399">1</span><span style="color: #990000">.</span>tgz helloworldbin-<span style="color: #993399">1</span>
+<span style="font-style: italic"><span style="color: #9A1900">#</span></span>
+<span style="font-style: italic"><span style="color: #9A1900"># 2° Create the spec file</span></span>
+cd <span style="color: #990000">~</span>/rpmbuild/SPECS
+rpmdev-newspec helloworldbin</tt></pre></div></div>
+<div class="paragraph"><p>This time, we need to handle the compilation. The spec file is slighly different
+in <tt>%build</tt> and <tt>%install</tt>. The installation in the build root is based on our
+<tt>Makefile</tt>.</p></div>
+<div class="listingblock">
+<div class="content"><!-- Generator: GNU source-highlight 3.1.3
+by Lorenzo Bettini
+http://www.lorenzobettini.it
+http://www.gnu.org/software/src-highlite -->
+<pre><tt><span style="font-weight: bold"><span style="color: #0000FF">Name:</span></span>               helloworldbin
+<span style="font-weight: bold"><span style="color: #0000FF">Version:</span></span>            <span style="color: #993399">1</span>
+<span style="font-weight: bold"><span style="color: #0000FF">Release:</span></span>            <span style="color: #993399">1</span>%{?dist}
+<span style="font-weight: bold"><span style="color: #0000FF">Summary:</span></span>            A program wich says 'Hello World'
+<span style="font-weight: bold"><span style="color: #0000FF">Group:</span></span>              Misc
+<span style="font-weight: bold"><span style="color: #0000FF">License:</span></span>            GPL
+<span style="font-weight: bold"><span style="color: #0000FF">Source0:</span></span>            helloworldbin-<span style="color: #993399">1</span>.tgz
+<span style="font-weight: bold"><span style="color: #0000FF">BuildRoot:</span></span>          <span style="font-weight: bold"><span style="color: #000080">%{_tmppath}</span></span>/<span style="font-weight: bold"><span style="color: #000080">%{name}</span></span>-<span style="font-weight: bold"><span style="color: #000080">%{version}</span></span>-<span style="font-weight: bold"><span style="color: #000080">%{release}</span></span>-root-%(<span style="font-weight: bold"><span style="color: #000080">%{__id_u}</span></span> -n)
+
+<span style="font-weight: bold"><span style="color: #000080">%description</span></span>
+This package was made for the purpose a training lab.
+
+<span style="font-weight: bold"><span style="color: #000080">%prep</span></span>
+rm -rf <span style="color: #009900">$RPM_BUILD_ROOT</span>
+mkdir -p <span style="color: #009900">$RPM_BUILD_ROOT</span>
+
+<span style="font-weight: bold"><span style="color: #000080">%setup</span></span> -q
+
+<span style="font-weight: bold"><span style="color: #000080">%build</span></span>
+make
+
+<span style="font-weight: bold"><span style="color: #000080">%install</span></span>
+make BUILDROOT=<span style="font-weight: bold"><span style="color: #000080">%buildroot</span></span> install
+
+<span style="font-weight: bold"><span style="color: #000080">%clean</span></span>
+rm -rf <span style="color: #009900">$RPM_BUILD_ROOT</span>
+
+<span style="font-weight: bold"><span style="color: #000080">%changelog</span></span>
+* Mon Apr  <span style="color: #993399">4</span> <span style="color: #993399">2011</span> Louis Coilliot
+- creation
+
+<span style="font-weight: bold"><span style="color: #000080">%files</span></span>
+<span style="font-weight: bold"><span style="color: #000080">%defattr</span></span>(-,root,root,-)
+<span style="font-weight: bold"><span style="color: #000080">%attr</span></span>(<span style="color: #993399">0755</span>,root,root) /usr/local/bin/helloworld</tt></pre></div></div>
+<div class="paragraph"><p>Then, build the package :</p></div>
+<div class="listingblock">
+<div class="content"><!-- Generator: GNU source-highlight 3.1.3
+by Lorenzo Bettini
+http://www.lorenzobettini.it
+http://www.gnu.org/software/src-highlite -->
+<pre><tt>cd <span style="color: #990000">~</span>/rpmbuild/SPECS
+rpmlint helloworldbin<span style="color: #990000">.</span>spec
+rpmbuild -bb helloworldbin<span style="color: #990000">.</span>spec
+find <span style="color: #990000">~</span>/rpmbuild/RPMS</tt></pre></div></div>
+</div>
+<h2 id="_sign_your_packages">7. Sign your packages</h2>
 <div class="sectionbody">
 <div class="paragraph"><p>The rpm packages can be signed, so you can verify the authenticity.</p></div>
 <div class="paragraph"><p>You can use your GPG private key to sign packages.</p></div>
@@ -1071,11 +1298,141 @@ get the private part of the key.</td>
 <a href="http://pgp.mit.edu:11371/pks/lookup?search=coilliot&amp;op=index">here</a>.</p></div>
 <div class="paragraph"><p>It is also very useful for signing and/or encrypting mails.</p></div>
 </div>
+<h2 id="_publish_the_packages_in_a_yum_repository">8. Publish the packages in a yum repository</h2>
+<div class="sectionbody">
+<div class="admonitionblock">
+<table><tr>
+<td class="icon">
+<img alt="Important" src="data:image/png;base64,
+iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJ
+bWFnZVJlYWR5ccllPAAADUFpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdp
+bj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+Cjx4OnhtcG1ldGEgeG1sbnM6
+eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDQuMi4yLWMwNjMgNTMu
+MzUyNjI0LCAyMDA4LzA3LzMwLTE4OjA1OjQxICAgICAgICAiPgogPHJkZjpSREYgeG1sbnM6cmRm
+PSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4KICA8cmRmOkRl
+c2NyaXB0aW9uIHJkZjphYm91dD0iIgogICAgeG1sbnM6ZGM9Imh0dHA6Ly9wdXJsLm9yZy9kYy9l
+bGVtZW50cy8xLjEvIgogICAgeG1sbnM6eG1wUmlnaHRzPSJodHRwOi8vbnMuYWRvYmUuY29tL3hh
+cC8xLjAvcmlnaHRzLyIKICAgIHhtbG5zOnBob3Rvc2hvcD0iaHR0cDovL25zLmFkb2JlLmNvbS9w
+aG90b3Nob3AvMS4wLyIKICAgIHhtbG5zOklwdGM0eG1wQ29yZT0iaHR0cDovL2lwdGMub3JnL3N0
+ZC9JcHRjNHhtcENvcmUvMS4wL3htbG5zLyIKICAgeG1wUmlnaHRzOldlYlN0YXRlbWVudD0iIgog
+ICBwaG90b3Nob3A6QXV0aG9yc1Bvc2l0aW9uPSIiPgogICA8ZGM6cmlnaHRzPgogICAgPHJkZjpB
+bHQ+CiAgICAgPHJkZjpsaSB4bWw6bGFuZz0ieC1kZWZhdWx0Ii8+CiAgICA8L3JkZjpBbHQ+CiAg
+IDwvZGM6cmlnaHRzPgogICA8ZGM6Y3JlYXRvcj4KICAgIDxyZGY6U2VxPgogICAgIDxyZGY6bGkv
+PgogICAgPC9yZGY6U2VxPgogICA8L2RjOmNyZWF0b3I+CiAgIDxkYzp0aXRsZT4KICAgIDxyZGY6
+QWx0PgogICAgIDxyZGY6bGkgeG1sOmxhbmc9IngtZGVmYXVsdCI+ZGlhZ25vc3RpY19sYWJvcmF0
+b3J5PC9yZGY6bGk+CiAgICA8L3JkZjpBbHQ+CiAgIDwvZGM6dGl0bGU+CiAgIDx4bXBSaWdodHM6
+VXNhZ2VUZXJtcz4KICAgIDxyZGY6QWx0PgogICAgIDxyZGY6bGkgeG1sOmxhbmc9IngtZGVmYXVs
+dCIvPgogICAgPC9yZGY6QWx0PgogICA8L3htcFJpZ2h0czpVc2FnZVRlcm1zPgogICA8SXB0YzR4
+bXBDb3JlOkNyZWF0b3JDb250YWN0SW5mbwogICAgSXB0YzR4bXBDb3JlOkNpQWRyRXh0YWRyPSIi
+CiAgICBJcHRjNHhtcENvcmU6Q2lBZHJDaXR5PSIiCiAgICBJcHRjNHhtcENvcmU6Q2lBZHJSZWdp
+b249IiIKICAgIElwdGM0eG1wQ29yZTpDaUFkclBjb2RlPSIiCiAgICBJcHRjNHhtcENvcmU6Q2lB
+ZHJDdHJ5PSIiCiAgICBJcHRjNHhtcENvcmU6Q2lUZWxXb3JrPSIiCiAgICBJcHRjNHhtcENvcmU6
+Q2lFbWFpbFdvcms9IiIKICAgIElwdGM0eG1wQ29yZTpDaVVybFdvcms9IiIvPgogIDwvcmRmOkRl
+c2NyaXB0aW9uPgogPC9yZGY6UkRGPgo8L3g6eG1wbWV0YT4KICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+IAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAog
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgIAo8P3hwYWNrZXQgZW5kPSJ3Ij8+81+wHgAA
+CpJJREFUeNq8WguMVFcZ/u6dO7s7O7uwC+yWrZYurfRhqbSNmhYlqGmJBh9FYyrFB7FWu1q1oomh
+2hKUJsZU00psaonUxhAaQ4kYSrE0pQVtEaywQKEFKu8SSnmzMzs7997j/597zp1z7p3ZWbbgkH/P
+nXvvnPP97//8B2fzlq1wHAf8ofGHNHydxm4aQ31/+B/Bs77nOYSQF64Q4iiNS4geoes+IjiKgQlE
+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" />
+</td>
+<td class="content">LAB 02-4 : publish your packages</td>
+</tr></table>
+</div>
+<div class="paragraph"><p>Set a yum repository in the infra vm.</p></div>
+<div class="paragraph"><p>Use it in the lab vm.</p></div>
+<div class="paragraph"><p>This time for the repository, you&#8217;ll have to create the meta data with</p></div>
+<div class="listingblock">
+<div class="content"><!-- Generator: GNU source-highlight 3.1.3
+by Lorenzo Bettini
+http://www.lorenzobettini.it
+http://www.gnu.org/software/src-highlite -->
+<pre><tt>createrepo <span style="color: #990000">.</span></tt></pre></div></div>
+<div class="paragraph"><p>in the repository folder.</p></div>
+</div>
 </div>
 <div id="footnotes"><hr /></div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2011-04-06 15:41:21 CEST
+Last updated 2011-04-06 18:18:49 CEST
 </div>
 </div>
 </body>
