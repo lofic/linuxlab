@@ -329,4 +329,16 @@ createrepo .
 in the repository folder.
 
 
+Great tutorials
+---------------
+link:http://fedoraproject.org/wiki/How_to_create_an_RPM_package#Creating_packages_HOWTO[
+Fedora Wiki - How to create a rpm package]
+
+link:http://doc.fedora-fr.org/wiki/La_cr%C3%A9ation_de_RPM_pour_les_nuls_:_Cr%C3%A9ation_du_fichier_SPEC_et_du_Paquetage[
+Communauté Fedora Fr - La création de RPM pour les nuls]
+
+link:http://eric.gerbier.free.fr/fabrication-rpm.html[
+Fabrication de paquetage rpm]
+
+
 
