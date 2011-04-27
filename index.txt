@@ -26,3 +26,9 @@ LAB 02 : Create a rpm package
 link:02-create_a_rpm_package.html[lab]
 
 link:https://github.com/lofic/linuxlab/tree/master/02-create_a_rpm_package/resources[Resources]
+
+LAB 03 : Secure shell
+---------------------
+link:03-secure_shell.html[lab]
+
+
