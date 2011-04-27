@@ -74,7 +74,7 @@ some logical volumes.
 IMPORTANT: LAB 00-1 : create a logical volume of 3GB.
 
 Example :
-[source, shell]
+[source, sh]
 --------------------------------------------------------------------------------
 # Set sda9 as a PV = Physical Volume (i.e. resource) for LVM
 pvcreate /dev/sda9
@@ -150,7 +150,7 @@ grep -i bridge sysconfig.txt
 You should also look at the parameter `NM_CONTROLLED`
 
 Check with : 
-[source, shell]
+[source, sh]
 brctl show
 ********************************************************************************
 ================================================================================
@@ -165,11 +165,11 @@ You need a DHCP server for the network install of the virtual machines in
 In Debian/Ubuntu
 ~~~~~~~~~~~~~~~~
 Install the service
-[source, shell]
+[source, sh]
 apt-get install dhcp3-server
 
 I don't want it at boot time :
-[source, shell]
+[source, sh]
 update-rc.d -f dhcp3-server remove 
 
 A minimal configuration :
@@ -180,16 +180,16 @@ EOF
 --------------------------------------------------------------------------------
 
 Start the service :
-[source, shell]
+[source, sh]
 service dhcp3-server restart 
 
 In a RedHat-like OS 
 ~~~~~~~~~~~~~~~~~~~
-[source, shell]
+[source, sh]
 yum install dhcp
 
 I don't want it at boot time :
-[source, shell]
+[source, sh]
 chkconfig dhcpd off
 
 A minimal configuration :
@@ -200,7 +200,7 @@ EOF
 --------------------------------------------------------------------------------
 
 Start the service :
-[source, shell]
+[source, sh]
 service dhcpd restart 
 
 
@@ -261,11 +261,11 @@ Bios
 You need to enable the option `Virtualization Technology` in the BIOS.
 
 In your system, test with :
-[source, shell]
+[source, sh]
 modprobe kvm-intel
 
 or
-[source, shell]
+[source, sh]
 modprobe kvm-amd
 
 depending on your hardware.
@@ -275,7 +275,7 @@ In Debian/Ubuntu
 ~~~~~~~~~~~~~~~~
 
 
-[source, shell]
+[source, sh]
 --------------------------------------------------------------------------------
 apt-get install kvm
 apt-get install libvirt-bin virtinst virt-manager
@@ -289,12 +289,12 @@ In a RedHat-like OS
 ~~~~~~~~~~~~~~~~~~~
 Try this:
 
-[source, shell]
+[source, sh]
 yum install kvm virt-manager virt-viewer
 
 Or have a look at:
 
-[source, shell]
+[source, sh]
 LANG=C yum grouplist | grep -i virt  
 
 
@@ -354,17 +354,17 @@ lvcreate -s -L+500M -n vmlabsnap /dev/vg0/vmlab
 --------------------------------------------------------------------------------
 
 You can check the % of use of the snapshots with:
-[source, shell]
+[source, sh]
 lvs
 
 Work on the snapshot. You can change the target device for the vm in
-[source, shell]
+[source, sh]
 /etc/libvirt/qemu/lab.xml
 
 You need to restart the service libvirt-bin to refresh this info in
 `virt-manager`.
 
-[source, shell]
+[source, sh]
 service libvirt-bin restart
 
 IMPORTANT: LAB 00-6 : write a script to revert the vm to a clean original state.

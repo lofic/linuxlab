@@ -9,3 +9,6 @@ git clone https://github.com/lofic/linuxlab.git
 - How to update with the latest version
 cd linuxlab
 git pull
+
+- Other interesting training resources :
+http://trouble-maker.sourceforge.net/

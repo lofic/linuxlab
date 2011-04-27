@@ -1,0 +1,90 @@
+Lab 03 : secure shell 
+=====================
+:author: Louis Coilliot
+:numbered:
+:icons:
+:data-uri:
+:iconsdir: /home/lofic/Documents/icons/asciidoc
+
+Introduction
+------------
+
+SSH has many advanced features like tunneling and X11 forwarding.
+
+As the manual says, "the user must prove his/her identity to the remote machine
+using one of several methods". One of these methods is the use of public-key
+cryptography for authentication, password-less. Some obvious interests are
+productivity and automation. We will practice that.  
+
+If you don't know how asymmetric or public Key cryptography works, you should
+find out. This could help you understand :
+
+link:http://www.uic.edu/depts/accc/newsletter/adn26/pgpp.html[
+http://www.uic.edu/depts/accc/newsletter/adn26/pgpp.html]
+
+IMPORTANT: LAB 03-1 : public keys user authentication
+
+We want to be able to connect securely and quickly to our virtual machine named 
+lab.
+
+Now that you found out about asymmetric cryptography, you know that we need a
+pair of keys.
+
+We will generate those keys and copy the public key in the target system in a
+specific place. The private key should never be exposed.
+
+To generate the keys with no passphrase and the default location, use :
+[source,sh]
+ssh-keygen -q -t dsa -C '' -N '' -f ~/.ssh/id_dsa
+
+You should find the public and private keys in `~/.ssh`
+
+Then copy the pub key in the proper location on your target system. There is a 
+helper tool for this.
+
+[source,sh]
+ssh-copy-id -i .ssh/id_dsa.pub bob@lab
+
+Now try logging into the machine again.
+
+
+
+IMPORTANT: LAB 03-2 : X11 forwarding
+
+You can use graphical tools and applications working on a remote system without
+installing any display server there.
+
+You can export or forward the display to your local display server.
+
+With `ssh -X` you can do a X11 forwarding.
+
+On your local system, check in `/etc/ssh/sshd_config` :
+[source,conf]
+ForwardX11 yes
+
+On your remote system named lab, check in `/etc/ssh/sshd_config` :
+[source,conf]
+X11Forwarding yes
+
+Restart the service sshd if you needed to change the configuration.
+
+On your remote system, you also need to install xauth :
+[source,sh]
+yum -y install xauth
+
+And here is a little graphical program to test :
+[source,sh]
+yum -y install xeyes
+
+Note that all the dependencies are client display libraries, not server 
+libraries.
+
+Finally, test the X11 forwarding :
+[source,sh]
+--------------------------------------------------------------------------------
+ssh -X bob@lab xeyes &
+ps aux | grep xeyes
+--------------------------------------------------------------------------------
+
+Now kill the program.
+
