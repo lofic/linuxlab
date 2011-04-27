@@ -1,0 +1,879 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+    "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta name="generator" content="AsciiDoc 8.5.2" />
+<title>Lab 03 : secure shell</title>
+<style type="text/css">
+/* Debug borders */
+p, li, dt, dd, div, pre, h1, h2, h3, h4, h5, h6 {
+/*
+  border: 1px solid red;
+*/
+}
+
+body {
+  margin: 1em 5% 1em 5%;
+}
+
+a {
+  color: blue;
+  text-decoration: underline;
+}
+a:visited {
+  color: fuchsia;
+}
+
+em {
+  font-style: italic;
+  color: navy;
+}
+
+strong {
+  font-weight: bold;
+  color: #083194;
+}
+
+tt {
+  color: navy;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  color: #527bbd;
+  font-family: sans-serif;
+  margin-top: 1.2em;
+  margin-bottom: 0.5em;
+  line-height: 1.3;
+}
+
+h1, h2, h3 {
+  border-bottom: 2px solid silver;
+}
+h2 {
+  padding-top: 0.5em;
+}
+h3 {
+  float: left;
+}
+h3 + * {
+  clear: left;
+}
+
+div.sectionbody {
+  font-family: serif;
+  margin-left: 0;
+}
+
+hr {
+  border: 1px solid silver;
+}
+
+p {
+  margin-top: 0.5em;
+  margin-bottom: 0.5em;
+}
+
+ul, ol, li > p {
+  margin-top: 0;
+}
+
+pre {
+  padding: 0;
+  margin: 0;
+}
+
+span#author {
+  color: #527bbd;
+  font-family: sans-serif;
+  font-weight: bold;
+  font-size: 1.1em;
+}
+span#email {
+}
+span#revnumber, span#revdate, span#revremark {
+  font-family: sans-serif;
+}
+
+div#footer {
+  font-family: sans-serif;
+  font-size: small;
+  border-top: 2px solid silver;
+  padding-top: 0.5em;
+  margin-top: 4.0em;
+}
+div#footer-text {
+  float: left;
+  padding-bottom: 0.5em;
+}
+div#footer-badges {
+  float: right;
+  padding-bottom: 0.5em;
+}
+
+div#preamble {
+  margin-top: 1.5em;
+  margin-bottom: 1.5em;
+}
+div.tableblock, div.imageblock, div.exampleblock, div.verseblock,
+div.quoteblock, div.literalblock, div.listingblock, div.sidebarblock,
+div.admonitionblock {
+  margin-top: 1.0em;
+  margin-bottom: 1.5em;
+}
+div.admonitionblock {
+  margin-top: 2.0em;
+  margin-bottom: 2.0em;
+  margin-right: 10%;
+  color: #606060;
+}
+
+div.content { /* Block element content. */
+  padding: 0;
+}
+
+/* Block element titles. */
+div.title, caption.title {
+  color: #527bbd;
+  font-family: sans-serif;
+  font-weight: bold;
+  text-align: left;
+  margin-top: 1.0em;
+  margin-bottom: 0.5em;
+}
+div.title + * {
+  margin-top: 0;
+}
+
+td div.title:first-child {
+  margin-top: 0.0em;
+}
+div.content div.title:first-child {
+  margin-top: 0.0em;
+}
+div.content + div.title {
+  margin-top: 0.0em;
+}
+
+div.sidebarblock > div.content {
+  background: #ffffee;
+  border: 1px solid silver;
+  padding: 0.5em;
+}
+
+div.listingblock > div.content {
+  border: 1px solid silver;
+  background: #f4f4f4;
+  padding: 0.5em;
+}
+
+div.quoteblock, div.verseblock {
+  padding-left: 1.0em;
+  margin-left: 1.0em;
+  margin-right: 10%;
+  border-left: 5px solid #dddddd;
+  color: #777777;
+}
+
+div.quoteblock > div.attribution {
+  padding-top: 0.5em;
+  text-align: right;
+}
+
+div.verseblock > div.content {
+  white-space: pre;
+}
+div.verseblock > div.attribution {
+  padding-top: 0.75em;
+  text-align: left;
+}
+/* DEPRECATED: Pre version 8.2.7 verse style literal block. */
+div.verseblock + div.attribution {
+  text-align: left;
+}
+
+div.admonitionblock .icon {
+  vertical-align: top;
+  font-size: 1.1em;
+  font-weight: bold;
+  text-decoration: underline;
+  color: #527bbd;
+  padding-right: 0.5em;
+}
+div.admonitionblock td.content {
+  padding-left: 0.5em;
+  border-left: 3px solid #dddddd;
+}
+
+div.exampleblock > div.content {
+  border-left: 3px solid #dddddd;
+  padding-left: 0.5em;
+}
+
+div.imageblock div.content { padding-left: 0; }
+span.image img { border-style: none; }
+a.image:visited { color: white; }
+
+dl {
+  margin-top: 0.8em;
+  margin-bottom: 0.8em;
+}
+dt {
+  margin-top: 0.5em;
+  margin-bottom: 0;
+  font-style: normal;
+  color: navy;
+}
+dd > *:first-child {
+  margin-top: 0.1em;
+}
+
+ul, ol {
+    list-style-position: outside;
+}
+ol.arabic {
+  list-style-type: decimal;
+}
+ol.loweralpha {
+  list-style-type: lower-alpha;
+}
+ol.upperalpha {
+  list-style-type: upper-alpha;
+}
+ol.lowerroman {
+  list-style-type: lower-roman;
+}
+ol.upperroman {
+  list-style-type: upper-roman;
+}
+
+div.compact ul, div.compact ol,
+div.compact p, div.compact p,
+div.compact div, div.compact div {
+  margin-top: 0.1em;
+  margin-bottom: 0.1em;
+}
+
+div.tableblock > table {
+  border: 3px solid #527bbd;
+}
+thead, p.table.header {
+  font-family: sans-serif;
+  font-weight: bold;
+}
+tfoot {
+  font-weight: bold;
+}
+td > div.verse {
+  white-space: pre;
+}
+p.table {
+  margin-top: 0;
+}
+/* Because the table frame attribute is overriden by CSS in most browsers. */
+div.tableblock > table[frame="void"] {
+  border-style: none;
+}
+div.tableblock > table[frame="hsides"] {
+  border-left-style: none;
+  border-right-style: none;
+}
+div.tableblock > table[frame="vsides"] {
+  border-top-style: none;
+  border-bottom-style: none;
+}
+
+
+div.hdlist {
+  margin-top: 0.8em;
+  margin-bottom: 0.8em;
+}
+div.hdlist tr {
+  padding-bottom: 15px;
+}
+dt.hdlist1.strong, td.hdlist1.strong {
+  font-weight: bold;
+}
+td.hdlist1 {
+  vertical-align: top;
+  font-style: normal;
+  padding-right: 0.8em;
+  color: navy;
+}
+td.hdlist2 {
+  vertical-align: top;
+}
+div.hdlist.compact tr {
+  margin: 0;
+  padding-bottom: 0;
+}
+
+.comment {
+  background: yellow;
+}
+
+.footnote, .footnoteref {
+  font-size: 0.8em;
+}
+
+span.footnote, span.footnoteref {
+  vertical-align: super;
+}
+
+#footnotes {
+  margin: 20px 0 20px 0;
+  padding: 7px 0 0 0;
+}
+
+#footnotes div.footnote {
+  margin: 0 0 5px 0;
+}
+
+#footnotes hr {
+  border: none;
+  border-top: 1px solid silver;
+  height: 1px;
+  text-align: left;
+  margin-left: 0;
+  width: 20%;
+  min-width: 100px;
+}
+
+
+@media print {
+  div#footer-badges { display: none; }
+}
+
+div#toc {
+  margin-bottom: 2.5em;
+}
+
+div#toctitle {
+  color: #527bbd;
+  font-family: sans-serif;
+  font-size: 1.1em;
+  font-weight: bold;
+  margin-top: 1.0em;
+  margin-bottom: 0.1em;
+}
+
+div.toclevel1, div.toclevel2, div.toclevel3, div.toclevel4 {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+div.toclevel2 {
+  margin-left: 2em;
+  font-size: 0.9em;
+}
+div.toclevel3 {
+  margin-left: 4em;
+  font-size: 0.9em;
+}
+div.toclevel4 {
+  margin-left: 6em;
+  font-size: 0.9em;
+}
+/* Workarounds for IE6's broken and incomplete CSS2. */
+
+div.sidebar-content {
+  background: #ffffee;
+  border: 1px solid silver;
+  padding: 0.5em;
+}
+div.sidebar-title, div.image-title {
+  color: #527bbd;
+  font-family: sans-serif;
+  font-weight: bold;
+  margin-top: 0.0em;
+  margin-bottom: 0.5em;
+}
+
+div.listingblock div.content {
+  border: 1px solid silver;
+  background: #f4f4f4;
+  padding: 0.5em;
+}
+
+div.quoteblock-attribution {
+  padding-top: 0.5em;
+  text-align: right;
+}
+
+div.verseblock-content {
+  white-space: pre;
+}
+div.verseblock-attribution {
+  padding-top: 0.75em;
+  text-align: left;
+}
+
+div.exampleblock-content {
+  border-left: 3px solid #dddddd;
+  padding-left: 0.5em;
+}
+
+/* IE6 sets dynamically generated links as visited. */
+div#toc a:visited { color: blue; }
+</style>
+<script type="text/javascript">
+/*<![CDATA[*/
+window.onload = function(){asciidoc.footnotes();}
+var asciidoc = {  // Namespace.
+
+/////////////////////////////////////////////////////////////////////
+// Table Of Contents generator
+/////////////////////////////////////////////////////////////////////
+
+/* Author: Mihai Bazon, September 2002
+ * http://students.infoiasi.ro/~mishoo
+ *
+ * Table Of Content generator
+ * Version: 0.4
+ *
+ * Feel free to use this script under the terms of the GNU General Public
+ * License, as long as you do not remove or alter this notice.
+ */
+
+ /* modified by Troy D. Hanson, September 2006. License: GPL */
+ /* modified by Stuart Rackham, 2006, 2009. License: GPL */
+
+// toclevels = 1..4.
+toc: function (toclevels) {
+
+  function getText(el) {
+    var text = "";
+    for (var i = el.firstChild; i != null; i = i.nextSibling) {
+      if (i.nodeType == 3 /* Node.TEXT_NODE */) // IE doesn't speak constants.
+        text += i.data;
+      else if (i.firstChild != null)
+        text += getText(i);
+    }
+    return text;
+  }
+
+  function TocEntry(el, text, toclevel) {
+    this.element = el;
+    this.text = text;
+    this.toclevel = toclevel;
+  }
+
+  function tocEntries(el, toclevels) {
+    var result = new Array;
+    var re = new RegExp('[hH]([2-'+(toclevels+1)+'])');
+    // Function that scans the DOM tree for header elements (the DOM2
+    // nodeIterator API would be a better technique but not supported by all
+    // browsers).
+    var iterate = function (el) {
+      for (var i = el.firstChild; i != null; i = i.nextSibling) {
+        if (i.nodeType == 1 /* Node.ELEMENT_NODE */) {
+          var mo = re.exec(i.tagName);
+          if (mo && (i.getAttribute("class") || i.getAttribute("className")) != "float") {
+            result[result.length] = new TocEntry(i, getText(i), mo[1]-1);
+          }
+          iterate(i);
+        }
+      }
+    }
+    iterate(el);
+    return result;
+  }
+
+  var toc = document.getElementById("toc");
+  var entries = tocEntries(document.getElementById("content"), toclevels);
+  for (var i = 0; i < entries.length; ++i) {
+    var entry = entries[i];
+    if (entry.element.id == "")
+      entry.element.id = "_toc_" + i;
+    var a = document.createElement("a");
+    a.href = "#" + entry.element.id;
+    a.appendChild(document.createTextNode(entry.text));
+    var div = document.createElement("div");
+    div.appendChild(a);
+    div.className = "toclevel" + entry.toclevel;
+    toc.appendChild(div);
+  }
+  if (entries.length == 0)
+    toc.parentNode.removeChild(toc);
+},
+
+
+/////////////////////////////////////////////////////////////////////
+// Footnotes generator
+/////////////////////////////////////////////////////////////////////
+
+/* Based on footnote generation code from:
+ * http://www.brandspankingnew.net/archive/2005/07/format_footnote.html
+ */
+
+footnotes: function () {
+  var cont = document.getElementById("content");
+  var noteholder = document.getElementById("footnotes");
+  var spans = cont.getElementsByTagName("span");
+  var refs = {};
+  var n = 0;
+  for (i=0; i<spans.length; i++) {
+    if (spans[i].className == "footnote") {
+      n++;
+      // Use [\s\S] in place of . so multi-line matches work.
+      // Because JavaScript has no s (dotall) regex flag.
+      note = spans[i].innerHTML.match(/\s*\[([\s\S]*)]\s*/)[1];
+      noteholder.innerHTML +=
+        "<div class='footnote' id='_footnote_" + n + "'>" +
+        "<a href='#_footnoteref_" + n + "' title='Return to text'>" +
+        n + "</a>. " + note + "</div>";
+      spans[i].innerHTML =
+        "[<a id='_footnoteref_" + n + "' href='#_footnote_" + n +
+        "' title='View footnote' class='footnote'>" + n + "</a>]";
+      var id =spans[i].getAttribute("id");
+      if (id != null) refs["#"+id] = n;
+    }
+  }
+  if (n == 0)
+    noteholder.parentNode.removeChild(noteholder);
+  else {
+    // Process footnoterefs.
+    for (i=0; i<spans.length; i++) {
+      if (spans[i].className == "footnoteref") {
+        var href = spans[i].getElementsByTagName("a")[0].getAttribute("href");
+        href = href.match(/#.*/)[0];  // Because IE return full URL.
+        n = refs[href];
+        spans[i].innerHTML =
+          "[<a href='#_footnote_" + n +
+          "' title='View footnote' class='footnote'>" + n + "</a>]";
+      }
+    }
+  }
+}
+
+}
+/*]]>*/
+</script>
+</head>
+<body>
+<div id="header">
+<h1>Lab 03 : secure shell</h1>
+<span id="author">Louis Coilliot</span><br />
+</div>
+<div id="content">
+<h2 id="_introduction">1. Introduction</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>SSH has many advanced features like tunneling and X11 forwarding.</p></div>
+<div class="paragraph"><p>As the manual says, "the user must prove his/her identity to the remote machine
+using one of several methods". One of these methods is the use of public-key
+cryptography for authentication, password-less. Some obvious interests are
+productivity and automation. We will practice that.</p></div>
+<div class="paragraph"><p>If you don&#8217;t know how asymmetric or public Key cryptography works, you should
+find out. This could help you understand :</p></div>
+<div class="paragraph"><p><a href="http://www.uic.edu/depts/accc/newsletter/adn26/pgpp.html">
+<a href="http://www.uic.edu/depts/accc/newsletter/adn26/pgpp.html">http://www.uic.edu/depts/accc/newsletter/adn26/pgpp.html</a></a></p></div>
+<div class="admonitionblock">
+<table><tr>
+<td class="icon">
+<img alt="Important" src="data:image/png;base64,
+iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJ
+bWFnZVJlYWR5ccllPAAADUFpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdp
+bj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+Cjx4OnhtcG1ldGEgeG1sbnM6
+eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDQuMi4yLWMwNjMgNTMu
+MzUyNjI0LCAyMDA4LzA3LzMwLTE4OjA1OjQxICAgICAgICAiPgogPHJkZjpSREYgeG1sbnM6cmRm
+PSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4KICA8cmRmOkRl
+c2NyaXB0aW9uIHJkZjphYm91dD0iIgogICAgeG1sbnM6ZGM9Imh0dHA6Ly9wdXJsLm9yZy9kYy9l
+bGVtZW50cy8xLjEvIgogICAgeG1sbnM6eG1wUmlnaHRzPSJodHRwOi8vbnMuYWRvYmUuY29tL3hh
+cC8xLjAvcmlnaHRzLyIKICAgIHhtbG5zOnBob3Rvc2hvcD0iaHR0cDovL25zLmFkb2JlLmNvbS9w
+aG90b3Nob3AvMS4wLyIKICAgIHhtbG5zOklwdGM0eG1wQ29yZT0iaHR0cDovL2lwdGMub3JnL3N0
+ZC9JcHRjNHhtcENvcmUvMS4wL3htbG5zLyIKICAgeG1wUmlnaHRzOldlYlN0YXRlbWVudD0iIgog
+ICBwaG90b3Nob3A6QXV0aG9yc1Bvc2l0aW9uPSIiPgogICA8ZGM6cmlnaHRzPgogICAgPHJkZjpB
+bHQ+CiAgICAgPHJkZjpsaSB4bWw6bGFuZz0ieC1kZWZhdWx0Ii8+CiAgICA8L3JkZjpBbHQ+CiAg
+IDwvZGM6cmlnaHRzPgogICA8ZGM6Y3JlYXRvcj4KICAgIDxyZGY6U2VxPgogICAgIDxyZGY6bGkv
+PgogICAgPC9yZGY6U2VxPgogICA8L2RjOmNyZWF0b3I+CiAgIDxkYzp0aXRsZT4KICAgIDxyZGY6
+QWx0PgogICAgIDxyZGY6bGkgeG1sOmxhbmc9IngtZGVmYXVsdCI+ZGlhZ25vc3RpY19sYWJvcmF0
+b3J5PC9yZGY6bGk+CiAgICA8L3JkZjpBbHQ+CiAgIDwvZGM6dGl0bGU+CiAgIDx4bXBSaWdodHM6
+VXNhZ2VUZXJtcz4KICAgIDxyZGY6QWx0PgogICAgIDxyZGY6bGkgeG1sOmxhbmc9IngtZGVmYXVs
+dCIvPgogICAgPC9yZGY6QWx0PgogICA8L3htcFJpZ2h0czpVc2FnZVRlcm1zPgogICA8SXB0YzR4
+bXBDb3JlOkNyZWF0b3JDb250YWN0SW5mbwogICAgSXB0YzR4bXBDb3JlOkNpQWRyRXh0YWRyPSIi
+CiAgICBJcHRjNHhtcENvcmU6Q2lBZHJDaXR5PSIiCiAgICBJcHRjNHhtcENvcmU6Q2lBZHJSZWdp
+b249IiIKICAgIElwdGM0eG1wQ29yZTpDaUFkclBjb2RlPSIiCiAgICBJcHRjNHhtcENvcmU6Q2lB
+ZHJDdHJ5PSIiCiAgICBJcHRjNHhtcENvcmU6Q2lUZWxXb3JrPSIiCiAgICBJcHRjNHhtcENvcmU6
+Q2lFbWFpbFdvcms9IiIKICAgIElwdGM0eG1wQ29yZTpDaVVybFdvcms9IiIvPgogIDwvcmRmOkRl
+c2NyaXB0aW9uPgogPC9yZGY6UkRGPgo8L3g6eG1wbWV0YT4KICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+IAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAog
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgIAo8P3hwYWNrZXQgZW5kPSJ3Ij8+81+wHgAA
+CpJJREFUeNq8WguMVFcZ/u6dO7s7O7uwC+yWrZYurfRhqbSNmhYlqGmJBh9FYyrFB7FWu1q1oomh
+2hKUJsZU00psaonUxhAaQ4kYSrE0pQVtEaywQKEFKu8SSnmzMzs7997j/597zp1z7p3ZWbbgkH/P
+nXvvnPP97//8B2fzlq1wHAf8ofGHNHydxm4aQ31/+B/Bs77nOYSQF64Q4iiNS4geoes+IjiKgQlE
+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" />
+</td>
+<td class="content">LAB 03-1 : public keys user authentication</td>
+</tr></table>
+</div>
+<div class="paragraph"><p>We want to be able to connect securely and quickly to our virtual machine named
+lab.</p></div>
+<div class="paragraph"><p>Now that you found out about asymmetric cryptography, you know that we need a
+pair of keys.</p></div>
+<div class="paragraph"><p>We will generate those keys and copy the public key in the target system in a
+specific place. The private key should never be exposed.</p></div>
+<div class="paragraph"><p>To generate the keys with no passphrase and the default location, use :</p></div>
+<div class="listingblock">
+<div class="content"><!-- Generator: GNU source-highlight 3.1.3
+by Lorenzo Bettini
+http://www.lorenzobettini.it
+http://www.gnu.org/software/src-highlite -->
+<pre><tt>ssh-keygen -q -t dsa -C <span style="color: #FF0000">''</span> -N <span style="color: #FF0000">''</span> -f <span style="color: #990000">~/.</span>ssh/id_dsa</tt></pre></div></div>
+<div class="paragraph"><p>You should find the public and private keys in <tt>~/.ssh</tt></p></div>
+<div class="paragraph"><p>Then copy the pub key in the proper location on your target system. There is a
+helper tool for this.</p></div>
+<div class="listingblock">
+<div class="content"><!-- Generator: GNU source-highlight 3.1.3
+by Lorenzo Bettini
+http://www.lorenzobettini.it
+http://www.gnu.org/software/src-highlite -->
+<pre><tt>ssh-copy-id -i <span style="color: #990000">.</span>ssh/id_dsa<span style="color: #990000">.</span>pub bob@lab</tt></pre></div></div>
+<div class="paragraph"><p>Now try logging into the machine again.</p></div>
+<div class="admonitionblock">
+<table><tr>
+<td class="icon">
+<img alt="Important" src="data:image/png;base64,
+iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJ
+bWFnZVJlYWR5ccllPAAADUFpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdp
+bj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+Cjx4OnhtcG1ldGEgeG1sbnM6
+eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDQuMi4yLWMwNjMgNTMu
+MzUyNjI0LCAyMDA4LzA3LzMwLTE4OjA1OjQxICAgICAgICAiPgogPHJkZjpSREYgeG1sbnM6cmRm
+PSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4KICA8cmRmOkRl
+c2NyaXB0aW9uIHJkZjphYm91dD0iIgogICAgeG1sbnM6ZGM9Imh0dHA6Ly9wdXJsLm9yZy9kYy9l
+bGVtZW50cy8xLjEvIgogICAgeG1sbnM6eG1wUmlnaHRzPSJodHRwOi8vbnMuYWRvYmUuY29tL3hh
+cC8xLjAvcmlnaHRzLyIKICAgIHhtbG5zOnBob3Rvc2hvcD0iaHR0cDovL25zLmFkb2JlLmNvbS9w
+aG90b3Nob3AvMS4wLyIKICAgIHhtbG5zOklwdGM0eG1wQ29yZT0iaHR0cDovL2lwdGMub3JnL3N0
+ZC9JcHRjNHhtcENvcmUvMS4wL3htbG5zLyIKICAgeG1wUmlnaHRzOldlYlN0YXRlbWVudD0iIgog
+ICBwaG90b3Nob3A6QXV0aG9yc1Bvc2l0aW9uPSIiPgogICA8ZGM6cmlnaHRzPgogICAgPHJkZjpB
+bHQ+CiAgICAgPHJkZjpsaSB4bWw6bGFuZz0ieC1kZWZhdWx0Ii8+CiAgICA8L3JkZjpBbHQ+CiAg
+IDwvZGM6cmlnaHRzPgogICA8ZGM6Y3JlYXRvcj4KICAgIDxyZGY6U2VxPgogICAgIDxyZGY6bGkv
+PgogICAgPC9yZGY6U2VxPgogICA8L2RjOmNyZWF0b3I+CiAgIDxkYzp0aXRsZT4KICAgIDxyZGY6
+QWx0PgogICAgIDxyZGY6bGkgeG1sOmxhbmc9IngtZGVmYXVsdCI+ZGlhZ25vc3RpY19sYWJvcmF0
+b3J5PC9yZGY6bGk+CiAgICA8L3JkZjpBbHQ+CiAgIDwvZGM6dGl0bGU+CiAgIDx4bXBSaWdodHM6
+VXNhZ2VUZXJtcz4KICAgIDxyZGY6QWx0PgogICAgIDxyZGY6bGkgeG1sOmxhbmc9IngtZGVmYXVs
+dCIvPgogICAgPC9yZGY6QWx0PgogICA8L3htcFJpZ2h0czpVc2FnZVRlcm1zPgogICA8SXB0YzR4
+bXBDb3JlOkNyZWF0b3JDb250YWN0SW5mbwogICAgSXB0YzR4bXBDb3JlOkNpQWRyRXh0YWRyPSIi
+CiAgICBJcHRjNHhtcENvcmU6Q2lBZHJDaXR5PSIiCiAgICBJcHRjNHhtcENvcmU6Q2lBZHJSZWdp
+b249IiIKICAgIElwdGM0eG1wQ29yZTpDaUFkclBjb2RlPSIiCiAgICBJcHRjNHhtcENvcmU6Q2lB
+ZHJDdHJ5PSIiCiAgICBJcHRjNHhtcENvcmU6Q2lUZWxXb3JrPSIiCiAgICBJcHRjNHhtcENvcmU6
+Q2lFbWFpbFdvcms9IiIKICAgIElwdGM0eG1wQ29yZTpDaVVybFdvcms9IiIvPgogIDwvcmRmOkRl
+c2NyaXB0aW9uPgogPC9yZGY6UkRGPgo8L3g6eG1wbWV0YT4KICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+IAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAog
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgIAo8P3hwYWNrZXQgZW5kPSJ3Ij8+81+wHgAA
+CpJJREFUeNq8WguMVFcZ/u6dO7s7O7uwC+yWrZYurfRhqbSNmhYlqGmJBh9FYyrFB7FWu1q1oomh
+2hKUJsZU00psaonUxhAaQ4kYSrE0pQVtEaywQKEFKu8SSnmzMzs7997j/597zp1z7p3ZWbbgkH/P
+nXvvnPP97//8B2fzlq1wHAf8ofGHNHydxm4aQ31/+B/Bs77nOYSQF64Q4iiNS4geoes+IjiKgQlE
+2zKZTGMm48J1XcmUpgiEOP+lBQul9vd6v9XgGShTGIaKAiIxhe79w1Pvv+F5GTeT8UCjZEBTLS0I
+IfD/+NjAQwRBQMT3g/X0rMWjP/eR5Al8hsBHDPA1U0UDuKhM1BYSg46kHwSR5PldXtZ1JWOPkwbE
+bGk2RAyemYgY8OC4bDzOYDpOGZZTwwtEtecMXAuhChPMgDYh12XJR+9E2pDXnyQNYFw0cezIynwc
+Oafr2GZ0QU1HB48ajxlkyPZPgAW9Gxp+GWlCNLEJBREm+6GrR+0HygMvtO2nzMdYx2FBsg/we/yd
+GJH4jPjkaUCOATgF3pTWew6tQ9QKjRmWOoMmHDy6CrzGIMg/PH4QWWjkLHxTuGK4IeO8QA5VQ1Ib
+KpRKgg6tITwzTMlr9nzhxi8zy069ZETvZfJ5ZCkQ1GOBZ/LpJf/c2bpJTlQFbYZVpQG+MJmQTqN+
+4AgHog6sTL4ZxX37cWDNC8i2tkL4ftXw5FCE88+dQ/uUj6HlmqvldV0mICxGwpiBaPSi+GqAV9yy
+VNnz6xYD9F6Wwu5+Av+fnm/jcrrVynm/SjgtEO0jmvDT+zHpVw+hXCczSyQioQll5hqzFyULzZEw
+GIk8H/XkTwBKxQLG33M3vFwO5+YtwMTd2+H39UFwylQ2nx3Vjj2fmIbWqVNw5fwH0N/fL3876Owa
+vGlOjFVUhB5rIEoaEXgpfflPOVAdNQelATTkmpEb341j/UWIrIegbWQqe5XKPnJdXeD6pUQMOI5b
+33yQMB8hLJP3YudVGjA51nm0ng/wU45lfl8BZbJ/+csiSZh9QWlAtOTpWRnZYhFBnJlF3WLWBG86
+sR5ds1DSGtC5QSljaOFOwfHVtaP/GNk20Elp6IW0VY1WwIe2BiqOLKyHZqmis7UZxqOkqXKHeuyL
+6lWRo5iLs44qD+z3hBX/Y4uwwqdpQnEYDa3YqpME1yISoLAXMLUiLEdjkLVVFsS+BWkSziBmVM1c
+TAGz0Lm0rsJAhRHH0UzUUbXSAKUMsm9R00QCFZahNEC1Ss1EHmnfZkKX1yZOLwht8zF/FNVHfM9J
+bA+FZRzyd2rV8sBAWqaqhilz4lJMSAFZHmFnnGq2X428MAgsqdtJrWJGqKnu6DcyI1MeKFOUqVXv
+lE6dklk7MiGKIMJNzClSGrHKnIT0WfhuUIUr2+aEFWZrUY4W3L/8r8iPuyySo05ihm1w+XB0/T/R
+pHzAdso0aYuoZt5ypDVczYkwwqhVVgiRigYmsSM1jxmDE4feRu+jv8HNf1kaRZogtKRZJrpx8RPY
++ecn8c7uPWjp7JSOWGteU+J2+BS2BmKujIcm6GSiS2mLTKWtIYvnb/8Srp3+BXR++CYM9BVTwb58
+rg9t3Zfjpp578dynp6OV6ieoOr+algcPnxH4SiYOwxS3UahyqsT0ip2y9DsI1Jurn8eR1zZgxukz
+KMm9YFDVB4r0/s2PLcRmerZ1yVJcNWsmjlIVy3vwVN5wUFVgseDU6IaJ4sjuvSS/B1Z7I9PYKO15
+5Wc+i6nzF6B5RKuUdK24GxT6ZZV625Kn8fev3imvs83NCPzAmD8inVzNatnEqjXgxhIXSUZqc89U
+LpfR1TUWa3/+IBrIFD7y4M9QKPt1641CfwlX33kHOq64Cmt6voexnR0oB36VNQOziVVdC9ytSP9Q
+VJW4Dd5HfvRo9J06jZce+iU+99zKqItAOSDGSkyxhlzPs6IRl9hshDPWvoCNjz+Gk4cOYwQ5NAvE
+Xk/UXN8k17QnDd5UW1KVsjNGYxfV9ytmzsJ1H5+K8dNuBUPPNDREScvNwGvOISyVonKcmHDIzpta
+W5CjPHDy8BG0U7id/M27sfyLX8YlZHq0tJw7rQExBB9I3ExHnCBmYmCgLB334NZt6F39LDInT6Gf
+bHgNRaETW3rRQgDzzU04tGo1FhLg7b9+GPkm8pVcE97dth3rvnsvXp41C09PnIQDTz2F/256FW++
+vA5jJ3yA5h5QNU4NiVvmLrQP2LavW3imI8XPCKibzaKDAC27YybGkNQPv96LRbSB2bZiOdbOno0j
+BPLAhn9hfU+PzAdvPfMMju95Cxt/sQC//9D1MvnMeOlFzNjeSx6cxQh6Z8U3ZqPVpV1bU47W8Oua
+jV1K6PCZKFODINqmmH0gltA1E6/FK4ufxOE3XpctPS+Xx9cOHUSeTGpR+2g8QSDJkCQ1E+3ZtgW7
+SbqNdM3ZGk1Nyl/KGKCpWziD79+Ldb99BJPn3Icdm3uJr2y6sVslH0gnNlvYdh4IjG5wIMG3jBoF
+l7Sw4p7vSOlzds20tWEkgWdXbb/xBjk2ZjxZk3JM6iHpf+qBefK6ke5t+t0j+NOkG/DHsWPRV6R9
+s5fFJRyKf/wjDJw5ixEdHSiR70TrVnwuqtkCq+CUDAy24wlMBijyXNE9Dn/7wfdRpIjRSI4qaE97
+7MhhLL1tGpbdPgO71r5IDETAy1zkkfM2UrTyaH/MzAbc6aN/B7f24vTJE5SIMxjgnhLPRc+X3XUX
+rnz/pfAJuO9rMw4k+CCO/XbV7Pxh0eJj+Xx+TI4qySZSbyNFkgYqDSotdpcm89HV3Y2GM6cwjwoy
+bp14alGaEUW1ScnJ8JmJTc4nAGXVYmlIPEvu1hjsXhp/sm498h+8Dgd37ZKdcskAAWULYBw89lMu
+4a5GoVB417X7Ldr+lfSVBDhGd3Z1YvmcOVHZzJW8dn5avZH8JMd1vmPcF1Evk4Fn5WbHfpYk1g2b
+38r756JjdLsEq80oWfKbmD0hKq2LivkEcMJ4uyInKpXKGH/LLVi16ln5/nm3T0X9zsbbRNdTZcuF
+OJuQq4q9MLErSzGAhA8ELNYgOglxVNt9x+YtuHXuXLS971IUz5yR5nUhG+2ynKc5P/qVmdi1fadc
+O0psdqMhyYQXl85GbHUCp9IVVm2twtmz2LhhIy6b/nmK143DOCdw6jasQzKbnXv34fTx4+SHDfF+
+IRTmDjG0tpuejreBEXWiJg6kAztGm6NAe9odm/4d9ywvAO5UK10HD181xQREJZz77A92H9dLtjD8
+IDCaUWHqnJTP0i7GgUblzEXE4OEg3uiY4VRbCn+89FFmdJjG6pLGozoKInnQm+6BnB/gQQ730v2h
+SPKVhBbGJsw+EB9yMJeR7fuVw+5hHXEPzzNEjdOZZCfCYMBh8O8Q8DbzPMw85HYSJiQGk3oVaVqd
+JN2Ni9tMzhCir7AOXhIbmgFmYAl9ma+lr89hnfSR5kU7ia93mG6STnCKgdfYBx6mG/Pjkz81oTOE
+U8nk4kNl0nGGHp7MbrlZXDLR/W8xAwV6MJk4eyXuuRs9y/M5Vh06A855zWcyYNBMunVUb1hfpZdG
+EhMLafIpRCMusu8Oy9/Vf7HZzFU60RG++T8BBgAkirX2O+Vn5gAAAABJRU5ErkJggg==" />
+</td>
+<td class="content">LAB 03-2 : X11 forwarding</td>
+</tr></table>
+</div>
+<div class="paragraph"><p>You can use graphical tools and applications working on a remote system without
+installing any display server there.</p></div>
+<div class="paragraph"><p>You can export or forward the display to your local display server.</p></div>
+<div class="paragraph"><p>With <tt>ssh -X</tt> you can do a X11 forwarding.</p></div>
+<div class="paragraph"><p>On your local system, check in <tt>/etc/ssh/sshd_config</tt> :</p></div>
+<div class="listingblock">
+<div class="content"><!-- Generator: GNU source-highlight 3.1.3
+by Lorenzo Bettini
+http://www.lorenzobettini.it
+http://www.gnu.org/software/src-highlite -->
+<pre><tt>ForwardX11 yes</tt></pre></div></div>
+<div class="paragraph"><p>On your remote system named lab, check in <tt>/etc/ssh/sshd_config</tt> :</p></div>
+<div class="listingblock">
+<div class="content"><!-- Generator: GNU source-highlight 3.1.3
+by Lorenzo Bettini
+http://www.lorenzobettini.it
+http://www.gnu.org/software/src-highlite -->
+<pre><tt>X11Forwarding yes</tt></pre></div></div>
+<div class="paragraph"><p>Restart the service sshd if you needed to change the configuration.</p></div>
+<div class="paragraph"><p>On your remote system, you also need to install xauth :</p></div>
+<div class="listingblock">
+<div class="content"><!-- Generator: GNU source-highlight 3.1.3
+by Lorenzo Bettini
+http://www.lorenzobettini.it
+http://www.gnu.org/software/src-highlite -->
+<pre><tt>yum -y install xauth</tt></pre></div></div>
+<div class="paragraph"><p>And here is a little graphical program to test :</p></div>
+<div class="listingblock">
+<div class="content"><!-- Generator: GNU source-highlight 3.1.3
+by Lorenzo Bettini
+http://www.lorenzobettini.it
+http://www.gnu.org/software/src-highlite -->
+<pre><tt>yum -y install xeyes</tt></pre></div></div>
+<div class="paragraph"><p>Note that all the dependencies are client display libraries, not server
+libraries.</p></div>
+<div class="paragraph"><p>Finally, test the X11 forwarding :</p></div>
+<div class="listingblock">
+<div class="content"><!-- Generator: GNU source-highlight 3.1.3
+by Lorenzo Bettini
+http://www.lorenzobettini.it
+http://www.gnu.org/software/src-highlite -->
+<pre><tt>ssh -X bob@lab xeyes <span style="color: #990000">&amp;</span>
+ps aux <span style="color: #990000">|</span> grep xeyes</tt></pre></div></div>
+<div class="paragraph"><p>Now kill the program.</p></div>
+</div>
+</div>
+<div id="footnotes"><hr /></div>
+<div id="footer">
+<div id="footer-text">
+Last updated 2011-04-27 23:18:22 CEST
+</div>
+</div>
+</body>
+</html>
