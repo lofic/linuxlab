@@ -1,0 +1,314 @@
+Lab 04 : central authentication 
+===============================
+:author: Louis Coilliot
+:numbered:
+:icons:
+:data-uri:
+:iconsdir: /home/lofic/Documents/icons/asciidoc
+
+Introduction
+------------
+
+Our new purpose is to use a central account database for identification and
+authentication on our vm = lab.
+
+So we need the server part. Setting manually a directory server combined with
+Kerberos as the authentication protocol and with encrypted communications, is not so
+ straightforward.
+
+The good news is there is an integrated security information management solution
+easy to deploy : FreeIPA 
+
+The bad news is ATOW it is not easy to install on RHEL6 or Centos 6. The easiest
+way is to install it on a Fedora 14 system. That means we have to create a third
+virtual machine, in addition to our virtual machines named `infra` and `lab`.  
+
+You should have a look at the FreeIPA website :
+
+link:http://freeipa.org[http://freeipa.org]
+
+FreeIPA uses 389-DS as the LDAP database backend.
+
+Install a Fedora 14 system and FreeIPA
+--------------------------------------
+We can install it using internet resources. For example :
+
+link:http://ftp.lip6.fr/pub/linux/distributions/fedora/releases/14/Fedora/x86_64/os/[
+http://ftp.lip6.fr/pub/linux/distributions/fedora/releases/14/Fedora/x86_64/os/]
+
+You already know how to install the virtual machine, from Lab 00, but here is a
+refresh.
+
+In the resource folder of this lab, you'll find a usable kickstart for Fedora
+14, `ks-fedora14-x86_64.cfg`
+
+IMPORTANT: LAB 04-1 : install a virtual machine with a Fedora 14 system
+
+[source, sh]
+LANG=C virt-manager
+
+Connect to localhost (QEMU)
+
+Create a new virtual machine
+
+Name: ipa 
+
+Choose how you would like to install the operating system: Network install
+(HTTP, ...)
+
+URL : http://ftp.lip6.fr/pub/linux/distributions/fedora/releases/14/Fedora/x86_64/os/
+
+URL options, Kickstart URL : http://1.2.3.4/ks/ks-fedora14-x86_64.cfg
+
+Enable storage for this virtual machine
+
+Select : managed or other existing storage
+
+Set the logical volume (example : /dev/vg0/vmipa)
+
+RAM : 1 GB (change it to 512 MB after the install)
+
+Check that your bridge `br0` is selected.
+
+
+IMPORTANT: LAB 04-2 : prepare the system for FreeIPA
+
+Set the hostname of your machine to `freeipa.lablinux.net`
+
+In `/etc/sysconfig/network` :
+
+[source, conf]
+HOSTNAME=freeipa.lablinux.net
+
+Then for immediate effect :
+[source, sh]
+hostname freeipa.lablinux.net
+
+Log out and log in again.
+
+We don't have any DNS (yet) for our domain `lablinux.net`
+
+So we will put two entries in `/etc/hosts`
+
+- one for `freeipa freeipa.lablinux.net`
+- one for `lab lab.lablinux.net`
+
+We will get rid of Network Manager for safety.
+
+In `/etc/sysconfig/network-scripts/ifcfg-eth0` :
+
+[source, conf]
+NM_CONTROLLED="no"
+
+And restart the network service.
+
+IMPORTANT: LAB 04-3 : install FreeIPA
+
+On your Fedora 14 system :
+
+[source, sh]
+--------------------------------------------------------------------------------
+sed -i 's/^enabled=0/enabled=1/g' /etc/yum.repos.d/fedora-updates-testing.repo
+yum -y update --enablerepo=updates-testing
+yum -y install wget
+wget http://freeipa.org/downloads/freeipa-devel.repo
+cp freeipa-devel.repo /etc/yum.repos.d/
+yum -y install ipa-server
+--------------------------------------------------------------------------------
+
+
+IMPORTANT: LAB 04-4 : enable the communication ports
+
+From the basic firewall configuration of the system, use :
+
+[source, sh]
+--------------------------------------------------------------------------------
+/etc/init.d/iptables restart 
+iptables -D INPUT -j REJECT --reject-with icmp-host-prohibited
+iptables -D FORWARD -j REJECT --reject-with icmp-host-prohibited
+iptables -A INPUT -m state --state NEW -p tcp --match multiport --dport \
+ 80,443,389,636,88,464 -j ACCEPT
+iptables -A INPUT -m state --state NEW -p udp --match multiport --dport \
+ 88,464,123 -j ACCEPT
+iptables -A INPUT -j REJECT --reject-with icmp-host-prohibited
+iptables -A FORWARD -j REJECT --reject-with icmp-host-prohibited
+/etc/init.d/iptables save
+--------------------------------------------------------------------------------
+
+
+IMPORTANT: LAB 04-5 : configure FreeIPA
+
+Use the domain `lablinux.net` 
+
+[source, sh]
+--------------------------------------------------------------------------------
+ipa-server-install
+kinit admin
+klist
+--------------------------------------------------------------------------------
+
+
+IMPORTANT: LAB 04-6 : create some users in FreeIPA
+
+
+[source, sh]
+--------------------------------------------------------------------------------
+ipa user-add alice
+ipa passwd alice
+ipa user-find
+--------------------------------------------------------------------------------
+
+FreeIPA uses LDAP for identification but Kerberos for authentication. 
+
+For the lab we want to be able to authenticate against LDAP, so we add a Posix
+ LDAP `userPassword` attribute.
+
+In the resource folder of this lab, you'll find a script named
+`setldappasswd.py` to do this.
+
+
+[source, sh]
+--------------------------------------------------------------------------------
+./setldappasswd.py
+--------------------------------------------------------------------------------
+
+
+IMPORTANT: LAB 04-7 : export the security certificate
+
+[source, sh]
+--------------------------------------------------------------------------------
+certutil -L -d /etc/dirsrv/slapd-LABLINUX-NET
+certutil -L -d /etc/dirsrv/slapd-LABLINUX-NET -n "LABLINUX.NET IPA CA" \
+ -a > /tmp/cacert.asc
+--------------------------------------------------------------------------------
+
+
+Client configuration for identification and authentication against LDAP
+-----------------------------------------------------------------------
+FreeIPA provides a package named `ipa-client` for the configuration of the
+client systems. But here we will use the agnostic method.
+
+IMPORTANT: LAB 04-8 : prepare the client system
+
+Do this on the virtual machine named `lab`.
+
+Set the hostname of your machine to `lab.lablinux.net`
+
+In `/etc/sysconfig/network` :
+
+[source, conf]
+HOSTNAME=lab.lablinux.net
+
+Then for immediate effect :
+[source, sh]
+hostname lab.lablinux.net
+
+Log out and log in again.
+
+We don't have any DNS (yet) for our domain `lablinux.net`
+
+So we will put two entries in `/etc/hosts`
+
+- one for `freeipa freeipa.lablinux.net`
+- one for `lab lab.lablinux.net`
+
+
+IMPORTANT: LAB 04-9 : configure the client system for LDAP
+
+Install some required packages :
+
+[source, sh]
+--------------------------------------------------------------------------------
+yum install sssd nss-pam-ldapd pam_ldap
+yum install authconfig authconfig-gtk
+--------------------------------------------------------------------------------
+
+For the client configuration with the helper tool `authconfig`, you have three
+options :
+
+- `authconfig` : command line
+- `authconfig-tui` : text user interface
+- `authconfig-gtk` : graphical user interface
+
+With the text user interface, the configuration is :
+
+[source, sh]
+LANG=C authconfig-tui
+
+Uncheck everything that is not specified below.
+
+[source, conf]
+--------------------------------------------------------------------------------
+ Authentication Configuration
+-> User Information
+--> [*] Use LDAP
+-> Authentication
+--> [*] Use Shadow Passwords
+--> [*] Use LDAP Authentication
+--> [*] Local authorization is sufficient 
+
+ LDAP Settings
+-> [*] Use TLS   
+-> Server: ldap://freeipa.lablinux.net/   # USE THE FQDN because of the cert.
+-> Base DN: dc=lablinux,dc=net
+--------------------------------------------------------------------------------
+
+
+The system won't let you authenticate against LDAP without TLS. You MUST Import the
+ certificate in your client system. 
+ 
+`authconfig-tui` says : 
+
+'To connect to a LDAP server with TLS protocol enabled you need a CA certificate                       
+which signed your server's certificate. Copy the certificate in the PEM format
+to the /etc/openldap/cacerts directory. Then press OK.'
+
+Do so with the certificate that you previously exported.
+
+Alternatively, this configuration should work :
+
+[source, sh]
+--------------------------------------------------------------------------------
+authconfig --enableldap --ldapserver=freeipa.lablinux.net --enableldaptls \
+           --ldaploadcacert=file:///etc/openldap/cacerts/cacert.asc \
+           --ldapbasedn="dc=lablinux,dc=net" --enableldapauth --enablesssd \
+           --enablesssdauth --update
+--------------------------------------------------------------------------------
+
+If you want the automatic creation of local home directories, you can add :
+
+[source, sh]
+--------------------------------------------------------------------------------
+authconfig --enablemkhomedir --update
+--------------------------------------------------------------------------------
+
+Check the configuration with :
+[source, sh]
+--------------------------------------------------------------------------------
+/etc/init.d/sssd restart
+getent passwd alice
+--------------------------------------------------------------------------------
+
+If you want to list all the LDAP users with getent and sssd, you need to
+configure in /etc/sssd/sssd.conf :
+
+[source, sh]
+--------------------------------------------------------------------------------
+[domain/default]
+# (...)
+enumerate = True
+--------------------------------------------------------------------------------
+
+Then
+
+[source, sh]
+/etc/init.d/sssd restart
+
+It may take up to several minutes after SSSD startup to fully complete 
+enumerations.
+
+
+Client configuration for authentication against Kerberos
+--------------------------------------------------------
+
+To do.
