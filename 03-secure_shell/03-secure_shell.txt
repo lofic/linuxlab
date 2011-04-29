@@ -47,7 +47,8 @@ ssh-copy-id -i .ssh/id_dsa.pub bob@lab
 
 Now try logging into the machine again.
 
-With selinux in mode enforcing, you might need on the target system :
+With selinux in mode enforcing, you might need to restore a context on the
+target system :
 
 [source,sh]
 /sbin/restorecon -v ~/.ssh/authorized_keys
