@@ -47,6 +47,10 @@ ssh-copy-id -i .ssh/id_dsa.pub bob@lab
 
 Now try logging into the machine again.
 
+With selinux in mode enforcing, you might need on the target system :
+
+[source,sh]
+/sbin/restorecon -v ~/.ssh/authorized_keys
 
 
 IMPORTANT: LAB 03-2 : X11 forwarding
