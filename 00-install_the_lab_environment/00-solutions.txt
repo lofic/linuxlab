@@ -29,6 +29,20 @@ ONBOOT=yes
 
 CAUTION: Bridge with an uppercase on the B
 
+If your KVM host is a Debian or Ubuntu system, the configuration looks like :
+[source, conf]
+--------------------------------------------------------------------------------
+auto eth0
+iface eth0 inet manual
+
+auto br0
+iface br0 inet dhcp
+        bridge_ports eth0
+        bridge_stp off
+        bridge_fd 0
+        bridge_maxwait 0
+--------------------------------------------------------------------------------
+
 
 LAB 00-3 : mount the iso image.
 -------------------------------
