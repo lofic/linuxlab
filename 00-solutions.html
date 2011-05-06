@@ -635,6 +635,21 @@ GNQfHLG+TyMTkAVEr88xQfVnkBg7GAKixSIykDYQsL21/wFkW/B5QqT9lwAAAABJRU5ErkJggg==" />
 <td class="content">Bridge with an uppercase on the B</td>
 </tr></table>
 </div>
+<div class="paragraph"><p>If your KVM host is a Debian or Ubuntu system, the configuration looks like :</p></div>
+<div class="listingblock">
+<div class="content"><!-- Generator: GNU source-highlight 3.1.3
+by Lorenzo Bettini
+http://www.lorenzobettini.it
+http://www.gnu.org/software/src-highlite -->
+<pre><tt>auto eth0
+iface eth0 inet manual
+
+auto br0
+iface br0 inet dhcp
+        bridge_ports eth0
+        bridge_stp off
+        bridge_fd <span style="color: #993399">0</span>
+        bridge_maxwait <span style="color: #993399">0</span></tt></pre></div></div>
 </div>
 <h2 id="_lab_00_3_mount_the_iso_image">LAB 00-3 : mount the iso image.</h2>
 <div class="sectionbody">
@@ -726,7 +741,7 @@ sudo lvcreate -s -L+500M -n vmlabsnap /dev/vg0/vmlab</tt></pre>
 <div id="footnotes"><hr /></div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2011-04-02 11:45:30 CEST
+Last updated 2011-05-06 10:30:44 CEST
 </div>
 </div>
 </body>
