@@ -63,7 +63,7 @@ You can export or forward the display to your local display server.
 
 With `ssh -X` you can do a X11 forwarding.
 
-On your local system, check in `/etc/ssh/sshd_config` :
+On your local system, check in `/etc/ssh/ssh_config` :
 [source,conf]
 ForwardX11 yes
 
