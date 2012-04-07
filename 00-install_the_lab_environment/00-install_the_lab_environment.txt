@@ -126,6 +126,10 @@ iface br0 inet static
         gateway 192.168.1.1
 --------------------------------------------------------------------------------
 
+If you have troubles with the pxe boot on the bridge, see :
+
+link:https://bugzilla.redhat.com/show_bug.cgi?id=638735[https://bugzilla.redhat.com/show_bug.cgi?id=638735]
+
 In a RedHat-like OS
 ~~~~~~~~~~~~~~~~~~~
 I mean Red Hat Enterprise Linux, Oracle Enterprise Linux, Centos, Fedora and 
