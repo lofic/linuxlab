@@ -33,6 +33,13 @@ LAB 03 : Secure shell
 link:03-secure_shell.html[lab]
 
 
+LAB 04 : Directory service
+--------------------------
+link:04-directory_service.html[lab]
+
+link:https://github.com/lofic/linuxlab/tree/master/04-directory_service/resources[Resources]
+
+
 LAB 06 : IPA 
 ------------
 link:06-IPA.html[lab]
