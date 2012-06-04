@@ -47,14 +47,14 @@ Set the Directory service
 
 We will set a response file for a non interactive installation.
 
-Get the template here : link:resources/setup-ds-admin-full.inf[resources/setup-ds-admin-full.inf]
+Get the template here : link:04-directory_service/resources/setup-ds-admin-full.inf[resources/setup-ds-admin-full.inf]
 
 Adjust the parameters to your need.
 
 For example :
 
 --------------------------------------------------------------------------------
-wget https://github.com/lofic/linuxlab/tree/master/04-Directory_service/resources/setup-ds-admin-full.inf
+wget https://raw.github.com/lofic/linuxlab/master/04-directory_service/resources/setup-ds-admin-full.inf 
 
 --------------------------------------------------------------------------------
 
