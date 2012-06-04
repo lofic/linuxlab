@@ -33,11 +33,11 @@ LAB 03 : Secure shell
 link:03-secure_shell.html[lab]
 
 
-LAB 04 : Central authentication 
--------------------------------
-link:04-central_authentication.html[lab]
+LAB 06 : IPA 
+------------
+link:06-IPA.html[lab]
 
-link:https://github.com/lofic/linuxlab/tree/master/04-central_authentication/resources[Resources]
+link:https://github.com/lofic/linuxlab/tree/master/06-IPA/resources[Resources]
 
 
 
