@@ -1,0 +1,49 @@
+[General]
+AdminDomain = lab
+ConfigDirectoryAdminID = admin
+ConfigDirectoryAdminPwd = CDADMINPW 
+ConfigDirectoryLdapURL = ldap://SRVHOSTNAME:389/o=NetscapeRoot
+FullMachineName = SRVHOSTNAME 
+ServerRoot = /usr/lib64/dirsrv
+SuiteSpotGroup = nobody
+SuiteSpotUserID = nobody
+prefix =
+
+[admin]
+Port = 9830
+ServerAdminID = admin
+ServerAdminPwd = SADMINPW 
+ServerIpAddress = SRVIP
+SysUser = nobody
+
+[slapd]
+AddOrgEntries = Yes
+AddSampleEntries = No
+HashedRootDNPwd = {SSHA}g0LlHcT7nwIwVE2582MoDKuDwx716BaxGPD1Lg== 
+InstallLdifFile = suggest
+RootDN = cn=Directory Manager
+RootDNPwd = RDNPW 
+ServerIdentifier = dir01
+ServerPort = 389
+SlapdConfigForMC = yes
+Suffix = dc=labolinux,dc=fr
+UseExistingMC = 0
+bak_dir = /var/lib/dirsrv/slapd-dir01/bak
+bindir = /usr/bin
+cert_dir = /etc/dirsrv/slapd-dir01
+config_dir = /etc/dirsrv/slapd-dir01
+datadir = /usr/share
+db_dir = /var/lib/dirsrv/slapd-dir01/db
+ds_bename = userRoot
+inst_dir = /usr/lib64/dirsrv/slapd-dir01
+ldif_dir = /var/lib/dirsrv/slapd-dir01/ldif
+localstatedir = /var
+lock_dir = /var/lock/dirsrv/slapd-dir01
+log_dir = /var/log/dirsrv/slapd-dir01
+naming_value = maquette
+run_dir = /var/run/dirsrv
+sbindir = /usr/sbin
+schema_dir = /etc/dirsrv/slapd-dir01/schema
+sysconfdir = /etc
+tmp_dir = /tmp
+

@@ -1,0 +1,60 @@
+Lab 04 : directory service 
+==========================
+:author: Louis Coilliot
+:numbered:
+:icons:
+:data-uri:
+:iconsdir: /home/lofic/Documents/icons/asciidoc
+
+Introduction
+------------
+
+We will install a LDAP directory service to provide a central source for account
+information. 
+
+The communication with the server will be encrypted using SSL/TLS.
+
+The open source LDAP server used here is '389 Directory Server'.
+
+This is a guided lab.
+
+Prerequisites
+-------------
+
+On Centos 6 you will need to set some additional yum repositories :
+
+* EPEL
+* Continuous release (cr)
+* 389-ds-base from Rich Megginson
+
+--------------------------------------------------------------------------------
+rpm -Uvh http://rpmfind.net/linux/epel/6/i386/epel-release-6-7.noarch.rpm
+yum -y install centos-release-cr
+wget http://repos.fedorapeople.org/repos/rmeggins/389-ds-base/epel-389-ds-base.repo \
+ -O /etc/yum.repos.d/epel-389-ds-base.repo 
+yum clean all && yum makecache
+--------------------------------------------------------------------------------
+
+Install 389-DS
+--------------
+
+--------------------------------------------------------------------------------
+yum -y install 389-ds
+--------------------------------------------------------------------------------
+
+Set the Directory service
+-------------------------
+
+We will set a response file for a non interactive installation.
+
+Get the template here : link:resources/setup-ds-admin-full.inf[resources/setup-ds-admin-full.inf]
+
+Adjust the parameters to your need.
+
+For example :
+
+--------------------------------------------------------------------------------
+wget https://github.com/lofic/linuxlab/tree/master/04-Directory_service/resources/setup-ds-admin-full.inf
+
+--------------------------------------------------------------------------------
+
