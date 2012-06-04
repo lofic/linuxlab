@@ -1,5 +1,5 @@
-Lab 04 : central authentication 
-===============================
+Lab 06 : IPA 
+============
 :author: Louis Coilliot
 :numbered:
 :icons:
@@ -12,8 +12,7 @@ Introduction
 Our new purpose is to use a central account database for identification and
 authentication on our vm = lab.
 
-So we need the server part. Setting manually a directory server combined with
-Kerberos as the authentication protocol and with encrypted communications, is not so straightforward.
+So we need the server part. Setting manually a directory server combined with Kerberos as the authentication protocol and with encrypted communications is not so straightforward.
 
 The good news is there is an integrated security information management solution
 easy to deploy : FreeIPA 
@@ -41,7 +40,7 @@ refresh.
 In the resource folder of this lab, you'll find a usable kickstart for Fedora
 14, `ks-fedora14-x86_64.cfg`
 
-IMPORTANT: LAB 04-1 : install a virtual machine with a Fedora 14 system
+IMPORTANT: LAB 06-1 : install a virtual machine with a Fedora 14 system
 
 [source, sh]
 LANG=C virt-manager
@@ -70,7 +69,7 @@ RAM : 1 GB (change it to 512 MB after the install)
 Check that your bridge `br0` is selected.
 
 
-IMPORTANT: LAB 04-2 : prepare the system for FreeIPA
+IMPORTANT: LAB 06-2 : prepare the system for FreeIPA
 
 Set the hostname of your machine to `freeipa.lablinux.net`
 
@@ -101,7 +100,7 @@ NM_CONTROLLED="no"
 
 And restart the network service.
 
-IMPORTANT: LAB 04-3 : install FreeIPA
+IMPORTANT: LAB 06-3 : install FreeIPA
 
 On your Fedora 14 system :
 
@@ -116,7 +115,7 @@ yum -y install ipa-server
 --------------------------------------------------------------------------------
 
 
-IMPORTANT: LAB 04-4 : enable the communication ports
+IMPORTANT: LAB 06-4 : enable the communication ports
 
 From the basic firewall configuration of the system, use :
 
@@ -135,7 +134,7 @@ iptables -A FORWARD -j REJECT --reject-with icmp-host-prohibited
 --------------------------------------------------------------------------------
 
 
-IMPORTANT: LAB 04-5 : configure FreeIPA
+IMPORTANT: LAB 06-5 : configure FreeIPA
 
 Use the domain `lablinux.net` 
 
@@ -147,7 +146,7 @@ klist
 --------------------------------------------------------------------------------
 
 
-IMPORTANT: LAB 04-6 : create some users in FreeIPA
+IMPORTANT: LAB 06-6 : create some users in FreeIPA
 
 
 [source, sh]
@@ -172,7 +171,7 @@ In the resource folder of this lab, you'll find a script named
 --------------------------------------------------------------------------------
 
 
-IMPORTANT: LAB 04-7 : export the security certificate
+IMPORTANT: LAB 06-7 : export the security certificate
 
 [source, sh]
 --------------------------------------------------------------------------------
@@ -187,7 +186,7 @@ Client configuration for identification and authentication against LDAP
 FreeIPA provides a package named `ipa-client` for the configuration of the
 client systems. But here we will use the agnostic method.
 
-IMPORTANT: LAB 04-8 : prepare the client system
+IMPORTANT: LAB 06-8 : prepare the client system
 
 Do this on the virtual machine named `lab`.
 
@@ -212,7 +211,7 @@ So we will put two entries in `/etc/hosts`
 - one for `lab lab.lablinux.net`
 
 
-IMPORTANT: LAB 04-9 : configure the client system for LDAP
+IMPORTANT: LAB 06-9 : configure the client system for LDAP
 
 Install some required packages :
 
