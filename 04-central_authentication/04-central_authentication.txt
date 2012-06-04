@@ -13,8 +13,7 @@ Our new purpose is to use a central account database for identification and
 authentication on our vm = lab.
 
 So we need the server part. Setting manually a directory server combined with
-Kerberos as the authentication protocol and with encrypted communications, is not so
- straightforward.
+Kerberos as the authentication protocol and with encrypted communications, is not so straightforward.
 
 The good news is there is an integrated security information management solution
 easy to deploy : FreeIPA 
