@@ -799,7 +799,47 @@ yum clean all &amp;&amp; yum makecache</tt></pre>
 <div class="paragraph"><p>For example :</p></div>
 <div class="listingblock">
 <div class="content">
-<pre><tt>wget https://raw.github.com/lofic/linuxlab/master/04-directory_service/resources/setup-ds-admin-full.inf</tt></pre>
+<pre><tt>wget https://raw.github.com/lofic/linuxlab/master/04-directory_service/resources/setup-ds-admin-full.inf
+CDADMINPW=plokiploki;SADMINPW=plokiploki;RDNPW=plokiploki
+SRVHOSTNAME=el6a.labolinux.fr
+SRVIP=192.168.0.60
+sed -i "s/CDADMINPW/$CDADMINPW/g" setup-ds-admin-full.inf
+sed -i "s/SADMINPW/$SADMINPW/g"   setup-ds-admin-full.inf
+sed -i "s/RDNPW/$RDNPW/g"         setup-ds-admin-full.inf
+sed -i "s/SRVIP/$SRVIP/g"         setup-ds-admin-full.inf
+sed -i "s/SRVHOSTNAME/$SRVHOSTNAME/g" setup-ds-admin-full.inf</tt></pre>
+</div></div>
+<div class="paragraph"><p>Generate the password hash for HashedRootDNPwd with <tt>htpsswd</tt></p></div>
+<div class="paragraph"><p>The default password in the template is <tt>plokiploki</tt></p></div>
+<div class="paragraph"><p>Then :</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>setup-ds-admin.pl -k -s -f setup-ds-admin-full.inf</tt></pre>
+</div></div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_enable_and_activate_the_services">5. Enable and activate the services</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre><tt>/sbin/chkconfig dirsrv on
+/sbin/chkconfig dirsrv-admin on
+
+/sbin/service dirsrv status
+/sbin/service dirsrv-admin status</tt></pre>
+</div></div>
+<div class="paragraph"><p>Test the service :</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>ldapsearch -x -h localhost -p 389 -s base -b "" "objectclass=*"</tt></pre>
+</div></div>
+<div class="paragraph"><p>Setup the web applications :</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>setup-ds-dsgw
+
+/sbin/service dirsrv-admin restart</tt></pre>
 </div></div>
 </div>
 </div>
@@ -807,7 +847,7 @@ yum clean all &amp;&amp; yum makecache</tt></pre>
 <div id="footnotes"><hr /></div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2012-06-04 22:13:05 CEST
+Last updated 2012-06-05 09:41:06 CEST
 </div>
 </div>
 </body>

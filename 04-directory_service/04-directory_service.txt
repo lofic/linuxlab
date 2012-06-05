@@ -56,6 +56,48 @@ For example :
 
 --------------------------------------------------------------------------------
 wget https://raw.github.com/lofic/linuxlab/master/04-directory_service/resources/setup-ds-admin-full.inf 
+CDADMINPW=plokiploki;SADMINPW=plokiploki;RDNPW=plokiploki
+SRVHOSTNAME=el6a.labolinux.fr
+SRVIP=192.168.0.60
+sed -i "s/CDADMINPW/$CDADMINPW/g" setup-ds-admin-full.inf
+sed -i "s/SADMINPW/$SADMINPW/g"   setup-ds-admin-full.inf
+sed -i "s/RDNPW/$RDNPW/g"         setup-ds-admin-full.inf
+sed -i "s/SRVIP/$SRVIP/g"         setup-ds-admin-full.inf
+sed -i "s/SRVHOSTNAME/$SRVHOSTNAME/g" setup-ds-admin-full.inf
+--------------------------------------------------------------------------------
 
+Generate the password hash for HashedRootDNPwd with `htpsswd`
+
+The default password in the template is `plokiploki`
+
+Then :
+
+--------------------------------------------------------------------------------
+setup-ds-admin.pl -k -s -f setup-ds-admin-full.inf
+--------------------------------------------------------------------------------
+
+Enable and activate the services
+--------------------------------
+
+--------------------------------------------------------------------------------
+/sbin/chkconfig dirsrv on
+/sbin/chkconfig dirsrv-admin on
+
+/sbin/service dirsrv status
+/sbin/service dirsrv-admin status
+--------------------------------------------------------------------------------
+
+Test the service :
+
+--------------------------------------------------------------------------------
+ldapsearch -x -h localhost -p 389 -s base -b "" "objectclass=*"
+--------------------------------------------------------------------------------
+
+Setup the web applications :
+
+--------------------------------------------------------------------------------
+setup-ds-dsgw
+
+/sbin/service dirsrv-admin restart
 --------------------------------------------------------------------------------
 
