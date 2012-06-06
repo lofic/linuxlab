@@ -18,6 +18,7 @@ The open source LDAP server used here is '389 Directory Server'.
 
 This is a guided lab.
 
+
 Prerequisites
 -------------
 
@@ -33,6 +34,8 @@ On Centos 6 you will need to set some additional yum repositories :
 * Continuous release (cr)
 * 389-ds-base from Rich Megginson
 
+IMPORTANT: LAB 04-1 : add the yum repositories
+
 [source, sh]
 --------------------------------------------------------------------------------
 rpm -Uvh http://rpmfind.net/linux/epel/6/i386/epel-release-6-7.noarch.rpm
@@ -44,6 +47,8 @@ yum clean all && yum makecache
 
 Install 389-DS
 --------------
+
+IMPORTANT: LAB 04-2 : install the packages
 
 [source, sh]
 --------------------------------------------------------------------------------
@@ -59,6 +64,9 @@ Get the template here :
 link:https://raw.github.com/lofic/linuxlab/master/04-directory_service/resources/setup-ds-admin-full.inf[setup-ds-admin-full.inf]
 
 Adjust the parameters to your need.
+
+
+IMPORTANT: LAB 04-3 : set the directory 
 
 For example :
 
@@ -86,8 +94,7 @@ Then :
 setup-ds-admin.pl -k -s -f setup-ds-admin-full.inf
 --------------------------------------------------------------------------------
 
-Enable and activate the services
---------------------------------
+Enable and activate the services.
 
 [source, sh]
 --------------------------------------------------------------------------------
@@ -98,7 +105,7 @@ Enable and activate the services
 /sbin/service dirsrv-admin status
 --------------------------------------------------------------------------------
 
-Test the service :
+Test the directory service :
 
 [source, sh]
 --------------------------------------------------------------------------------
@@ -114,8 +121,11 @@ setup-ds-dsgw
 /sbin/service dirsrv-admin restart
 --------------------------------------------------------------------------------
 
-Uninstall everything
---------------------
+
+[TIP]
+.Don't panic
+================================================================================
+********************************************************************************
 
 If you made some mistakes and you want to start over, you can use :
 
@@ -124,9 +134,14 @@ If you made some mistakes and you want to start over, you can use :
 # remove-ds-admin.pl -f -y
 --------------------------------------------------------------------------------
 
+********************************************************************************
+================================================================================
 
-Import some accounts
---------------------
+
+Import some data
+----------------
+
+IMPORTANT: LAB 04-4 : import some accounts 
 
 [source, sh]
 --------------------------------------------------------------------------------
@@ -157,7 +172,7 @@ BINDPASSWD='plokiploki'
 
 LDIFFILE=/tmp/kermit.ldif
 
-ldapadd -h $LDAPSRV -p $LDAPPORT -D "$BINDDN" -w $BINDPASSWD -f $LDIFFILE
+ldapadd -h $LDAPSRV -p $LDAPPORT -D "$BINDDN" -w "$BINDPASSWD" -f $LDIFFILE
 --------------------------------------------------------------------------------
 
 And so on. You can add multiple accounts with the same ldif file.
@@ -170,13 +185,15 @@ Generate the password hash for the users with `pwdhash`
 Check the import with :
 
 --------------------------------------------------------------------------------
-ldapsearch -h $LDAPSRV -p $LDAPPORT -D "$BINDDN" -w $BINDPASSWD \
+ldapsearch -h $LDAPSRV -p $LDAPPORT -D "$BINDDN" -w "$BINDPASSWD" \
  -b 'ou=People,dc=labolinux,dc=fr' '(uid=*)'
 --------------------------------------------------------------------------------
 
 
-Configure a client
-------------------
+Configure a client for id and auth. with the directory
+------------------------------------------------------
+
+IMPORTANT: LAB 04-5 : configure a client 
 
 Without interaction :
 
@@ -188,6 +205,8 @@ yum -y install authconfig pam_ldap fprintd-pam nss-pam-ldapd
 authconfig --enableldap --enableldapauth --ldapserver=$LDAPSRV \
            --ldapbasedn='dc=labolinux,dc=fr' --update
 authconfig --enablemkhomedir --enablelocauthorize --update
+# Later on we will use in addition :
+# authconfig --enableldaptls --update
 --------------------------------------------------------------------------------
 
 With interaction :
@@ -203,6 +222,86 @@ Check with :
 --------------------------------------------------------------------------------
 getent passwd
 getent group
+--------------------------------------------------------------------------------
+
+
+Configure SSL for the directory server
+--------------------------------------
+
+Cf rfc4513, 6.3.3. Password-Related Security Considerations
+
+___
+The use of clear text passwords and other unprotected authentication
+credentials is strongly discouraged over open networks when the
+underlying transport service cannot guarantee confidentiality.  LDAP
+implementations SHOULD NOT by default support authentication methods
+using clear text passwords and other unprotected authentication
+credentials unless the data on the session is protected using TLS or
+other data confidentiality and data integrity protection.
+
+The transmission of passwords in the clear -- typically for
+authentication or modification -- poses a significant security risk.
+___
+
+
+IMPORTANT: LAB 04-6 : configure the LDAPS server 
+
+--------------------------------------------------------------------------------
+su - # IMPORTANT
+
+cd /etc/dirsrv/slapd-dir01 # IMPORTANT
+
+# This one works fine for Centos 6.2 :
+wget https://github.com/lofic/linuxlab/tree/master/04-directory_service/resources/setupssl2.sh
+# Original version : https://raw.github.com/richm/scripts/master/setupssl2.sh
+
+chmod +x setupssl2.sh
+
+./setupssl2.sh /etc/dirsrv/slapd-dir01
+
+restorecon -v /etc/dirsrv/admin-serv/*
+
+/sbin/service dirsrv restart
+/sbin/service dirsrv-admin restart
+--------------------------------------------------------------------------------
+
+Check with :
+
+--------------------------------------------------------------------------------
+LDAPSRV=el6a.labolinux.fr # <- change this, use the fqdn
+BINDDN='cn=Directory Manager'
+BINDPASSWD='plokiploki'
+ldapsearch -H ldaps://$LDAPSRV -x -D "$BINDDN" -w "$BINDPASSWD" \
+ -s sub -b "ou=People,dc=labolinux,dc=fr" '(uid=*)'
+
+tail /var/log/dirsrv/slapd-dir01/access # look for startTLS and the return code
+--------------------------------------------------------------------------------
+
+Configure SSL for the clients
+-----------------------------
+
+The CA certificate is `/etc/dirsrv/slapd-dir01/cacert.asc` on the directory
+server.
+
+IMPORTANT: LAB 04-7 : configure the LDAPS clients 
+
+On the clients, copy it to `/etc/openldap/cacerts/`
+
+--------------------------------------------------------------------------------
+cp cacert.asc /etc/openldap/cacerts/ 
+--------------------------------------------------------------------------------
+
+Then :
+
+--------------------------------------------------------------------------------
+authconfig --enableldaptls --update # non interactive
+authconfig-tui                      # interactive
+--------------------------------------------------------------------------------
+
+Check with :
+
+--------------------------------------------------------------------------------
+ldapsearch -x -ZZ '(uid=*)'
 --------------------------------------------------------------------------------
 
 
