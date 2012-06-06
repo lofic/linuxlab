@@ -771,22 +771,26 @@ Continuous release (cr)
 </li>
 </ul></div>
 <div class="listingblock">
-<div class="content">
-<pre><tt>rpm -Uvh http://rpmfind.net/linux/epel/6/i386/epel-release-6-7.noarch.rpm
+<div class="content"><!-- Generator: GNU source-highlight 3.1.5
+by Lorenzo Bettini
+http://www.lorenzobettini.it
+http://www.gnu.org/software/src-highlite -->
+<pre><tt>rpm -Uvh http<span style="color: #990000">:</span>//rpmfind<span style="color: #990000">.</span>net/linux/epel<span style="color: #990000">/</span><span style="color: #993399">6</span>/i<span style="color: #993399">386</span>/epel-release-<span style="color: #993399">6</span>-<span style="color: #993399">7</span><span style="color: #990000">.</span>noarch<span style="color: #990000">.</span>rpm
 yum -y install centos-release-cr
-wget http://repos.fedorapeople.org/repos/rmeggins/389-ds-base/epel-389-ds-base.repo \
- -O /etc/yum.repos.d/epel-389-ds-base.repo
-yum clean all &amp;&amp; yum makecache</tt></pre>
-</div></div>
+wget http<span style="color: #990000">:</span>//repos<span style="color: #990000">.</span>fedorapeople<span style="color: #990000">.</span>org/repos/rmeggins<span style="color: #990000">/</span><span style="color: #993399">389</span>-ds-base/epel-<span style="color: #993399">389</span>-ds-base<span style="color: #990000">.</span>repo <span style="color: #990000">\</span>
+ -O /etc/yum<span style="color: #990000">.</span>repos<span style="color: #990000">.</span>d/epel-<span style="color: #993399">389</span>-ds-base<span style="color: #990000">.</span>repo
+yum clean all <span style="color: #990000">&amp;&amp;</span> yum makecache</tt></pre></div></div>
 </div>
 </div>
 <div class="sect1">
 <h2 id="_install_389_ds">3. Install 389-DS</h2>
 <div class="sectionbody">
 <div class="listingblock">
-<div class="content">
-<pre><tt>yum -y install 389-ds</tt></pre>
-</div></div>
+<div class="content"><!-- Generator: GNU source-highlight 3.1.5
+by Lorenzo Bettini
+http://www.lorenzobettini.it
+http://www.gnu.org/software/src-highlite -->
+<pre><tt>yum -y install <span style="color: #993399">389</span>-ds</tt></pre></div></div>
 </div>
 </div>
 <div class="sect1">
@@ -798,49 +802,59 @@ yum clean all &amp;&amp; yum makecache</tt></pre>
 <div class="paragraph"><p>Adjust the parameters to your need.</p></div>
 <div class="paragraph"><p>For example :</p></div>
 <div class="listingblock">
-<div class="content">
-<pre><tt>wget https://raw.github.com/lofic/linuxlab/master/04-directory_service/resources/setup-ds-admin-full.inf
-CDADMINPW=plokiploki;SADMINPW=plokiploki;RDNPW=plokiploki
-SRVHOSTNAME=el6a.labolinux.fr
-SRVIP=192.168.0.60
-sed -i "s/CDADMINPW/$CDADMINPW/g" setup-ds-admin-full.inf
-sed -i "s/SADMINPW/$SADMINPW/g"   setup-ds-admin-full.inf
-sed -i "s/RDNPW/$RDNPW/g"         setup-ds-admin-full.inf
-sed -i "s/SRVIP/$SRVIP/g"         setup-ds-admin-full.inf
-sed -i "s/SRVHOSTNAME/$SRVHOSTNAME/g" setup-ds-admin-full.inf</tt></pre>
-</div></div>
-<div class="paragraph"><p>Generate the password hash for HashedRootDNPwd with <tt>htpsswd</tt></p></div>
+<div class="content"><!-- Generator: GNU source-highlight 3.1.5
+by Lorenzo Bettini
+http://www.lorenzobettini.it
+http://www.gnu.org/software/src-highlite -->
+<pre><tt>wget https<span style="color: #990000">:</span>//raw<span style="color: #990000">.</span>github<span style="color: #990000">.</span>com/lofic/linuxlab/master<span style="color: #990000">/</span><span style="color: #993399">04</span>-directory_service/resources/setup-ds-admin-full<span style="color: #990000">.</span>inf
+<span style="color: #009900">CDADMINPW</span><span style="color: #990000">=</span>plokiploki<span style="color: #990000">;</span><span style="color: #009900">SADMINPW</span><span style="color: #990000">=</span>plokiploki<span style="color: #990000">;</span><span style="color: #009900">RDNPW</span><span style="color: #990000">=</span>plokiploki
+<span style="color: #009900">SRVHOSTNAME</span><span style="color: #990000">=</span>el6a<span style="color: #990000">.</span>labolinux<span style="color: #990000">.</span>fr
+<span style="color: #009900">SRVIP</span><span style="color: #990000">=</span><span style="color: #993399">192.168</span><span style="color: #990000">.</span><span style="color: #993399">0.60</span>
+sed -i <span style="color: #FF0000">"s/CDADMINPW/$CDADMINPW/g"</span> setup-ds-admin-full<span style="color: #990000">.</span>inf
+sed -i <span style="color: #FF0000">"s/SADMINPW/$SADMINPW/g"</span>   setup-ds-admin-full<span style="color: #990000">.</span>inf
+sed -i <span style="color: #FF0000">"s/RDNPW/$RDNPW/g"</span>         setup-ds-admin-full<span style="color: #990000">.</span>inf
+sed -i <span style="color: #FF0000">"s/SRVIP/$SRVIP/g"</span>         setup-ds-admin-full<span style="color: #990000">.</span>inf
+sed -i <span style="color: #FF0000">"s/SRVHOSTNAME/$SRVHOSTNAME/g"</span> setup-ds-admin-full<span style="color: #990000">.</span>inf</tt></pre></div></div>
+<div class="paragraph"><p>Generate the password hash for HashedRootDNPwd with <tt>pwdhash</tt></p></div>
 <div class="paragraph"><p>The default password in the template is <tt>plokiploki</tt></p></div>
 <div class="paragraph"><p>Then :</p></div>
 <div class="listingblock">
-<div class="content">
-<pre><tt>setup-ds-admin.pl -k -s -f setup-ds-admin-full.inf</tt></pre>
-</div></div>
+<div class="content"><!-- Generator: GNU source-highlight 3.1.5
+by Lorenzo Bettini
+http://www.lorenzobettini.it
+http://www.gnu.org/software/src-highlite -->
+<pre><tt>setup-ds-admin<span style="color: #990000">.</span>pl -k -s -f setup-ds-admin-full<span style="color: #990000">.</span>inf</tt></pre></div></div>
 </div>
 </div>
 <div class="sect1">
 <h2 id="_enable_and_activate_the_services">5. Enable and activate the services</h2>
 <div class="sectionbody">
 <div class="listingblock">
-<div class="content">
+<div class="content"><!-- Generator: GNU source-highlight 3.1.5
+by Lorenzo Bettini
+http://www.lorenzobettini.it
+http://www.gnu.org/software/src-highlite -->
 <pre><tt>/sbin/chkconfig dirsrv on
 /sbin/chkconfig dirsrv-admin on
 
 /sbin/service dirsrv status
-/sbin/service dirsrv-admin status</tt></pre>
-</div></div>
+/sbin/service dirsrv-admin status</tt></pre></div></div>
 <div class="paragraph"><p>Test the service :</p></div>
 <div class="listingblock">
-<div class="content">
-<pre><tt>ldapsearch -x -h localhost -p 389 -s base -b "" "objectclass=*"</tt></pre>
-</div></div>
+<div class="content"><!-- Generator: GNU source-highlight 3.1.5
+by Lorenzo Bettini
+http://www.lorenzobettini.it
+http://www.gnu.org/software/src-highlite -->
+<pre><tt>ldapsearch -x -h localhost -p <span style="color: #993399">389</span> -s base -b <span style="color: #FF0000">""</span> <span style="color: #FF0000">"objectclass=*"</span></tt></pre></div></div>
 <div class="paragraph"><p>Setup the web applications :</p></div>
 <div class="listingblock">
-<div class="content">
+<div class="content"><!-- Generator: GNU source-highlight 3.1.5
+by Lorenzo Bettini
+http://www.lorenzobettini.it
+http://www.gnu.org/software/src-highlite -->
 <pre><tt>setup-ds-dsgw
 
-/sbin/service dirsrv-admin restart</tt></pre>
-</div></div>
+/sbin/service dirsrv-admin restart</tt></pre></div></div>
 </div>
 </div>
 <div class="sect1">
@@ -848,16 +862,59 @@ sed -i "s/SRVHOSTNAME/$SRVHOSTNAME/g" setup-ds-admin-full.inf</tt></pre>
 <div class="sectionbody">
 <div class="paragraph"><p>If you made some mistakes and you want to start over, you can use :</p></div>
 <div class="listingblock">
-<div class="content">
-<pre><tt># remove-ds-admin.pl -f -y</tt></pre>
-</div></div>
+<div class="content"><!-- Generator: GNU source-highlight 3.1.5
+by Lorenzo Bettini
+http://www.lorenzobettini.it
+http://www.gnu.org/software/src-highlite -->
+<pre><tt><span style="font-style: italic"><span style="color: #9A1900"># remove-ds-admin.pl -f -y</span></span></tt></pre></div></div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_import_some_accounts">7. Import some accounts</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content"><!-- Generator: GNU source-highlight 3.1.5
+by Lorenzo Bettini
+http://www.lorenzobettini.it
+http://www.gnu.org/software/src-highlite -->
+<pre><tt>cat<span style="color: #990000">&lt;&lt;</span>EOF<span style="color: #990000">&gt;</span>/tmp/kermit<span style="color: #990000">.</span>ldif
+dn<span style="color: #990000">:</span> <span style="color: #009900">uid</span><span style="color: #990000">=</span>kermit<span style="color: #990000">,</span><span style="color: #009900">ou</span><span style="color: #990000">=</span>People<span style="color: #990000">,</span><span style="color: #009900">dc</span><span style="color: #990000">=</span>labolinux<span style="color: #990000">,</span><span style="color: #009900">dc</span><span style="color: #990000">=</span>fr
+givenName<span style="color: #990000">:</span> Kermit
+sn<span style="color: #990000">:</span> The Frog
+loginShell<span style="color: #990000">:</span> /bin/bash
+gidNumber<span style="color: #990000">:</span> <span style="color: #993399">1001</span>
+uidNumber<span style="color: #990000">:</span> <span style="color: #993399">1001</span>
+objectClass<span style="color: #990000">:</span> top
+objectClass<span style="color: #990000">:</span> person
+objectClass<span style="color: #990000">:</span> organizationalPerson
+objectClass<span style="color: #990000">:</span> inetorgperson
+objectClass<span style="color: #990000">:</span> posixAccount
+uid<span style="color: #990000">:</span> kermit
+gecos<span style="color: #990000">:</span> Muppet addict
+cn<span style="color: #990000">:</span> Kermit The Frog
+preferredLanguage<span style="color: #990000">:</span> fr
+homeDirectory<span style="color: #990000">:</span> /home/kermit
+userPassword<span style="color: #990000">:</span> {SSHA}<span style="color: #009900">g0LlHcT7nwIwVE2582MoDKuDwx716BaxGPD1Lg</span><span style="color: #990000">==</span>
+EOF
+
+<span style="color: #009900">LDAPADDBIN</span><span style="color: #990000">=</span><span style="color: #FF0000">'/usr/bin/ldapadd'</span>
+<span style="color: #009900">LDAPSRV</span><span style="color: #990000">=</span>localhost
+<span style="color: #009900">LDAPPORT</span><span style="color: #990000">=</span><span style="color: #993399">389</span>
+<span style="color: #009900">BINDDN</span><span style="color: #990000">=</span><span style="color: #FF0000">'cn=Directory Manager'</span>
+<span style="color: #009900">BINDPASSWD</span><span style="color: #990000">=</span><span style="color: #FF0000">'plokiploki'</span>
+<span style="color: #009900">LDIFFILE</span><span style="color: #990000">=</span>/tmp/kermit<span style="color: #990000">.</span>ldif
+<span style="color: #009900">$LDAPADDBIN</span> -h <span style="color: #009900">$LDAPSRV</span> -p <span style="color: #009900">$LDAPPORT</span> -D <span style="color: #FF0000">"$BINDDN"</span> -w <span style="color: #009900">$BINDPASSWD</span> -f <span style="color: #009900">$LDIFFILE</span></tt></pre></div></div>
+<div class="paragraph"><p>And so on.</p></div>
+<div class="paragraph"><p>Get some examples of accounts here :
+<a href="https://github.com/lofic/linuxlab/tree/master/04-directory_service/resources/accounts">accounts</a></p></div>
+<div class="paragraph"><p>Generate the password hash for the users with <tt>pwdhash</tt></p></div>
 </div>
 </div>
 </div>
 <div id="footnotes"><hr /></div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2012-06-05 09:46:00 CEST
+Last updated 2012-06-06 13:29:53 CEST
 </div>
 </div>
 </body>
