@@ -21,6 +21,12 @@ This is a guided lab.
 Prerequisites
 -------------
 
+[WARNING]
+The DNS must provide direct and reverse resolution of the hostname of the
+server.
+
+Run `dsktune` for recommendations. But fine tuning is not mandatory for a lab.
+
 On Centos 6 you will need to set some additional yum repositories :
 
 * EPEL
@@ -167,3 +173,36 @@ Check the import with :
 ldapsearch -h $LDAPSRV -p $LDAPPORT -D "$BINDDN" -w $BINDPASSWD \
  -b 'ou=People,dc=labolinux,dc=fr' '(uid=*)'
 --------------------------------------------------------------------------------
+
+
+Configure a client
+------------------
+
+Without interaction :
+
+[source, sh]
+--------------------------------------------------------------------------------
+LDAPSRV=el6a.labolinux.fr # <- change this
+
+yum -y install authconfig pam_ldap fprintd-pam nss-pam-ldapd
+authconfig --enableldap --enableldapauth --ldapserver=$LDAPSRV \
+           --ldapbasedn='dc=labolinux,dc=fr' --update
+authconfig --enablemkhomedir --enablelocauthorize --update
+--------------------------------------------------------------------------------
+
+With interaction :
+
+[source, sh]
+--------------------------------------------------------------------------------
+authconfig-tui
+--------------------------------------------------------------------------------
+
+Check with :
+
+[source, sh]
+--------------------------------------------------------------------------------
+getent passwd
+getent group
+--------------------------------------------------------------------------------
+
+
