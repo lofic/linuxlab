@@ -1,0 +1,17 @@
+dn: uid=kermit,ou=People,dc=labolinux,dc=fr
+givenName: Kermit
+sn: The Frog
+loginShell: /bin/bash
+gidNumber: 1001
+uidNumber: 1001
+objectClass: top
+objectClass: person
+objectClass: organizationalPerson
+objectClass: inetorgperson
+objectClass: posixAccount
+uid: kermit
+gecos: Muppet addict
+cn: Kermit The Frog
+preferredLanguage: fr
+homeDirectory: /home/kermit
+userPassword: {SSHA}g0LlHcT7nwIwVE2582MoDKuDwx716BaxGPD1Lg==

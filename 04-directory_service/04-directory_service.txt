@@ -27,6 +27,7 @@ On Centos 6 you will need to set some additional yum repositories :
 * Continuous release (cr)
 * 389-ds-base from Rich Megginson
 
+[source, sh]
 --------------------------------------------------------------------------------
 rpm -Uvh http://rpmfind.net/linux/epel/6/i386/epel-release-6-7.noarch.rpm
 yum -y install centos-release-cr
@@ -38,6 +39,7 @@ yum clean all && yum makecache
 Install 389-DS
 --------------
 
+[source, sh]
 --------------------------------------------------------------------------------
 yum -y install 389-ds
 --------------------------------------------------------------------------------
@@ -54,6 +56,7 @@ Adjust the parameters to your need.
 
 For example :
 
+[source, sh]
 --------------------------------------------------------------------------------
 wget https://raw.github.com/lofic/linuxlab/master/04-directory_service/resources/setup-ds-admin-full.inf 
 CDADMINPW=plokiploki;SADMINPW=plokiploki;RDNPW=plokiploki
@@ -66,12 +69,13 @@ sed -i "s/SRVIP/$SRVIP/g"         setup-ds-admin-full.inf
 sed -i "s/SRVHOSTNAME/$SRVHOSTNAME/g" setup-ds-admin-full.inf
 --------------------------------------------------------------------------------
 
-Generate the password hash for HashedRootDNPwd with `htpsswd`
+Generate the password hash for HashedRootDNPwd with `pwdhash`
 
 The default password in the template is `plokiploki`
 
 Then :
 
+[source, sh]
 --------------------------------------------------------------------------------
 setup-ds-admin.pl -k -s -f setup-ds-admin-full.inf
 --------------------------------------------------------------------------------
@@ -79,6 +83,7 @@ setup-ds-admin.pl -k -s -f setup-ds-admin-full.inf
 Enable and activate the services
 --------------------------------
 
+[source, sh]
 --------------------------------------------------------------------------------
 /sbin/chkconfig dirsrv on
 /sbin/chkconfig dirsrv-admin on
@@ -89,12 +94,14 @@ Enable and activate the services
 
 Test the service :
 
+[source, sh]
 --------------------------------------------------------------------------------
 ldapsearch -x -h localhost -p 389 -s base -b "" "objectclass=*"
 --------------------------------------------------------------------------------
 
 Setup the web applications :
 
+[source, sh]
 --------------------------------------------------------------------------------
 setup-ds-dsgw
 
@@ -105,9 +112,58 @@ Uninstall everything
 --------------------
 
 If you made some mistakes and you want to start over, you can use :
+
+[source, sh]
 --------------------------------------------------------------------------------
 # remove-ds-admin.pl -f -y
 --------------------------------------------------------------------------------
 
 
+Import some accounts
+--------------------
 
+[source, sh]
+--------------------------------------------------------------------------------
+cat<<EOF>/tmp/kermit.ldif
+dn: uid=kermit,ou=People,dc=labolinux,dc=fr
+givenName: Kermit
+sn: The Frog
+loginShell: /bin/bash
+gidNumber: 1001
+uidNumber: 1001
+objectClass: top
+objectClass: person
+objectClass: organizationalPerson
+objectClass: inetorgperson
+objectClass: posixAccount
+uid: kermit
+gecos: Muppet addict
+cn: Kermit The Frog
+preferredLanguage: fr
+homeDirectory: /home/kermit
+userPassword: {SSHA}g0LlHcT7nwIwVE2582MoDKuDwx716BaxGPD1Lg==
+EOF
+
+LDAPSRV=localhost
+LDAPPORT=389
+BINDDN='cn=Directory Manager'
+BINDPASSWD='plokiploki'
+
+LDIFFILE=/tmp/kermit.ldif
+
+ldapadd -h $LDAPSRV -p $LDAPPORT -D "$BINDDN" -w $BINDPASSWD -f $LDIFFILE
+--------------------------------------------------------------------------------
+
+And so on. You can add multiple accounts with the same ldif file.
+
+Get some examples of accounts here :
+link:https://github.com/lofic/linuxlab/tree/master/04-directory_service/resources/accounts[accounts] 
+
+Generate the password hash for the users with `pwdhash`
+
+Check the import with :
+
+--------------------------------------------------------------------------------
+ldapsearch -h $LDAPSRV -p $LDAPPORT -D "$BINDDN" -w $BINDPASSWD \
+ -b 'ou=People,dc=labolinux,dc=fr' '(uid=*)'
+--------------------------------------------------------------------------------

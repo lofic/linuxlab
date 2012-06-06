@@ -1,0 +1,17 @@
+dn: uid=piggy,ou=People,dc=labolinux,dc=fr
+givenName: Piggy
+sn: Piggy
+loginShell: /bin/bash
+gidNumber: 1002
+uidNumber: 1002
+objectClass: top
+objectClass: person
+objectClass: organizationalPerson
+objectClass: inetorgperson
+objectClass: posixAccount
+uid: piggy
+gecos: Muppet addict
+cn: Miss Piggy
+preferredLanguage: fr
+homeDirectory: /home/piggy
+userPassword: {SSHA}g0LlHcT7nwIwVE2582MoDKuDwx716BaxGPD1Lg==

@@ -1,0 +1,9 @@
+dn: cn=muppets,ou=Groups,dc=labolinux,dc=fr
+description: The Muppet Show
+objectClass: top
+objectClass: groupofuniquenames
+objectClass: posixgroup
+uniqueMember: uid=kermit,ou=People,dc=labolinux,dc=fr
+uniqueMember: uid=piggy,ou=People,dc=labolinux,dc=fr
+cn: muppets
+gidNumber: 1001
