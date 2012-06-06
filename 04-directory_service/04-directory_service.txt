@@ -63,7 +63,7 @@ We will set a response file for a non interactive installation.
 Get the template here :
 link:https://raw.github.com/lofic/linuxlab/master/04-directory_service/resources/setup-ds-admin-full.inf[setup-ds-admin-full.inf]
 
-Adjust the parameters to your need.
+Adjust the parameters to your needs.
 
 
 IMPORTANT: LAB 04-3 : set the directory 
@@ -259,7 +259,7 @@ su - # IMPORTANT
 cd /etc/dirsrv/slapd-dir01 # IMPORTANT
 
 # This one works fine for Centos 6.2 :
-wget https://github.com/lofic/linuxlab/tree/master/04-directory_service/resources/setupssl2.sh
+wget https://raw.github.com/lofic/linuxlab/master/04-directory_service/resources/setupssl2.sh 
 # Original version : https://raw.github.com/richm/scripts/master/setupssl2.sh
 
 chmod +x setupssl2.sh
