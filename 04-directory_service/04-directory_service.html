@@ -1658,18 +1658,22 @@ getent group</tt></pre></div></div>
 <div class="sect1">
 <h2 id="_configure_ssl_for_the_directory_server">7. Configure SSL for the directory server</h2>
 <div class="sectionbody">
-<div class="paragraph"><p>Cf rfc4513, 6.3.3. Password-Related Security Considerations</p></div>
-<div class="paragraph"><p><em>_</em>
-The use of clear text passwords and other unprotected authentication
-credentials is strongly discouraged over open networks when the
-underlying transport service cannot guarantee confidentiality.  LDAP
-implementations SHOULD NOT by default support authentication methods
-using clear text passwords and other unprotected authentication
-credentials unless the data on the session is protected using TLS or
-other data confidentiality and data integrity protection.</p></div>
-<div class="paragraph"><p>The transmission of passwords in the clear&#8201;&#8212;&#8201;typically for
-authentication or modification&#8201;&#8212;&#8201;poses a significant security risk.
-<em>_</em></p></div>
+<div class="quoteblock">
+<div class="content">
+<div class="paragraph"><p>The use of clear text passwords and other unprotected authentication</p></div>
+<div class="paragraph"><p>credentials is strongly discouraged over open networks when the</p></div>
+<div class="paragraph"><p>underlying transport service cannot guarantee confidentiality.  LDAP</p></div>
+<div class="paragraph"><p>implementations SHOULD NOT by default support authentication methods</p></div>
+<div class="paragraph"><p>using clear text passwords and other unprotected authentication</p></div>
+<div class="paragraph"><p>credentials unless the data on the session is protected using TLS or</p></div>
+<div class="paragraph"><p>other data confidentiality and data integrity protection.</p></div>
+<div class="paragraph"><p>The transmission of passwords in the clear&#8201;&#8212;&#8201;typically for</p></div>
+<div class="paragraph"><p>authentication or modification&#8201;&#8212;&#8201;poses a significant security risk.</p></div>
+</div>
+<div class="attribution">
+<em>6.3.3. Password-Related Security Considerations</em><br />
+&#8212; rfc4513
+</div></div>
 <div class="admonitionblock">
 <table><tr>
 <td class="icon">
@@ -1788,35 +1792,39 @@ EhMLafIpRCMusu8Oy9/Vf7HZzFU60RG++T8BBgAkirX2O+Vn5gAAAABJRU5ErkJggg==" />
 </tr></table>
 </div>
 <div class="listingblock">
-<div class="content">
-<pre><tt>su - # IMPORTANT
+<div class="content"><!-- Generator: GNU source-highlight 3.1.5
+by Lorenzo Bettini
+http://www.lorenzobettini.it
+http://www.gnu.org/software/src-highlite -->
+<pre><tt>su - <span style="font-style: italic"><span style="color: #9A1900"># IMPORTANT</span></span>
 
-cd /etc/dirsrv/slapd-dir01 # IMPORTANT
+cd /etc/dirsrv/slapd-dir<span style="color: #993399">01</span> <span style="font-style: italic"><span style="color: #9A1900"># IMPORTANT</span></span>
 
-# This one works fine for Centos 6.2 :
-wget https://github.com/lofic/linuxlab/tree/master/04-directory_service/resources/setupssl2.sh
-# Original version : https://raw.github.com/richm/scripts/master/setupssl2.sh
+<span style="font-style: italic"><span style="color: #9A1900"># This one works fine for Centos 6.2 :</span></span>
+wget https<span style="color: #990000">:</span>//github<span style="color: #990000">.</span>com/lofic/linuxlab/tree/master<span style="color: #990000">/</span><span style="color: #993399">04</span>-directory_service/resources/setupssl<span style="color: #993399">2</span><span style="color: #990000">.</span>sh
+<span style="font-style: italic"><span style="color: #9A1900"># Original version : https://raw.github.com/richm/scripts/master/setupssl2.sh</span></span>
 
-chmod +x setupssl2.sh
+chmod <span style="color: #990000">+</span>x setupssl2<span style="color: #990000">.</span>sh
 
-./setupssl2.sh /etc/dirsrv/slapd-dir01
+<span style="color: #990000">.</span>/setupssl<span style="color: #993399">2</span><span style="color: #990000">.</span>sh /etc/dirsrv/slapd-dir<span style="color: #993399">01</span>
 
-restorecon -v /etc/dirsrv/admin-serv/*
+restorecon -v /etc/dirsrv/admin-serv<span style="color: #990000">/*</span>
 
 /sbin/service dirsrv restart
-/sbin/service dirsrv-admin restart</tt></pre>
-</div></div>
+/sbin/service dirsrv-admin restart</tt></pre></div></div>
 <div class="paragraph"><p>Check with :</p></div>
 <div class="listingblock">
-<div class="content">
-<pre><tt>LDAPSRV=el6a.labolinux.fr # &lt;- change this, use the fqdn
-BINDDN='cn=Directory Manager'
-BINDPASSWD='plokiploki'
-ldapsearch -H ldaps://$LDAPSRV -x -D "$BINDDN" -w "$BINDPASSWD" \
- -s sub -b "ou=People,dc=labolinux,dc=fr" '(uid=*)'
+<div class="content"><!-- Generator: GNU source-highlight 3.1.5
+by Lorenzo Bettini
+http://www.lorenzobettini.it
+http://www.gnu.org/software/src-highlite -->
+<pre><tt><span style="color: #009900">LDAPSRV</span><span style="color: #990000">=</span>el6a<span style="color: #990000">.</span>labolinux<span style="color: #990000">.</span>fr <span style="font-style: italic"><span style="color: #9A1900"># &lt;- change this, use the fqdn</span></span>
+<span style="color: #009900">BINDDN</span><span style="color: #990000">=</span><span style="color: #FF0000">'cn=Directory Manager'</span>
+<span style="color: #009900">BINDPASSWD</span><span style="color: #990000">=</span><span style="color: #FF0000">'plokiploki'</span>
+ldapsearch -H ldaps<span style="color: #990000">://</span><span style="color: #009900">$LDAPSRV</span> -x -D <span style="color: #FF0000">"$BINDDN"</span> -w <span style="color: #FF0000">"$BINDPASSWD"</span> <span style="color: #990000">\</span>
+ -s sub -b <span style="color: #FF0000">"ou=People,dc=labolinux,dc=fr"</span> <span style="color: #FF0000">'(uid=*)'</span>
 
-tail /var/log/dirsrv/slapd-dir01/access # look for startTLS and the return code</tt></pre>
-</div></div>
+tail /var/log/dirsrv/slapd-dir<span style="color: #993399">01</span>/access <span style="font-style: italic"><span style="color: #9A1900"># look for startTLS and the return code</span></span></tt></pre></div></div>
 </div>
 </div>
 <div class="sect1">
@@ -1943,27 +1951,33 @@ EhMLafIpRCMusu8Oy9/Vf7HZzFU60RG++T8BBgAkirX2O+Vn5gAAAABJRU5ErkJggg==" />
 </div>
 <div class="paragraph"><p>On the clients, copy it to <tt>/etc/openldap/cacerts/</tt></p></div>
 <div class="listingblock">
-<div class="content">
-<pre><tt>cp cacert.asc /etc/openldap/cacerts/</tt></pre>
-</div></div>
+<div class="content"><!-- Generator: GNU source-highlight 3.1.5
+by Lorenzo Bettini
+http://www.lorenzobettini.it
+http://www.gnu.org/software/src-highlite -->
+<pre><tt>cp cacert<span style="color: #990000">.</span>asc /etc/openldap/cacerts<span style="color: #990000">/</span></tt></pre></div></div>
 <div class="paragraph"><p>Then :</p></div>
 <div class="listingblock">
-<div class="content">
-<pre><tt>authconfig --enableldaptls --update # non interactive
-authconfig-tui                      # interactive</tt></pre>
-</div></div>
+<div class="content"><!-- Generator: GNU source-highlight 3.1.5
+by Lorenzo Bettini
+http://www.lorenzobettini.it
+http://www.gnu.org/software/src-highlite -->
+<pre><tt>authconfig --enableldaptls --update <span style="font-style: italic"><span style="color: #9A1900"># non interactive</span></span>
+authconfig-tui                      <span style="font-style: italic"><span style="color: #9A1900"># interactive</span></span></tt></pre></div></div>
 <div class="paragraph"><p>Check with :</p></div>
 <div class="listingblock">
-<div class="content">
-<pre><tt>ldapsearch -x -ZZ '(uid=*)'</tt></pre>
-</div></div>
+<div class="content"><!-- Generator: GNU source-highlight 3.1.5
+by Lorenzo Bettini
+http://www.lorenzobettini.it
+http://www.gnu.org/software/src-highlite -->
+<pre><tt>ldapsearch -x -ZZ <span style="color: #FF0000">'(uid=*)'</span></tt></pre></div></div>
 </div>
 </div>
 </div>
 <div id="footnotes"><hr /></div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2012-06-06 22:23:14 CEST
+Last updated 2012-06-06 22:33:17 CEST
 </div>
 </div>
 </body>

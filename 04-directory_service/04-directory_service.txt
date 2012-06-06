@@ -228,24 +228,31 @@ getent group
 Configure SSL for the directory server
 --------------------------------------
 
-Cf rfc4513, 6.3.3. Password-Related Security Considerations
-
-___
+[quote, rfc4513, 6.3.3. Password-Related Security Considerations]
+________________________________________________________________________________
 The use of clear text passwords and other unprotected authentication
+
 credentials is strongly discouraged over open networks when the
+
 underlying transport service cannot guarantee confidentiality.  LDAP
+
 implementations SHOULD NOT by default support authentication methods
+
 using clear text passwords and other unprotected authentication
+
 credentials unless the data on the session is protected using TLS or
+
 other data confidentiality and data integrity protection.
 
 The transmission of passwords in the clear -- typically for
+
 authentication or modification -- poses a significant security risk.
-___
+________________________________________________________________________________
 
 
 IMPORTANT: LAB 04-6 : configure the LDAPS server 
 
+[source, sh]
 --------------------------------------------------------------------------------
 su - # IMPORTANT
 
@@ -267,6 +274,7 @@ restorecon -v /etc/dirsrv/admin-serv/*
 
 Check with :
 
+[source, sh]
 --------------------------------------------------------------------------------
 LDAPSRV=el6a.labolinux.fr # <- change this, use the fqdn
 BINDDN='cn=Directory Manager'
@@ -287,12 +295,14 @@ IMPORTANT: LAB 04-7 : configure the LDAPS clients
 
 On the clients, copy it to `/etc/openldap/cacerts/`
 
+[source, sh]
 --------------------------------------------------------------------------------
 cp cacert.asc /etc/openldap/cacerts/ 
 --------------------------------------------------------------------------------
 
 Then :
 
+[source, sh]
 --------------------------------------------------------------------------------
 authconfig --enableldaptls --update # non interactive
 authconfig-tui                      # interactive
@@ -300,6 +310,7 @@ authconfig-tui                      # interactive
 
 Check with :
 
+[source, sh]
 --------------------------------------------------------------------------------
 ldapsearch -x -ZZ '(uid=*)'
 --------------------------------------------------------------------------------
