@@ -13,11 +13,14 @@ Quote from Wikipedia :
 
 [quote]
 ________________________________________________________________________________
-Kerberos is a computer network authentication protocol which works on the basis of "tickets" to allow nodes communicating over a non-secure network to prove their identity to one another in a secure manner.
+Kerberos is a computer network authentication protocol which works on the basis
+ of "tickets" to allow nodes communicating over a non-secure network to prove
+ their identity to one another in a secure manner.
 ________________________________________________________________________________
 
 We will switch to Kerberos for authentications, keeping the directory service
-from link:http://lofic.github.com/linuxlab/04-directory_service.html[Lab 04] to get information on accounts.
+ from link:http://lofic.github.com/linuxlab/04-directory_service.html[Lab 04]
+ to get information on accounts.
 
 So you need to have a working directory from Lab 04 before doing this lab.
 
@@ -39,20 +42,178 @@ egrep 'krb5|kpwd|kadmin' /etc/services
 
 Open ports :
 
-* 88 TCP  and UDP
+* 88  TCP and UDP
 * 464 TCP and UDP
 * 749 TCP
 
+In `/etc/sysconfig/iptables` add those rules at the right place in the chain :
 
-IMPORTANT: LAB 05-2 : configure Kerberos and the KDC 
+--------------------------------------------------------------------------------
+-A INPUT -m state --state NEW -m tcp -p tcp --dport 88  -j ACCEPT
+-A INPUT -m state --state NEW -m udp -p udp --dport 88  -j ACCEPT
+-A INPUT -m state --state NEW -m tcp -p tcp --dport 464 -j ACCEPT
+-A INPUT -m state --state NEW -m udp -p udp --dport 464 -j ACCEPT
+-A INPUT -m state --state NEW -m tcp -p tcp --dport 749 -j ACCEPT
+--------------------------------------------------------------------------------
+
+And restart the firewall :
+
+--------------------------------------------------------------------------------
+/sbin/service iptables restart
+--------------------------------------------------------------------------------
+
+IMPORTANT: LAB 05-2 : configure Kerberos and the KDC
+
+Install the software :
+
+--------------------------------------------------------------------------------
+yum -y install krb5-server krb5-workstation
+--------------------------------------------------------------------------------
+
+Edit `/etc/krb5.conf`
+
+Change the realm, the domain, the kdc and admin hostname.
+
+With `labolinux.fr`, this would be this
+link:https://raw.github.com/lofic/linuxlab/master/05-kerberos/resources/krb5.conf[krb5.conf] :
 
 [source, conf]
 --------------------------------------------------------------------------------
-[appdefaults]
- pam = {
-   #...
-   validate = true
+#/etc/krb5.conf
+
+[logging]
+ default = FILE:/var/log/krb5libs.log
+ kdc = FILE:/var/log/krb5kdc.log
+ admin_server = FILE:/var/log/kadmind.log
+
+[libdefaults]
+ default_realm = LABOLINUX.FR 
+ dns_lookup_realm = false
+ dns_lookup_kdc = false
+ ticket_lifetime = 24h
+ renew_lifetime = 7d
+ forwardable = true
+
+[realms]
+ LABOLINUX.FR = {
+  kdc = el6a.labolinux.fr
+  admin_server = el6a.labolinux.fr
+ }
+
+[domain_realm]
+ .labolinux.fr = LABOLINUX.FR
+ labolinux.fr = LABOLINUX.FR 
+--------------------------------------------------------------------------------
+
+Change the host name for tags `kdc` and `admin_server`
+
+Create a Kerberos database and stash file :
+
+--------------------------------------------------------------------------------
+kdb5_util create -r LABOLINUX.FR -s
+--------------------------------------------------------------------------------
+
+You will be prompted for the database Master Password.
+
+Set the KDC in `/var/kerberos/krb5kdc/kdc.conf` :
+
+* set the realm to LABOLINUX.FR
+* uncomment the line with the `master_key_type`
+
+[source, conf]
+--------------------------------------------------------------------------------
+[kdcdefaults]
+ kdc_ports = 88
+ kdc_tcp_ports = 88
+
+[realms]
+ LABOLINUX.FR = {
+  master_key_type = aes256-cts
+  acl_file = /var/kerberos/krb5kdc/kadm5.acl
+  dict_file = /usr/share/dict/words
+  admin_keytab = /var/kerberos/krb5kdc/kadm5.keytab
+  supported_enctypes = aes256-cts:normal aes128-cts:normal des3-hmac-sha1:normal arcfour-hmac:normal des-hmac-sha1:normal des-cbc-md5:normal des-cbc-crc:normal
  }
 --------------------------------------------------------------------------------
 
+Note the path of the `admin_keytab`
 
+
+Change the realm for the preset ACL in /var/kerberos/krb5kdc/kadm5.acl :
+
+[source, conf]
+--------------------------------------------------------------------------------
+*/admin@LABOLINUX.FR    *
+--------------------------------------------------------------------------------
+
+Create some principals :
+
+[source, sh]
+--------------------------------------------------------------------------------
+kadmin.local -q 'addprinc root/admin' # for kadmin from remote
+
+kadmin.local -q 'addprinc kermit'     # our accounts from Lab 04
+kadmin.local -q 'addprinc piggy'
+
+kadmin.local -q 'listprincs'
+--------------------------------------------------------------------------------
+
+Create the keytab file for `kadmind` :
+
+[source, sh]
+--------------------------------------------------------------------------------
+kadmin.local -q 'ktadd -k /var/kerberos/krb5kdc/kadm5.keytab kadmin/admin'
+kadmin.local -q 'ktadd -k /var/kerberos/krb5kdc/kadm5.keytab kadmin/changepw'
+--------------------------------------------------------------------------------
+
+The kadm5.keytab location was set in kdc.conf
+
+Just in case :
+
+[source, sh]
+--------------------------------------------------------------------------------
+restorecon -R -v /var/kerberos/krb5kdc/
+restorecon -v /etc/krb5.conf
+--------------------------------------------------------------------------------
+
+Start the services :
+
+[source, sh]
+--------------------------------------------------------------------------------
+/sbin/chkconfig krb5kdc on
+/sbin/chkconfig kadmin on
+/sbin/service krb5kdc start
+/sbin/service kadmin start
+--------------------------------------------------------------------------------
+
+Configure Kerberos clients
+--------------------------
+
+IMPORTANT: LAB 05-3 : set the system auth. with Kerberos
+
+Copy the `/etc/krb5.conf` from the KDC to your hosts on the network 
+
+Install :
+
+[source, sh]
+--------------------------------------------------------------------------------
+yum install pam_krb5
+--------------------------------------------------------------------------------
+
+Set :
+
+[source, sh]
+--------------------------------------------------------------------------------
+authconfig-tui
+--------------------------------------------------------------------------------
+
+Disable LDAP auth.
+
+Enable Kerberos auth.
+
+Restart sshd :
+--------------------------------------------------------------------------------
+/sbin/service sshd restart
+--------------------------------------------------------------------------------
+
+Try to connect with the password that you set for the principal.

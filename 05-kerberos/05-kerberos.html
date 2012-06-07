@@ -745,12 +745,15 @@ asciidoc.install();
 <div class="paragraph"><p>Quote from Wikipedia :</p></div>
 <div class="quoteblock">
 <div class="content">
-<div class="paragraph"><p>Kerberos is a computer network authentication protocol which works on the basis of "tickets" to allow nodes communicating over a non-secure network to prove their identity to one another in a secure manner.</p></div>
+<div class="paragraph"><p>Kerberos is a computer network authentication protocol which works on the basis
+ of "tickets" to allow nodes communicating over a non-secure network to prove
+ their identity to one another in a secure manner.</p></div>
 </div>
 <div class="attribution">
 </div></div>
 <div class="paragraph"><p>We will switch to Kerberos for authentications, keeping the directory service
-from <a href="http://lofic.github.com/linuxlab/04-directory_service.html">Lab 04</a> to get information on accounts.</p></div>
+ from <a href="http://lofic.github.com/linuxlab/04-directory_service.html">Lab 04</a>
+ to get information on accounts.</p></div>
 <div class="paragraph"><p>So you need to have a working directory from Lab 04 before doing this lab.</p></div>
 <div class="paragraph"><p>This will be a guided lab.</p></div>
 </div>
@@ -885,7 +888,7 @@ EhMLafIpRCMusu8Oy9/Vf7HZzFU60RG++T8BBgAkirX2O+Vn5gAAAABJRU5ErkJggg==" />
 <div class="ulist"><ul>
 <li>
 <p>
-88 TCP  and UDP
+88  TCP and UDP
 </p>
 </li>
 <li>
@@ -899,6 +902,20 @@ EhMLafIpRCMusu8Oy9/Vf7HZzFU60RG++T8BBgAkirX2O+Vn5gAAAABJRU5ErkJggg==" />
 </p>
 </li>
 </ul></div>
+<div class="paragraph"><p>In <tt>/etc/sysconfig/iptables</tt> add those rules at the right place in the chain :</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>-A INPUT -m state --state NEW -m tcp -p tcp --dport 88  -j ACCEPT
+-A INPUT -m state --state NEW -m udp -p udp --dport 88  -j ACCEPT
+-A INPUT -m state --state NEW -m tcp -p tcp --dport 464 -j ACCEPT
+-A INPUT -m state --state NEW -m udp -p udp --dport 464 -j ACCEPT
+-A INPUT -m state --state NEW -m tcp -p tcp --dport 749 -j ACCEPT</tt></pre>
+</div></div>
+<div class="paragraph"><p>And restart the firewall :</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>/sbin/service iptables restart</tt></pre>
+</div></div>
 <div class="admonitionblock">
 <table><tr>
 <td class="icon">
@@ -1016,23 +1033,280 @@ EhMLafIpRCMusu8Oy9/Vf7HZzFU60RG++T8BBgAkirX2O+Vn5gAAAABJRU5ErkJggg==" />
 <td class="content">LAB 05-2 : configure Kerberos and the KDC</td>
 </tr></table>
 </div>
+<div class="paragraph"><p>Install the software :</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>yum -y install krb5-server krb5-workstation</tt></pre>
+</div></div>
+<div class="paragraph"><p>Edit <tt>/etc/krb5.conf</tt></p></div>
+<div class="paragraph"><p>Change the realm, the domain, the kdc and admin hostname.</p></div>
+<div class="paragraph"><p>With <tt>labolinux.fr</tt>, this would be this
+<a href="https://raw.github.com/lofic/linuxlab/master/05-kerberos/resources/krb5.conf">krb5.conf</a> :</p></div>
 <div class="listingblock">
 <div class="content"><!-- Generator: GNU source-highlight 3.1.5
 by Lorenzo Bettini
 http://www.lorenzobettini.it
 http://www.gnu.org/software/src-highlite -->
-<pre><tt><span style="font-weight: bold"><span style="color: #000000">[appdefaults]</span></span>
-<span style="color: #009900"> pam </span><span style="color: #990000">=</span> {
-   <span style="font-style: italic"><span style="color: #9A1900">#...</span></span>
-<span style="color: #009900">   validate </span><span style="color: #990000">=</span> true
+<pre><tt><span style="font-style: italic"><span style="color: #9A1900">#/etc/krb5.conf</span></span>
+
+<span style="font-weight: bold"><span style="color: #000000">[logging]</span></span>
+<span style="color: #009900"> default </span><span style="color: #990000">=</span> FILE<span style="color: #990000">:/</span>var<span style="color: #990000">/</span>log<span style="color: #990000">/</span>krb5libs<span style="color: #990000">.</span>log
+<span style="color: #009900"> kdc </span><span style="color: #990000">=</span> FILE<span style="color: #990000">:/</span>var<span style="color: #990000">/</span>log<span style="color: #990000">/</span>krb5kdc<span style="color: #990000">.</span>log
+<span style="color: #009900"> admin_server </span><span style="color: #990000">=</span> FILE<span style="color: #990000">:/</span>var<span style="color: #990000">/</span>log<span style="color: #990000">/</span>kadmind<span style="color: #990000">.</span>log
+
+<span style="font-weight: bold"><span style="color: #000000">[libdefaults]</span></span>
+<span style="color: #009900"> default_realm </span><span style="color: #990000">=</span> LABOLINUX<span style="color: #990000">.</span>FR
+<span style="color: #009900"> dns_lookup_realm </span><span style="color: #990000">=</span> false
+<span style="color: #009900"> dns_lookup_kdc </span><span style="color: #990000">=</span> false
+<span style="color: #009900"> ticket_lifetime </span><span style="color: #990000">=</span> 24h
+<span style="color: #009900"> renew_lifetime </span><span style="color: #990000">=</span> 7d
+<span style="color: #009900"> forwardable </span><span style="color: #990000">=</span> true
+
+<span style="font-weight: bold"><span style="color: #000000">[realms]</span></span>
+<span style="color: #009900"> LABOLINUX.FR </span><span style="color: #990000">=</span> {
+<span style="color: #009900">  kdc </span><span style="color: #990000">=</span> el6a<span style="color: #990000">.</span>labolinux<span style="color: #990000">.</span>fr
+<span style="color: #009900">  admin_server </span><span style="color: #990000">=</span> el6a<span style="color: #990000">.</span>labolinux<span style="color: #990000">.</span>fr
+ }
+
+<span style="font-weight: bold"><span style="color: #000000">[domain_realm]</span></span>
+<span style="color: #009900"> .labolinux.fr </span><span style="color: #990000">=</span> LABOLINUX<span style="color: #990000">.</span>FR
+<span style="color: #009900"> labolinux.fr </span><span style="color: #990000">=</span> LABOLINUX<span style="color: #990000">.</span>FR</tt></pre></div></div>
+<div class="paragraph"><p>Change the host name for tags <tt>kdc</tt> and <tt>admin_server</tt></p></div>
+<div class="paragraph"><p>Create a Kerberos database and stash file :</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>kdb5_util create -r LABOLINUX.FR -s</tt></pre>
+</div></div>
+<div class="paragraph"><p>You will be prompted for the database Master Password.</p></div>
+<div class="paragraph"><p>Set the KDC in <tt>/var/kerberos/krb5kdc/kdc.conf</tt> :</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+set the realm to LABOLINUX.FR
+</p>
+</li>
+<li>
+<p>
+uncomment the line with the <tt>master_key_type</tt>
+</p>
+</li>
+</ul></div>
+<div class="listingblock">
+<div class="content"><!-- Generator: GNU source-highlight 3.1.5
+by Lorenzo Bettini
+http://www.lorenzobettini.it
+http://www.gnu.org/software/src-highlite -->
+<pre><tt><span style="font-weight: bold"><span style="color: #000000">[kdcdefaults]</span></span>
+<span style="color: #009900"> kdc_ports </span><span style="color: #990000">=</span> <span style="color: #993399">88</span>
+<span style="color: #009900"> kdc_tcp_ports </span><span style="color: #990000">=</span> <span style="color: #993399">88</span>
+
+<span style="font-weight: bold"><span style="color: #000000">[realms]</span></span>
+<span style="color: #009900"> LABOLINUX.FR </span><span style="color: #990000">=</span> {
+<span style="color: #009900">  master_key_type </span><span style="color: #990000">=</span> aes256<span style="color: #990000">-</span>cts
+<span style="color: #009900">  acl_file </span><span style="color: #990000">=</span> <span style="color: #990000">/</span>var<span style="color: #990000">/</span>kerberos<span style="color: #990000">/</span>krb5kdc<span style="color: #990000">/</span>kadm5<span style="color: #990000">.</span>acl
+<span style="color: #009900">  dict_file </span><span style="color: #990000">=</span> <span style="color: #990000">/</span>usr<span style="color: #990000">/</span>share<span style="color: #990000">/</span>dict<span style="color: #990000">/</span>words
+<span style="color: #009900">  admin_keytab </span><span style="color: #990000">=</span> <span style="color: #990000">/</span>var<span style="color: #990000">/</span>kerberos<span style="color: #990000">/</span>krb5kdc<span style="color: #990000">/</span>kadm5<span style="color: #990000">.</span>keytab
+<span style="color: #009900">  supported_enctypes </span><span style="color: #990000">=</span> aes256<span style="color: #990000">-</span>cts<span style="color: #990000">:</span>normal aes128<span style="color: #990000">-</span>cts<span style="color: #990000">:</span>normal des3<span style="color: #990000">-</span>hmac<span style="color: #990000">-</span>sha1<span style="color: #990000">:</span>normal arcfour<span style="color: #990000">-</span>hmac<span style="color: #990000">:</span>normal des<span style="color: #990000">-</span>hmac<span style="color: #990000">-</span>sha1<span style="color: #990000">:</span>normal des<span style="color: #990000">-</span>cbc<span style="color: #990000">-</span>md5<span style="color: #990000">:</span>normal des<span style="color: #990000">-</span>cbc<span style="color: #990000">-</span>crc<span style="color: #990000">:</span>normal
  }</tt></pre></div></div>
+<div class="paragraph"><p>Note the path of the <tt>admin_keytab</tt></p></div>
+<div class="paragraph"><p>Change the realm for the preset ACL in /var/kerberos/krb5kdc/kadm5.acl :</p></div>
+<div class="listingblock">
+<div class="content"><!-- Generator: GNU source-highlight 3.1.5
+by Lorenzo Bettini
+http://www.lorenzobettini.it
+http://www.gnu.org/software/src-highlite -->
+<pre><tt><span style="color: #990000">*/</span>admin@LABOLINUX<span style="color: #990000">.</span>FR    <span style="color: #990000">*</span></tt></pre></div></div>
+<div class="paragraph"><p>Create some principals :</p></div>
+<div class="listingblock">
+<div class="content"><!-- Generator: GNU source-highlight 3.1.5
+by Lorenzo Bettini
+http://www.lorenzobettini.it
+http://www.gnu.org/software/src-highlite -->
+<pre><tt>kadmin<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #0000FF">local</span></span> -q <span style="color: #FF0000">'addprinc root/admin'</span> <span style="font-style: italic"><span style="color: #9A1900"># for kadmin from remote</span></span>
+
+kadmin<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #0000FF">local</span></span> -q <span style="color: #FF0000">'addprinc kermit'</span>     <span style="font-style: italic"><span style="color: #9A1900"># our accounts from Lab 04</span></span>
+kadmin<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #0000FF">local</span></span> -q <span style="color: #FF0000">'addprinc piggy'</span>
+
+kadmin<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #0000FF">local</span></span> -q <span style="color: #FF0000">'listprincs'</span></tt></pre></div></div>
+<div class="paragraph"><p>Create the keytab file for <tt>kadmind</tt> :</p></div>
+<div class="listingblock">
+<div class="content"><!-- Generator: GNU source-highlight 3.1.5
+by Lorenzo Bettini
+http://www.lorenzobettini.it
+http://www.gnu.org/software/src-highlite -->
+<pre><tt>kadmin<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #0000FF">local</span></span> -q <span style="color: #FF0000">'ktadd -k /var/kerberos/krb5kdc/kadm5.keytab kadmin/admin'</span>
+kadmin<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #0000FF">local</span></span> -q <span style="color: #FF0000">'ktadd -k /var/kerberos/krb5kdc/kadm5.keytab kadmin/changepw'</span></tt></pre></div></div>
+<div class="paragraph"><p>The kadm5.keytab location was set in kdc.conf</p></div>
+<div class="paragraph"><p>Just in case :</p></div>
+<div class="listingblock">
+<div class="content"><!-- Generator: GNU source-highlight 3.1.5
+by Lorenzo Bettini
+http://www.lorenzobettini.it
+http://www.gnu.org/software/src-highlite -->
+<pre><tt>restorecon -R -v /var/kerberos/krb5kdc<span style="color: #990000">/</span>
+restorecon -v /etc/krb<span style="color: #993399">5</span><span style="color: #990000">.</span>conf</tt></pre></div></div>
+<div class="paragraph"><p>Start the services :</p></div>
+<div class="listingblock">
+<div class="content"><!-- Generator: GNU source-highlight 3.1.5
+by Lorenzo Bettini
+http://www.lorenzobettini.it
+http://www.gnu.org/software/src-highlite -->
+<pre><tt>/sbin/chkconfig krb5kdc on
+/sbin/chkconfig kadmin on
+/sbin/service krb5kdc start
+/sbin/service kadmin start</tt></pre></div></div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_configure_kerberos_clients">3. Configure Kerberos clients</h2>
+<div class="sectionbody">
+<div class="admonitionblock">
+<table><tr>
+<td class="icon">
+<img alt="Important" src="data:image/png;base64,
+iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJ
+bWFnZVJlYWR5ccllPAAADUFpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdp
+bj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+Cjx4OnhtcG1ldGEgeG1sbnM6
+eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDQuMi4yLWMwNjMgNTMu
+MzUyNjI0LCAyMDA4LzA3LzMwLTE4OjA1OjQxICAgICAgICAiPgogPHJkZjpSREYgeG1sbnM6cmRm
+PSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4KICA8cmRmOkRl
+c2NyaXB0aW9uIHJkZjphYm91dD0iIgogICAgeG1sbnM6ZGM9Imh0dHA6Ly9wdXJsLm9yZy9kYy9l
+bGVtZW50cy8xLjEvIgogICAgeG1sbnM6eG1wUmlnaHRzPSJodHRwOi8vbnMuYWRvYmUuY29tL3hh
+cC8xLjAvcmlnaHRzLyIKICAgIHhtbG5zOnBob3Rvc2hvcD0iaHR0cDovL25zLmFkb2JlLmNvbS9w
+aG90b3Nob3AvMS4wLyIKICAgIHhtbG5zOklwdGM0eG1wQ29yZT0iaHR0cDovL2lwdGMub3JnL3N0
+ZC9JcHRjNHhtcENvcmUvMS4wL3htbG5zLyIKICAgeG1wUmlnaHRzOldlYlN0YXRlbWVudD0iIgog
+ICBwaG90b3Nob3A6QXV0aG9yc1Bvc2l0aW9uPSIiPgogICA8ZGM6cmlnaHRzPgogICAgPHJkZjpB
+bHQ+CiAgICAgPHJkZjpsaSB4bWw6bGFuZz0ieC1kZWZhdWx0Ii8+CiAgICA8L3JkZjpBbHQ+CiAg
+IDwvZGM6cmlnaHRzPgogICA8ZGM6Y3JlYXRvcj4KICAgIDxyZGY6U2VxPgogICAgIDxyZGY6bGkv
+PgogICAgPC9yZGY6U2VxPgogICA8L2RjOmNyZWF0b3I+CiAgIDxkYzp0aXRsZT4KICAgIDxyZGY6
+QWx0PgogICAgIDxyZGY6bGkgeG1sOmxhbmc9IngtZGVmYXVsdCI+ZGlhZ25vc3RpY19sYWJvcmF0
+b3J5PC9yZGY6bGk+CiAgICA8L3JkZjpBbHQ+CiAgIDwvZGM6dGl0bGU+CiAgIDx4bXBSaWdodHM6
+VXNhZ2VUZXJtcz4KICAgIDxyZGY6QWx0PgogICAgIDxyZGY6bGkgeG1sOmxhbmc9IngtZGVmYXVs
+dCIvPgogICAgPC9yZGY6QWx0PgogICA8L3htcFJpZ2h0czpVc2FnZVRlcm1zPgogICA8SXB0YzR4
+bXBDb3JlOkNyZWF0b3JDb250YWN0SW5mbwogICAgSXB0YzR4bXBDb3JlOkNpQWRyRXh0YWRyPSIi
+CiAgICBJcHRjNHhtcENvcmU6Q2lBZHJDaXR5PSIiCiAgICBJcHRjNHhtcENvcmU6Q2lBZHJSZWdp
+b249IiIKICAgIElwdGM0eG1wQ29yZTpDaUFkclBjb2RlPSIiCiAgICBJcHRjNHhtcENvcmU6Q2lB
+ZHJDdHJ5PSIiCiAgICBJcHRjNHhtcENvcmU6Q2lUZWxXb3JrPSIiCiAgICBJcHRjNHhtcENvcmU6
+Q2lFbWFpbFdvcms9IiIKICAgIElwdGM0eG1wQ29yZTpDaVVybFdvcms9IiIvPgogIDwvcmRmOkRl
+c2NyaXB0aW9uPgogPC9yZGY6UkRGPgo8L3g6eG1wbWV0YT4KICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+IAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAog
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgIAo8P3hwYWNrZXQgZW5kPSJ3Ij8+81+wHgAA
+CpJJREFUeNq8WguMVFcZ/u6dO7s7O7uwC+yWrZYurfRhqbSNmhYlqGmJBh9FYyrFB7FWu1q1oomh
+2hKUJsZU00psaonUxhAaQ4kYSrE0pQVtEaywQKEFKu8SSnmzMzs7997j/597zp1z7p3ZWbbgkH/P
+nXvvnPP97//8B2fzlq1wHAf8ofGHNHydxm4aQ31/+B/Bs77nOYSQF64Q4iiNS4geoes+IjiKgQlE
+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" />
+</td>
+<td class="content">LAB 05-3 : set the system auth. with Kerberos</td>
+</tr></table>
+</div>
+<div class="paragraph"><p>Copy the <tt>/etc/krb5.conf</tt> from the KDC to your hosts on the network</p></div>
+<div class="paragraph"><p>Install :</p></div>
+<div class="listingblock">
+<div class="content"><!-- Generator: GNU source-highlight 3.1.5
+by Lorenzo Bettini
+http://www.lorenzobettini.it
+http://www.gnu.org/software/src-highlite -->
+<pre><tt>yum install pam_krb5</tt></pre></div></div>
+<div class="paragraph"><p>Set :</p></div>
+<div class="listingblock">
+<div class="content"><!-- Generator: GNU source-highlight 3.1.5
+by Lorenzo Bettini
+http://www.lorenzobettini.it
+http://www.gnu.org/software/src-highlite -->
+<pre><tt>authconfig-tui</tt></pre></div></div>
+<div class="paragraph"><p>Disable LDAP auth.</p></div>
+<div class="paragraph"><p>Enable Kerberos auth.</p></div>
+<div class="paragraph"><p>Restart sshd :</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>/sbin/service sshd restart</tt></pre>
+</div></div>
+<div class="paragraph"><p>Try to connect with the password that you set for the principal.</p></div>
 </div>
 </div>
 </div>
 <div id="footnotes"><hr /></div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2012-06-07 09:13:42 CEST
+Last updated 2012-06-08 00:53:21 CEST
 </div>
 </div>
 </body>
