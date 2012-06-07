@@ -1,0 +1,1039 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+    "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+<meta http-equiv="Content-Type" content="application/xhtml+xml; charset=UTF-8" />
+<meta name="generator" content="AsciiDoc 8.6.6" />
+<title>Lab 05 : kerberos</title>
+<style type="text/css">
+/* Shared CSS for AsciiDoc xhtml11 and html5 backends */
+
+/* Default font. */
+body {
+  font-family: Georgia,serif;
+}
+
+/* Title font. */
+h1, h2, h3, h4, h5, h6,
+div.title, caption.title,
+thead, p.table.header,
+#toctitle,
+#author, #revnumber, #revdate, #revremark,
+#footer {
+  font-family: Arial,Helvetica,sans-serif;
+}
+
+body {
+  margin: 1em 5% 1em 5%;
+}
+
+a {
+  color: blue;
+  text-decoration: underline;
+}
+a:visited {
+  color: fuchsia;
+}
+
+em {
+  font-style: italic;
+  color: navy;
+}
+
+strong {
+  font-weight: bold;
+  color: #083194;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  color: #527bbd;
+  margin-top: 1.2em;
+  margin-bottom: 0.5em;
+  line-height: 1.3;
+}
+
+h1, h2, h3 {
+  border-bottom: 2px solid silver;
+}
+h2 {
+  padding-top: 0.5em;
+}
+h3 {
+  float: left;
+}
+h3 + * {
+  clear: left;
+}
+h5 {
+  font-size: 1.0em;
+}
+
+div.sectionbody {
+  margin-left: 0;
+}
+
+hr {
+  border: 1px solid silver;
+}
+
+p {
+  margin-top: 0.5em;
+  margin-bottom: 0.5em;
+}
+
+ul, ol, li > p {
+  margin-top: 0;
+}
+ul > li     { color: #aaa; }
+ul > li > * { color: black; }
+
+pre {
+  padding: 0;
+  margin: 0;
+}
+
+#author {
+  color: #527bbd;
+  font-weight: bold;
+  font-size: 1.1em;
+}
+#email {
+}
+#revnumber, #revdate, #revremark {
+}
+
+#footer {
+  font-size: small;
+  border-top: 2px solid silver;
+  padding-top: 0.5em;
+  margin-top: 4.0em;
+}
+#footer-text {
+  float: left;
+  padding-bottom: 0.5em;
+}
+#footer-badges {
+  float: right;
+  padding-bottom: 0.5em;
+}
+
+#preamble {
+  margin-top: 1.5em;
+  margin-bottom: 1.5em;
+}
+div.imageblock, div.exampleblock, div.verseblock,
+div.quoteblock, div.literalblock, div.listingblock, div.sidebarblock,
+div.admonitionblock {
+  margin-top: 1.0em;
+  margin-bottom: 1.5em;
+}
+div.admonitionblock {
+  margin-top: 2.0em;
+  margin-bottom: 2.0em;
+  margin-right: 10%;
+  color: #606060;
+}
+
+div.content { /* Block element content. */
+  padding: 0;
+}
+
+/* Block element titles. */
+div.title, caption.title {
+  color: #527bbd;
+  font-weight: bold;
+  text-align: left;
+  margin-top: 1.0em;
+  margin-bottom: 0.5em;
+}
+div.title + * {
+  margin-top: 0;
+}
+
+td div.title:first-child {
+  margin-top: 0.0em;
+}
+div.content div.title:first-child {
+  margin-top: 0.0em;
+}
+div.content + div.title {
+  margin-top: 0.0em;
+}
+
+div.sidebarblock > div.content {
+  background: #ffffee;
+  border: 1px solid #dddddd;
+  border-left: 4px solid #f0f0f0;
+  padding: 0.5em;
+}
+
+div.listingblock > div.content {
+  border: 1px solid #dddddd;
+  border-left: 5px solid #f0f0f0;
+  background: #f8f8f8;
+  padding: 0.5em;
+}
+
+div.quoteblock, div.verseblock {
+  padding-left: 1.0em;
+  margin-left: 1.0em;
+  margin-right: 10%;
+  border-left: 5px solid #f0f0f0;
+  color: #888;
+}
+
+div.quoteblock > div.attribution {
+  padding-top: 0.5em;
+  text-align: right;
+}
+
+div.verseblock > pre.content {
+  font-family: inherit;
+  font-size: inherit;
+}
+div.verseblock > div.attribution {
+  padding-top: 0.75em;
+  text-align: left;
+}
+/* DEPRECATED: Pre version 8.2.7 verse style literal block. */
+div.verseblock + div.attribution {
+  text-align: left;
+}
+
+div.admonitionblock .icon {
+  vertical-align: top;
+  font-size: 1.1em;
+  font-weight: bold;
+  text-decoration: underline;
+  color: #527bbd;
+  padding-right: 0.5em;
+}
+div.admonitionblock td.content {
+  padding-left: 0.5em;
+  border-left: 3px solid #dddddd;
+}
+
+div.exampleblock > div.content {
+  border-left: 3px solid #dddddd;
+  padding-left: 0.5em;
+}
+
+div.imageblock div.content { padding-left: 0; }
+span.image img { border-style: none; }
+a.image:visited { color: white; }
+
+dl {
+  margin-top: 0.8em;
+  margin-bottom: 0.8em;
+}
+dt {
+  margin-top: 0.5em;
+  margin-bottom: 0;
+  font-style: normal;
+  color: navy;
+}
+dd > *:first-child {
+  margin-top: 0.1em;
+}
+
+ul, ol {
+    list-style-position: outside;
+}
+ol.arabic {
+  list-style-type: decimal;
+}
+ol.loweralpha {
+  list-style-type: lower-alpha;
+}
+ol.upperalpha {
+  list-style-type: upper-alpha;
+}
+ol.lowerroman {
+  list-style-type: lower-roman;
+}
+ol.upperroman {
+  list-style-type: upper-roman;
+}
+
+div.compact ul, div.compact ol,
+div.compact p, div.compact p,
+div.compact div, div.compact div {
+  margin-top: 0.1em;
+  margin-bottom: 0.1em;
+}
+
+tfoot {
+  font-weight: bold;
+}
+td > div.verse {
+  white-space: pre;
+}
+
+div.hdlist {
+  margin-top: 0.8em;
+  margin-bottom: 0.8em;
+}
+div.hdlist tr {
+  padding-bottom: 15px;
+}
+dt.hdlist1.strong, td.hdlist1.strong {
+  font-weight: bold;
+}
+td.hdlist1 {
+  vertical-align: top;
+  font-style: normal;
+  padding-right: 0.8em;
+  color: navy;
+}
+td.hdlist2 {
+  vertical-align: top;
+}
+div.hdlist.compact tr {
+  margin: 0;
+  padding-bottom: 0;
+}
+
+.comment {
+  background: yellow;
+}
+
+.footnote, .footnoteref {
+  font-size: 0.8em;
+}
+
+span.footnote, span.footnoteref {
+  vertical-align: super;
+}
+
+#footnotes {
+  margin: 20px 0 20px 0;
+  padding: 7px 0 0 0;
+}
+
+#footnotes div.footnote {
+  margin: 0 0 5px 0;
+}
+
+#footnotes hr {
+  border: none;
+  border-top: 1px solid silver;
+  height: 1px;
+  text-align: left;
+  margin-left: 0;
+  width: 20%;
+  min-width: 100px;
+}
+
+div.colist td {
+  padding-right: 0.5em;
+  padding-bottom: 0.3em;
+  vertical-align: top;
+}
+div.colist td img {
+  margin-top: 0.3em;
+}
+
+@media print {
+  #footer-badges { display: none; }
+}
+
+#toc {
+  margin-bottom: 2.5em;
+}
+
+#toctitle {
+  color: #527bbd;
+  font-size: 1.1em;
+  font-weight: bold;
+  margin-top: 1.0em;
+  margin-bottom: 0.1em;
+}
+
+div.toclevel1, div.toclevel2, div.toclevel3, div.toclevel4 {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+div.toclevel2 {
+  margin-left: 2em;
+  font-size: 0.9em;
+}
+div.toclevel3 {
+  margin-left: 4em;
+  font-size: 0.9em;
+}
+div.toclevel4 {
+  margin-left: 6em;
+  font-size: 0.9em;
+}
+
+span.aqua { color: aqua; }
+span.black { color: black; }
+span.blue { color: blue; }
+span.fuchsia { color: fuchsia; }
+span.gray { color: gray; }
+span.green { color: green; }
+span.lime { color: lime; }
+span.maroon { color: maroon; }
+span.navy { color: navy; }
+span.olive { color: olive; }
+span.purple { color: purple; }
+span.red { color: red; }
+span.silver { color: silver; }
+span.teal { color: teal; }
+span.white { color: white; }
+span.yellow { color: yellow; }
+
+span.aqua-background { background: aqua; }
+span.black-background { background: black; }
+span.blue-background { background: blue; }
+span.fuchsia-background { background: fuchsia; }
+span.gray-background { background: gray; }
+span.green-background { background: green; }
+span.lime-background { background: lime; }
+span.maroon-background { background: maroon; }
+span.navy-background { background: navy; }
+span.olive-background { background: olive; }
+span.purple-background { background: purple; }
+span.red-background { background: red; }
+span.silver-background { background: silver; }
+span.teal-background { background: teal; }
+span.white-background { background: white; }
+span.yellow-background { background: yellow; }
+
+span.big { font-size: 2em; }
+span.small { font-size: 0.6em; }
+
+span.underline { text-decoration: underline; }
+span.overline { text-decoration: overline; }
+span.line-through { text-decoration: line-through; }
+
+
+/*
+ * xhtml11 specific
+ *
+ * */
+
+tt {
+  font-family: monospace;
+  font-size: inherit;
+  color: navy;
+}
+
+div.tableblock {
+  margin-top: 1.0em;
+  margin-bottom: 1.5em;
+}
+div.tableblock > table {
+  border: 3px solid #527bbd;
+}
+thead, p.table.header {
+  font-weight: bold;
+  color: #527bbd;
+}
+p.table {
+  margin-top: 0;
+}
+/* Because the table frame attribute is overriden by CSS in most browsers. */
+div.tableblock > table[frame="void"] {
+  border-style: none;
+}
+div.tableblock > table[frame="hsides"] {
+  border-left-style: none;
+  border-right-style: none;
+}
+div.tableblock > table[frame="vsides"] {
+  border-top-style: none;
+  border-bottom-style: none;
+}
+
+
+/*
+ * html5 specific
+ *
+ * */
+
+.monospaced {
+  font-family: monospace;
+  font-size: inherit;
+  color: navy;
+}
+
+table.tableblock {
+  margin-top: 1.0em;
+  margin-bottom: 1.5em;
+}
+thead, p.tableblock.header {
+  font-weight: bold;
+  color: #527bbd;
+}
+p.tableblock {
+  margin-top: 0;
+}
+table.tableblock {
+  border-width: 3px;
+  border-spacing: 0px;
+  border-style: solid;
+  border-color: #527bbd;
+  border-collapse: collapse;
+}
+th.tableblock, td.tableblock {
+  border-width: 1px;
+  padding: 4px;
+  border-style: solid;
+  border-color: #527bbd;
+}
+
+table.tableblock.frame-topbot {
+  border-left-style: hidden;
+  border-right-style: hidden;
+}
+table.tableblock.frame-sides {
+  border-top-style: hidden;
+  border-bottom-style: hidden;
+}
+table.tableblock.frame-none {
+  border-style: hidden;
+}
+
+th.tableblock.halign-left, td.tableblock.halign-left {
+  text-align: left;
+}
+th.tableblock.halign-center, td.tableblock.halign-center {
+  text-align: center;
+}
+th.tableblock.halign-right, td.tableblock.halign-right {
+  text-align: right;
+}
+
+th.tableblock.valign-top, td.tableblock.valign-top {
+  vertical-align: top;
+}
+th.tableblock.valign-middle, td.tableblock.valign-middle {
+  vertical-align: middle;
+}
+th.tableblock.valign-bottom, td.tableblock.valign-bottom {
+  vertical-align: bottom;
+}
+
+
+/*
+ * manpage specific
+ *
+ * */
+
+body.manpage h1 {
+  padding-top: 0.5em;
+  padding-bottom: 0.5em;
+  border-top: 2px solid silver;
+  border-bottom: 2px solid silver;
+}
+body.manpage h2 {
+  border-style: none;
+}
+body.manpage div.sectionbody {
+  margin-left: 3em;
+}
+
+@media print {
+  body.manpage div#toc { display: none; }
+}
+</style>
+<script type="text/javascript">
+/*<![CDATA[*/
+var asciidoc = {  // Namespace.
+
+/////////////////////////////////////////////////////////////////////
+// Table Of Contents generator
+/////////////////////////////////////////////////////////////////////
+
+/* Author: Mihai Bazon, September 2002
+ * http://students.infoiasi.ro/~mishoo
+ *
+ * Table Of Content generator
+ * Version: 0.4
+ *
+ * Feel free to use this script under the terms of the GNU General Public
+ * License, as long as you do not remove or alter this notice.
+ */
+
+ /* modified by Troy D. Hanson, September 2006. License: GPL */
+ /* modified by Stuart Rackham, 2006, 2009. License: GPL */
+
+// toclevels = 1..4.
+toc: function (toclevels) {
+
+  function getText(el) {
+    var text = "";
+    for (var i = el.firstChild; i != null; i = i.nextSibling) {
+      if (i.nodeType == 3 /* Node.TEXT_NODE */) // IE doesn't speak constants.
+        text += i.data;
+      else if (i.firstChild != null)
+        text += getText(i);
+    }
+    return text;
+  }
+
+  function TocEntry(el, text, toclevel) {
+    this.element = el;
+    this.text = text;
+    this.toclevel = toclevel;
+  }
+
+  function tocEntries(el, toclevels) {
+    var result = new Array;
+    var re = new RegExp('[hH]([2-'+(toclevels+1)+'])');
+    // Function that scans the DOM tree for header elements (the DOM2
+    // nodeIterator API would be a better technique but not supported by all
+    // browsers).
+    var iterate = function (el) {
+      for (var i = el.firstChild; i != null; i = i.nextSibling) {
+        if (i.nodeType == 1 /* Node.ELEMENT_NODE */) {
+          var mo = re.exec(i.tagName);
+          if (mo && (i.getAttribute("class") || i.getAttribute("className")) != "float") {
+            result[result.length] = new TocEntry(i, getText(i), mo[1]-1);
+          }
+          iterate(i);
+        }
+      }
+    }
+    iterate(el);
+    return result;
+  }
+
+  var toc = document.getElementById("toc");
+  if (!toc) {
+    return;
+  }
+
+  // Delete existing TOC entries in case we're reloading the TOC.
+  var tocEntriesToRemove = [];
+  var i;
+  for (i = 0; i < toc.childNodes.length; i++) {
+    var entry = toc.childNodes[i];
+    if (entry.nodeName == 'div'
+     && entry.getAttribute("class")
+     && entry.getAttribute("class").match(/^toclevel/))
+      tocEntriesToRemove.push(entry);
+  }
+  for (i = 0; i < tocEntriesToRemove.length; i++) {
+    toc.removeChild(tocEntriesToRemove[i]);
+  }
+
+  // Rebuild TOC entries.
+  var entries = tocEntries(document.getElementById("content"), toclevels);
+  for (var i = 0; i < entries.length; ++i) {
+    var entry = entries[i];
+    if (entry.element.id == "")
+      entry.element.id = "_toc_" + i;
+    var a = document.createElement("a");
+    a.href = "#" + entry.element.id;
+    a.appendChild(document.createTextNode(entry.text));
+    var div = document.createElement("div");
+    div.appendChild(a);
+    div.className = "toclevel" + entry.toclevel;
+    toc.appendChild(div);
+  }
+  if (entries.length == 0)
+    toc.parentNode.removeChild(toc);
+},
+
+
+/////////////////////////////////////////////////////////////////////
+// Footnotes generator
+/////////////////////////////////////////////////////////////////////
+
+/* Based on footnote generation code from:
+ * http://www.brandspankingnew.net/archive/2005/07/format_footnote.html
+ */
+
+footnotes: function () {
+  // Delete existing footnote entries in case we're reloading the footnodes.
+  var i;
+  var noteholder = document.getElementById("footnotes");
+  if (!noteholder) {
+    return;
+  }
+  var entriesToRemove = [];
+  for (i = 0; i < noteholder.childNodes.length; i++) {
+    var entry = noteholder.childNodes[i];
+    if (entry.nodeName == 'div' && entry.getAttribute("class") == "footnote")
+      entriesToRemove.push(entry);
+  }
+  for (i = 0; i < entriesToRemove.length; i++) {
+    noteholder.removeChild(entriesToRemove[i]);
+  }
+
+  // Rebuild footnote entries.
+  var cont = document.getElementById("content");
+  var spans = cont.getElementsByTagName("span");
+  var refs = {};
+  var n = 0;
+  for (i=0; i<spans.length; i++) {
+    if (spans[i].className == "footnote") {
+      n++;
+      var note = spans[i].getAttribute("data-note");
+      if (!note) {
+        // Use [\s\S] in place of . so multi-line matches work.
+        // Because JavaScript has no s (dotall) regex flag.
+        note = spans[i].innerHTML.match(/\s*\[([\s\S]*)]\s*/)[1];
+        spans[i].innerHTML =
+          "[<a id='_footnoteref_" + n + "' href='#_footnote_" + n +
+          "' title='View footnote' class='footnote'>" + n + "</a>]";
+        spans[i].setAttribute("data-note", note);
+      }
+      noteholder.innerHTML +=
+        "<div class='footnote' id='_footnote_" + n + "'>" +
+        "<a href='#_footnoteref_" + n + "' title='Return to text'>" +
+        n + "</a>. " + note + "</div>";
+      var id =spans[i].getAttribute("id");
+      if (id != null) refs["#"+id] = n;
+    }
+  }
+  if (n == 0)
+    noteholder.parentNode.removeChild(noteholder);
+  else {
+    // Process footnoterefs.
+    for (i=0; i<spans.length; i++) {
+      if (spans[i].className == "footnoteref") {
+        var href = spans[i].getElementsByTagName("a")[0].getAttribute("href");
+        href = href.match(/#.*/)[0];  // Because IE return full URL.
+        n = refs[href];
+        spans[i].innerHTML =
+          "[<a href='#_footnote_" + n +
+          "' title='View footnote' class='footnote'>" + n + "</a>]";
+      }
+    }
+  }
+},
+
+install: function(toclevels) {
+  var timerId;
+
+  function reinstall() {
+    asciidoc.footnotes();
+    if (toclevels) {
+      asciidoc.toc(toclevels);
+    }
+  }
+
+  function reinstallAndRemoveTimer() {
+    clearInterval(timerId);
+    reinstall();
+  }
+
+  timerId = setInterval(reinstall, 500);
+  if (document.addEventListener)
+    document.addEventListener("DOMContentLoaded", reinstallAndRemoveTimer, false);
+  else
+    window.onload = reinstallAndRemoveTimer;
+}
+
+}
+asciidoc.install();
+/*]]>*/
+</script>
+</head>
+<body class="article">
+<div id="header">
+<h1>Lab 05 : kerberos</h1>
+<span id="author">Louis Coilliot</span><br />
+</div>
+<div id="content">
+<div class="sect1">
+<h2 id="_introduction">1. Introduction</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>Quote from Wikipedia :</p></div>
+<div class="quoteblock">
+<div class="content">
+<div class="paragraph"><p>Kerberos is a computer network authentication protocol which works on the basis of "tickets" to allow nodes communicating over a non-secure network to prove their identity to one another in a secure manner.</p></div>
+</div>
+<div class="attribution">
+</div></div>
+<div class="paragraph"><p>We will switch to Kerberos for authentications, keeping the directory service
+from <a href="http://lofic.github.com/linuxlab/04-directory_service.html">Lab 04</a> to get information on accounts.</p></div>
+<div class="paragraph"><p>So you need to have a working directory from Lab 04 before doing this lab.</p></div>
+<div class="paragraph"><p>This will be a guided lab.</p></div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_set_up_the_kdc">2. Set up the KDC</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>KDC = Key Distribution Center</p></div>
+<div class="admonitionblock">
+<table><tr>
+<td class="icon">
+<img alt="Important" src="data:image/png;base64,
+iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJ
+bWFnZVJlYWR5ccllPAAADUFpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdp
+bj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+Cjx4OnhtcG1ldGEgeG1sbnM6
+eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDQuMi4yLWMwNjMgNTMu
+MzUyNjI0LCAyMDA4LzA3LzMwLTE4OjA1OjQxICAgICAgICAiPgogPHJkZjpSREYgeG1sbnM6cmRm
+PSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4KICA8cmRmOkRl
+c2NyaXB0aW9uIHJkZjphYm91dD0iIgogICAgeG1sbnM6ZGM9Imh0dHA6Ly9wdXJsLm9yZy9kYy9l
+bGVtZW50cy8xLjEvIgogICAgeG1sbnM6eG1wUmlnaHRzPSJodHRwOi8vbnMuYWRvYmUuY29tL3hh
+cC8xLjAvcmlnaHRzLyIKICAgIHhtbG5zOnBob3Rvc2hvcD0iaHR0cDovL25zLmFkb2JlLmNvbS9w
+aG90b3Nob3AvMS4wLyIKICAgIHhtbG5zOklwdGM0eG1wQ29yZT0iaHR0cDovL2lwdGMub3JnL3N0
+ZC9JcHRjNHhtcENvcmUvMS4wL3htbG5zLyIKICAgeG1wUmlnaHRzOldlYlN0YXRlbWVudD0iIgog
+ICBwaG90b3Nob3A6QXV0aG9yc1Bvc2l0aW9uPSIiPgogICA8ZGM6cmlnaHRzPgogICAgPHJkZjpB
+bHQ+CiAgICAgPHJkZjpsaSB4bWw6bGFuZz0ieC1kZWZhdWx0Ii8+CiAgICA8L3JkZjpBbHQ+CiAg
+IDwvZGM6cmlnaHRzPgogICA8ZGM6Y3JlYXRvcj4KICAgIDxyZGY6U2VxPgogICAgIDxyZGY6bGkv
+PgogICAgPC9yZGY6U2VxPgogICA8L2RjOmNyZWF0b3I+CiAgIDxkYzp0aXRsZT4KICAgIDxyZGY6
+QWx0PgogICAgIDxyZGY6bGkgeG1sOmxhbmc9IngtZGVmYXVsdCI+ZGlhZ25vc3RpY19sYWJvcmF0
+b3J5PC9yZGY6bGk+CiAgICA8L3JkZjpBbHQ+CiAgIDwvZGM6dGl0bGU+CiAgIDx4bXBSaWdodHM6
+VXNhZ2VUZXJtcz4KICAgIDxyZGY6QWx0PgogICAgIDxyZGY6bGkgeG1sOmxhbmc9IngtZGVmYXVs
+dCIvPgogICAgPC9yZGY6QWx0PgogICA8L3htcFJpZ2h0czpVc2FnZVRlcm1zPgogICA8SXB0YzR4
+bXBDb3JlOkNyZWF0b3JDb250YWN0SW5mbwogICAgSXB0YzR4bXBDb3JlOkNpQWRyRXh0YWRyPSIi
+CiAgICBJcHRjNHhtcENvcmU6Q2lBZHJDaXR5PSIiCiAgICBJcHRjNHhtcENvcmU6Q2lBZHJSZWdp
+b249IiIKICAgIElwdGM0eG1wQ29yZTpDaUFkclBjb2RlPSIiCiAgICBJcHRjNHhtcENvcmU6Q2lB
+ZHJDdHJ5PSIiCiAgICBJcHRjNHhtcENvcmU6Q2lUZWxXb3JrPSIiCiAgICBJcHRjNHhtcENvcmU6
+Q2lFbWFpbFdvcms9IiIKICAgIElwdGM0eG1wQ29yZTpDaVVybFdvcms9IiIvPgogIDwvcmRmOkRl
+c2NyaXB0aW9uPgogPC9yZGY6UkRGPgo8L3g6eG1wbWV0YT4KICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+IAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAog
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgIAo8P3hwYWNrZXQgZW5kPSJ3Ij8+81+wHgAA
+CpJJREFUeNq8WguMVFcZ/u6dO7s7O7uwC+yWrZYurfRhqbSNmhYlqGmJBh9FYyrFB7FWu1q1oomh
+2hKUJsZU00psaonUxhAaQ4kYSrE0pQVtEaywQKEFKu8SSnmzMzs7997j/597zp1z7p3ZWbbgkH/P
+nXvvnPP97//8B2fzlq1wHAf8ofGHNHydxm4aQ31/+B/Bs77nOYSQF64Q4iiNS4geoes+IjiKgQlE
+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" />
+</td>
+<td class="content">LAB 05-1 : open ports on the firewall</td>
+</tr></table>
+</div>
+<div class="paragraph"><p>Cf :</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>egrep 'krb5|kpwd|kadmin' /etc/services</tt></pre>
+</div></div>
+<div class="paragraph"><p>Open ports :</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+88 TCP  and UDP
+</p>
+</li>
+<li>
+<p>
+464 TCP and UDP
+</p>
+</li>
+<li>
+<p>
+749 TCP
+</p>
+</li>
+</ul></div>
+<div class="admonitionblock">
+<table><tr>
+<td class="icon">
+<img alt="Important" src="data:image/png;base64,
+iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJ
+bWFnZVJlYWR5ccllPAAADUFpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdp
+bj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+Cjx4OnhtcG1ldGEgeG1sbnM6
+eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDQuMi4yLWMwNjMgNTMu
+MzUyNjI0LCAyMDA4LzA3LzMwLTE4OjA1OjQxICAgICAgICAiPgogPHJkZjpSREYgeG1sbnM6cmRm
+PSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4KICA8cmRmOkRl
+c2NyaXB0aW9uIHJkZjphYm91dD0iIgogICAgeG1sbnM6ZGM9Imh0dHA6Ly9wdXJsLm9yZy9kYy9l
+bGVtZW50cy8xLjEvIgogICAgeG1sbnM6eG1wUmlnaHRzPSJodHRwOi8vbnMuYWRvYmUuY29tL3hh
+cC8xLjAvcmlnaHRzLyIKICAgIHhtbG5zOnBob3Rvc2hvcD0iaHR0cDovL25zLmFkb2JlLmNvbS9w
+aG90b3Nob3AvMS4wLyIKICAgIHhtbG5zOklwdGM0eG1wQ29yZT0iaHR0cDovL2lwdGMub3JnL3N0
+ZC9JcHRjNHhtcENvcmUvMS4wL3htbG5zLyIKICAgeG1wUmlnaHRzOldlYlN0YXRlbWVudD0iIgog
+ICBwaG90b3Nob3A6QXV0aG9yc1Bvc2l0aW9uPSIiPgogICA8ZGM6cmlnaHRzPgogICAgPHJkZjpB
+bHQ+CiAgICAgPHJkZjpsaSB4bWw6bGFuZz0ieC1kZWZhdWx0Ii8+CiAgICA8L3JkZjpBbHQ+CiAg
+IDwvZGM6cmlnaHRzPgogICA8ZGM6Y3JlYXRvcj4KICAgIDxyZGY6U2VxPgogICAgIDxyZGY6bGkv
+PgogICAgPC9yZGY6U2VxPgogICA8L2RjOmNyZWF0b3I+CiAgIDxkYzp0aXRsZT4KICAgIDxyZGY6
+QWx0PgogICAgIDxyZGY6bGkgeG1sOmxhbmc9IngtZGVmYXVsdCI+ZGlhZ25vc3RpY19sYWJvcmF0
+b3J5PC9yZGY6bGk+CiAgICA8L3JkZjpBbHQ+CiAgIDwvZGM6dGl0bGU+CiAgIDx4bXBSaWdodHM6
+VXNhZ2VUZXJtcz4KICAgIDxyZGY6QWx0PgogICAgIDxyZGY6bGkgeG1sOmxhbmc9IngtZGVmYXVs
+dCIvPgogICAgPC9yZGY6QWx0PgogICA8L3htcFJpZ2h0czpVc2FnZVRlcm1zPgogICA8SXB0YzR4
+bXBDb3JlOkNyZWF0b3JDb250YWN0SW5mbwogICAgSXB0YzR4bXBDb3JlOkNpQWRyRXh0YWRyPSIi
+CiAgICBJcHRjNHhtcENvcmU6Q2lBZHJDaXR5PSIiCiAgICBJcHRjNHhtcENvcmU6Q2lBZHJSZWdp
+b249IiIKICAgIElwdGM0eG1wQ29yZTpDaUFkclBjb2RlPSIiCiAgICBJcHRjNHhtcENvcmU6Q2lB
+ZHJDdHJ5PSIiCiAgICBJcHRjNHhtcENvcmU6Q2lUZWxXb3JrPSIiCiAgICBJcHRjNHhtcENvcmU6
+Q2lFbWFpbFdvcms9IiIKICAgIElwdGM0eG1wQ29yZTpDaVVybFdvcms9IiIvPgogIDwvcmRmOkRl
+c2NyaXB0aW9uPgogPC9yZGY6UkRGPgo8L3g6eG1wbWV0YT4KICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+IAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAog
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgIAo8P3hwYWNrZXQgZW5kPSJ3Ij8+81+wHgAA
+CpJJREFUeNq8WguMVFcZ/u6dO7s7O7uwC+yWrZYurfRhqbSNmhYlqGmJBh9FYyrFB7FWu1q1oomh
+2hKUJsZU00psaonUxhAaQ4kYSrE0pQVtEaywQKEFKu8SSnmzMzs7997j/597zp1z7p3ZWbbgkH/P
+nXvvnPP97//8B2fzlq1wHAf8ofGHNHydxm4aQ31/+B/Bs77nOYSQF64Q4iiNS4geoes+IjiKgQlE
+2zKZTGMm48J1XcmUpgiEOP+lBQul9vd6v9XgGShTGIaKAiIxhe79w1Pvv+F5GTeT8UCjZEBTLS0I
+IfD/+NjAQwRBQMT3g/X0rMWjP/eR5Al8hsBHDPA1U0UDuKhM1BYSg46kHwSR5PldXtZ1JWOPkwbE
+bGk2RAyemYgY8OC4bDzOYDpOGZZTwwtEtecMXAuhChPMgDYh12XJR+9E2pDXnyQNYFw0cezIynwc
+Oafr2GZ0QU1HB48ajxlkyPZPgAW9Gxp+GWlCNLEJBREm+6GrR+0HygMvtO2nzMdYx2FBsg/we/yd
+GJH4jPjkaUCOATgF3pTWew6tQ9QKjRmWOoMmHDy6CrzGIMg/PH4QWWjkLHxTuGK4IeO8QA5VQ1Ib
+KpRKgg6tITwzTMlr9nzhxi8zy069ZETvZfJ5ZCkQ1GOBZ/LpJf/c2bpJTlQFbYZVpQG+MJmQTqN+
+4AgHog6sTL4ZxX37cWDNC8i2tkL4ftXw5FCE88+dQ/uUj6HlmqvldV0mICxGwpiBaPSi+GqAV9yy
+VNnz6xYD9F6Wwu5+Av+fnm/jcrrVynm/SjgtEO0jmvDT+zHpVw+hXCczSyQioQll5hqzFyULzZEw
+GIk8H/XkTwBKxQLG33M3vFwO5+YtwMTd2+H39UFwylQ2nx3Vjj2fmIbWqVNw5fwH0N/fL3876Owa
+vGlOjFVUhB5rIEoaEXgpfflPOVAdNQelATTkmpEb341j/UWIrIegbWQqe5XKPnJdXeD6pUQMOI5b
+33yQMB8hLJP3YudVGjA51nm0ng/wU45lfl8BZbJ/+csiSZh9QWlAtOTpWRnZYhFBnJlF3WLWBG86
+sR5ds1DSGtC5QSljaOFOwfHVtaP/GNk20Elp6IW0VY1WwIe2BiqOLKyHZqmis7UZxqOkqXKHeuyL
+6lWRo5iLs44qD+z3hBX/Y4uwwqdpQnEYDa3YqpME1yISoLAXMLUiLEdjkLVVFsS+BWkSziBmVM1c
+TAGz0Lm0rsJAhRHH0UzUUbXSAKUMsm9R00QCFZahNEC1Ss1EHmnfZkKX1yZOLwht8zF/FNVHfM9J
+bA+FZRzyd2rV8sBAWqaqhilz4lJMSAFZHmFnnGq2X428MAgsqdtJrWJGqKnu6DcyI1MeKFOUqVXv
+lE6dklk7MiGKIMJNzClSGrHKnIT0WfhuUIUr2+aEFWZrUY4W3L/8r8iPuyySo05ihm1w+XB0/T/R
+pHzAdso0aYuoZt5ypDVczYkwwqhVVgiRigYmsSM1jxmDE4feRu+jv8HNf1kaRZogtKRZJrpx8RPY
++ecn8c7uPWjp7JSOWGteU+J2+BS2BmKujIcm6GSiS2mLTKWtIYvnb/8Srp3+BXR++CYM9BVTwb58
+rg9t3Zfjpp578dynp6OV6ieoOr+algcPnxH4SiYOwxS3UahyqsT0ip2y9DsI1Jurn8eR1zZgxukz
+KMm9YFDVB4r0/s2PLcRmerZ1yVJcNWsmjlIVy3vwVN5wUFVgseDU6IaJ4sjuvSS/B1Z7I9PYKO15
+5Wc+i6nzF6B5RKuUdK24GxT6ZZV625Kn8fev3imvs83NCPzAmD8inVzNatnEqjXgxhIXSUZqc89U
+LpfR1TUWa3/+IBrIFD7y4M9QKPt1641CfwlX33kHOq64Cmt6voexnR0oB36VNQOziVVdC9ytSP9Q
+VJW4Dd5HfvRo9J06jZce+iU+99zKqItAOSDGSkyxhlzPs6IRl9hshDPWvoCNjz+Gk4cOYwQ5NAvE
+Xk/UXN8k17QnDd5UW1KVsjNGYxfV9ytmzsJ1H5+K8dNuBUPPNDREScvNwGvOISyVonKcmHDIzpta
+W5CjPHDy8BG0U7id/M27sfyLX8YlZHq0tJw7rQExBB9I3ExHnCBmYmCgLB334NZt6F39LDInT6Gf
+bHgNRaETW3rRQgDzzU04tGo1FhLg7b9+GPkm8pVcE97dth3rvnsvXp41C09PnIQDTz2F/256FW++
+vA5jJ3yA5h5QNU4NiVvmLrQP2LavW3imI8XPCKibzaKDAC27YybGkNQPv96LRbSB2bZiOdbOno0j
+BPLAhn9hfU+PzAdvPfMMju95Cxt/sQC//9D1MvnMeOlFzNjeSx6cxQh6Z8U3ZqPVpV1bU47W8Oua
+jV1K6PCZKFODINqmmH0gltA1E6/FK4ufxOE3XpctPS+Xx9cOHUSeTGpR+2g8QSDJkCQ1E+3ZtgW7
+SbqNdM3ZGk1Nyl/KGKCpWziD79+Ldb99BJPn3Icdm3uJr2y6sVslH0gnNlvYdh4IjG5wIMG3jBoF
+l7Sw4p7vSOlzds20tWEkgWdXbb/xBjk2ZjxZk3JM6iHpf+qBefK6ke5t+t0j+NOkG/DHsWPRV6R9
+s5fFJRyKf/wjDJw5ixEdHSiR70TrVnwuqtkCq+CUDAy24wlMBijyXNE9Dn/7wfdRpIjRSI4qaE97
+7MhhLL1tGpbdPgO71r5IDETAy1zkkfM2UrTyaH/MzAbc6aN/B7f24vTJE5SIMxjgnhLPRc+X3XUX
+rnz/pfAJuO9rMw4k+CCO/XbV7Pxh0eJj+Xx+TI4qySZSbyNFkgYqDSotdpcm89HV3Y2GM6cwjwoy
+bp14alGaEUW1ScnJ8JmJTc4nAGXVYmlIPEvu1hjsXhp/sm498h+8Dgd37ZKdcskAAWULYBw89lMu
+4a5GoVB417X7Ldr+lfSVBDhGd3Z1YvmcOVHZzJW8dn5avZH8JMd1vmPcF1Evk4Fn5WbHfpYk1g2b
+38r756JjdLsEq80oWfKbmD0hKq2LivkEcMJ4uyInKpXKGH/LLVi16ln5/nm3T0X9zsbbRNdTZcuF
+OJuQq4q9MLErSzGAhA8ELNYgOglxVNt9x+YtuHXuXLS971IUz5yR5nUhG+2ynKc5P/qVmdi1fadc
+O0psdqMhyYQXl85GbHUCp9IVVm2twtmz2LhhIy6b/nmK143DOCdw6jasQzKbnXv34fTx4+SHDfF+
+IRTmDjG0tpuejreBEXWiJg6kAztGm6NAe9odm/4d9ywvAO5UK10HD181xQREJZz77A92H9dLtjD8
+IDCaUWHqnJTP0i7GgUblzEXE4OEg3uiY4VRbCn+89FFmdJjG6pLGozoKInnQm+6BnB/gQQ730v2h
+SPKVhBbGJsw+EB9yMJeR7fuVw+5hHXEPzzNEjdOZZCfCYMBh8O8Q8DbzPMw85HYSJiQGk3oVaVqd
+JN2Ni9tMzhCir7AOXhIbmgFmYAl9ma+lr89hnfSR5kU7ia93mG6STnCKgdfYBx6mG/Pjkz81oTOE
+U8nk4kNl0nGGHp7MbrlZXDLR/W8xAwV6MJk4eyXuuRs9y/M5Vh06A855zWcyYNBMunVUb1hfpZdG
+EhMLafIpRCMusu8Oy9/Vf7HZzFU60RG++T8BBgAkirX2O+Vn5gAAAABJRU5ErkJggg==" />
+</td>
+<td class="content">LAB 05-2 : configure Kerberos and the KDC</td>
+</tr></table>
+</div>
+<div class="listingblock">
+<div class="content"><!-- Generator: GNU source-highlight 3.1.5
+by Lorenzo Bettini
+http://www.lorenzobettini.it
+http://www.gnu.org/software/src-highlite -->
+<pre><tt><span style="font-weight: bold"><span style="color: #000000">[appdefaults]</span></span>
+<span style="color: #009900"> pam </span><span style="color: #990000">=</span> {
+   <span style="font-style: italic"><span style="color: #9A1900">#...</span></span>
+<span style="color: #009900">   validate </span><span style="color: #990000">=</span> true
+ }</tt></pre></div></div>
+</div>
+</div>
+</div>
+<div id="footnotes"><hr /></div>
+<div id="footer">
+<div id="footer-text">
+Last updated 2012-06-07 09:13:42 CEST
+</div>
+</div>
+</body>
+</html>

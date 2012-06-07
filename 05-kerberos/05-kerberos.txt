@@ -1,0 +1,58 @@
+Lab 05 : kerberos 
+=================
+:author: Louis Coilliot
+:numbered:
+:icons:
+:data-uri:
+:iconsdir: /home/lofic/Documents/icons/asciidoc
+
+Introduction
+------------
+
+Quote from Wikipedia :
+
+[quote]
+________________________________________________________________________________
+Kerberos is a computer network authentication protocol which works on the basis of "tickets" to allow nodes communicating over a non-secure network to prove their identity to one another in a secure manner.
+________________________________________________________________________________
+
+We will switch to Kerberos for authentications, keeping the directory service
+from link:http://lofic.github.com/linuxlab/04-directory_service.html[Lab 04] to get information on accounts.
+
+So you need to have a working directory from Lab 04 before doing this lab.
+
+This will be a guided lab.
+
+
+Set up the KDC
+--------------
+
+KDC = Key Distribution Center
+
+IMPORTANT: LAB 05-1 : open ports on the firewall 
+
+Cf :
+
+--------------------------------------------------------------------------------
+egrep 'krb5|kpwd|kadmin' /etc/services
+--------------------------------------------------------------------------------
+
+Open ports :
+
+* 88 TCP  and UDP
+* 464 TCP and UDP
+* 749 TCP
+
+
+IMPORTANT: LAB 05-2 : configure Kerberos and the KDC 
+
+[source, conf]
+--------------------------------------------------------------------------------
+[appdefaults]
+ pam = {
+   #...
+   validate = true
+ }
+--------------------------------------------------------------------------------
+
+
