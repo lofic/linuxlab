@@ -322,6 +322,7 @@ Then :
 
 [source, sh]
 --------------------------------------------------------------------------------
+yum -y install nss-pam-ldapd
 authconfig --enableldaptls --update # non interactive
 authconfig-tui                      # interactive
 --------------------------------------------------------------------------------
