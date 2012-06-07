@@ -1284,14 +1284,15 @@ EhMLafIpRCMusu8Oy9/Vf7HZzFU60RG++T8BBgAkirX2O+Vn5gAAAABJRU5ErkJggg==" />
 by Lorenzo Bettini
 http://www.lorenzobettini.it
 http://www.gnu.org/software/src-highlite -->
-<pre><tt>yum install pam_krb5</tt></pre></div></div>
+<pre><tt>yum -y install pam_krb5</tt></pre></div></div>
 <div class="paragraph"><p>Set :</p></div>
 <div class="listingblock">
 <div class="content"><!-- Generator: GNU source-highlight 3.1.5
 by Lorenzo Bettini
 http://www.lorenzobettini.it
 http://www.gnu.org/software/src-highlite -->
-<pre><tt>authconfig-tui</tt></pre></div></div>
+<pre><tt>authconfig-tui <span style="font-style: italic"><span style="color: #9A1900"># interactive</span></span>
+authconfig --enablekrb<span style="color: #993399">5</span> --disableldapauth --update</tt></pre></div></div>
 <div class="paragraph"><p>Disable LDAP auth.</p></div>
 <div class="paragraph"><p>Enable Kerberos auth.</p></div>
 <div class="paragraph"><p>Restart sshd :</p></div>
@@ -1306,7 +1307,7 @@ http://www.gnu.org/software/src-highlite -->
 <div id="footnotes"><hr /></div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2012-06-08 00:53:21 CEST
+Last updated 2012-06-08 01:17:54 CEST
 </div>
 </div>
 </body>
