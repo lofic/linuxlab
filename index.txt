@@ -40,6 +40,13 @@ link:04-directory_service.html[lab]
 link:https://github.com/lofic/linuxlab/tree/master/04-directory_service/resources[Resources]
 
 
+LAB 05 : Kerberos
+-----------------
+link:05-kerberos.html[lab]
+
+link:https://github.com/lofic/linuxlab/tree/master/05-kerberos/resources[Resources]
+
+
 LAB 06 : IPA 
 ------------
 link:06-IPA.html[lab]
