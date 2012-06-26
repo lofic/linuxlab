@@ -2096,9 +2096,10 @@ http://www.gnu.org/software/src-highlite -->
 by Lorenzo Bettini
 http://www.lorenzobettini.it
 http://www.gnu.org/software/src-highlite -->
-<pre><tt>yum -y install nss-pam-ldapd
+<pre><tt>yum -y install nss-pam-ldapd openldap-clients
 authconfig --enableldaptls --update <span style="font-style: italic"><span style="color: #9A1900"># non interactive</span></span>
-authconfig-tui                      <span style="font-style: italic"><span style="color: #9A1900"># interactive</span></span></tt></pre></div></div>
+authconfig-tui                      <span style="font-style: italic"><span style="color: #9A1900"># interactive</span></span>
+/sbin/service nslcd restart</tt></pre></div></div>
 <div class="paragraph"><p>Check with :</p></div>
 <div class="listingblock">
 <div class="content"><!-- Generator: GNU source-highlight 3.1.5
@@ -2112,7 +2113,7 @@ http://www.gnu.org/software/src-highlite -->
 <div id="footnotes"><hr /></div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2012-06-26 10:17:11 CEST
+Last updated 2012-06-26 10:30:31 CEST
 </div>
 </div>
 </body>
