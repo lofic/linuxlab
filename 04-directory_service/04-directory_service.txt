@@ -63,6 +63,12 @@ In `/etc/sysconfig/iptables` add those rules at the right place in the chain :
 -A INPUT -m state --state NEW -m tcp -p tcp --dport 636 -j ACCEPT
 --------------------------------------------------------------------------------
 
+And restart the firewall :
+
+--------------------------------------------------------------------------------
+/sbin/service iptables restart
+--------------------------------------------------------------------------------
+
 Install 389-DS
 --------------
 
@@ -322,9 +328,10 @@ Then :
 
 [source, sh]
 --------------------------------------------------------------------------------
-yum -y install nss-pam-ldapd
+yum -y install nss-pam-ldapd openldap-clients
 authconfig --enableldaptls --update # non interactive
 authconfig-tui                      # interactive
+/sbin/service nslcd restart
 --------------------------------------------------------------------------------
 
 Check with :
