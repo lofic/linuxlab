@@ -38,8 +38,10 @@ IMPORTANT: LAB 04-1 : add the yum repositories
 
 [source, sh]
 --------------------------------------------------------------------------------
-rpm -Uvh http://rpmfind.net/linux/epel/6/i386/epel-release-6-7.noarch.rpm
+#rpm -Uvh http://rpmfind.net/linux/epel/6/i386/epel-release-6-7.noarch.rpm
+rpm -Uvh http://mirrors.ircam.fr/pub/fedora/epel/6/i386/epel-release-6-7.noarch.rpm
 yum -y install centos-release-cr
+yum -y install wget
 wget http://repos.fedorapeople.org/repos/rmeggins/389-ds-base/epel-389-ds-base.repo \
  -O /etc/yum.repos.d/epel-389-ds-base.repo 
 yum clean all && yum makecache

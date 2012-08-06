@@ -139,7 +139,7 @@ Set the KDC in `/var/kerberos/krb5kdc/kdc.conf` :
 Note the path of the `admin_keytab`
 
 
-Change the realm for the preset ACL in /var/kerberos/krb5kdc/kadm5.acl :
+Change the realm for the preset ACL in `/var/kerberos/krb5kdc/kadm5.acl`:
 
 [source, conf]
 --------------------------------------------------------------------------------
