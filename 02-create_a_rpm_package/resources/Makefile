@@ -2,7 +2,7 @@ helloworld: helloworld.c
 	gcc helloworld.c -o helloworld
 #   ^-- you need a tab here, not spaces
 
-INST_LOCATION=/usr/local/bin
+INST_LOCATION=/usr/bin
 
 install: helloworld-install
 
