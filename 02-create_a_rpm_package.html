@@ -2,15 +2,25 @@
     "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-<meta name="generator" content="AsciiDoc 8.5.2" />
+<meta http-equiv="Content-Type" content="application/xhtml+xml; charset=UTF-8" />
+<meta name="generator" content="AsciiDoc 8.6.9" />
 <title>Lab 02 : create a rpm package</title>
 <style type="text/css">
-/* Debug borders */
-p, li, dt, dd, div, pre, h1, h2, h3, h4, h5, h6 {
-/*
-  border: 1px solid red;
-*/
+/* Shared CSS for AsciiDoc xhtml11 and html5 backends */
+
+/* Default font. */
+body {
+  font-family: Georgia,serif;
+}
+
+/* Title font. */
+h1, h2, h3, h4, h5, h6,
+div.title, caption.title,
+thead, p.table.header,
+#toctitle,
+#author, #revnumber, #revdate, #revremark,
+#footer {
+  font-family: Arial,Helvetica,sans-serif;
 }
 
 body {
@@ -35,13 +45,8 @@ strong {
   color: #083194;
 }
 
-tt {
-  color: navy;
-}
-
 h1, h2, h3, h4, h5, h6 {
   color: #527bbd;
-  font-family: sans-serif;
   margin-top: 1.2em;
   margin-bottom: 0.5em;
   line-height: 1.3;
@@ -59,9 +64,11 @@ h3 {
 h3 + * {
   clear: left;
 }
+h5 {
+  font-size: 1.0em;
+}
 
 div.sectionbody {
-  font-family: serif;
   margin-left: 0;
 }
 
@@ -77,45 +84,50 @@ p {
 ul, ol, li > p {
   margin-top: 0;
 }
+ul > li     { color: #aaa; }
+ul > li > * { color: black; }
 
-pre {
+.monospaced, code, pre {
+  font-family: "Courier New", Courier, monospace;
+  font-size: inherit;
+  color: navy;
   padding: 0;
   margin: 0;
 }
+pre {
+  white-space: pre-wrap;
+}
 
-span#author {
+#author {
   color: #527bbd;
-  font-family: sans-serif;
   font-weight: bold;
   font-size: 1.1em;
 }
-span#email {
+#email {
 }
-span#revnumber, span#revdate, span#revremark {
-  font-family: sans-serif;
+#revnumber, #revdate, #revremark {
 }
 
-div#footer {
-  font-family: sans-serif;
+#footer {
   font-size: small;
   border-top: 2px solid silver;
   padding-top: 0.5em;
   margin-top: 4.0em;
 }
-div#footer-text {
+#footer-text {
   float: left;
   padding-bottom: 0.5em;
 }
-div#footer-badges {
+#footer-badges {
   float: right;
   padding-bottom: 0.5em;
 }
 
-div#preamble {
+#preamble {
   margin-top: 1.5em;
   margin-bottom: 1.5em;
 }
-div.tableblock, div.imageblock, div.exampleblock, div.verseblock,
+div.imageblock, div.exampleblock, div.verseblock,
 div.quoteblock, div.literalblock, div.listingblock, div.sidebarblock,
 div.admonitionblock {
   margin-top: 1.0em;
@@ -135,7 +147,6 @@ div.content { /* Block element content. */
 /* Block element titles. */
 div.title, caption.title {
   color: #527bbd;
-  font-family: sans-serif;
   font-weight: bold;
   text-align: left;
   margin-top: 1.0em;
@@ -157,13 +168,15 @@ div.content + div.title {
 
 div.sidebarblock > div.content {
   background: #ffffee;
-  border: 1px solid silver;
+  border: 1px solid #dddddd;
+  border-left: 4px solid #f0f0f0;
   padding: 0.5em;
 }
 
 div.listingblock > div.content {
-  border: 1px solid silver;
-  background: #f4f4f4;
+  border: 1px solid #dddddd;
+  border-left: 5px solid #f0f0f0;
+  background: #f8f8f8;
   padding: 0.5em;
 }
 
@@ -171,8 +184,8 @@ div.quoteblock, div.verseblock {
   padding-left: 1.0em;
   margin-left: 1.0em;
   margin-right: 10%;
-  border-left: 5px solid #dddddd;
-  color: #777777;
+  border-left: 5px solid #f0f0f0;
+  color: #888;
 }
 
 div.quoteblock > div.attribution {
@@ -180,8 +193,9 @@ div.quoteblock > div.attribution {
   text-align: right;
 }
 
-div.verseblock > div.content {
-  white-space: pre;
+div.verseblock > pre.content {
+  font-family: inherit;
+  font-size: inherit;
 }
 div.verseblock > div.attribution {
   padding-top: 0.75em;
@@ -211,7 +225,7 @@ div.exampleblock > div.content {
 }
 
 div.imageblock div.content { padding-left: 0; }
-span.image img { border-style: none; }
+span.image img { border-style: none; vertical-align: text-bottom; }
 a.image:visited { color: white; }
 
 dl {
@@ -254,35 +268,12 @@ div.compact div, div.compact div {
   margin-bottom: 0.1em;
 }
 
-div.tableblock > table {
-  border: 3px solid #527bbd;
-}
-thead, p.table.header {
-  font-family: sans-serif;
-  font-weight: bold;
-}
 tfoot {
   font-weight: bold;
 }
 td > div.verse {
   white-space: pre;
 }
-p.table {
-  margin-top: 0;
-}
-/* Because the table frame attribute is overriden by CSS in most browsers. */
-div.tableblock > table[frame="void"] {
-  border-style: none;
-}
-div.tableblock > table[frame="hsides"] {
-  border-left-style: none;
-  border-right-style: none;
-}
-div.tableblock > table[frame="vsides"] {
-  border-top-style: none;
-  border-bottom-style: none;
-}
-
 
 div.hdlist {
   margin-top: 0.8em;
@@ -339,25 +330,32 @@ span.footnote, span.footnoteref {
   min-width: 100px;
 }
 
-
-@media print {
-  div#footer-badges { display: none; }
+div.colist td {
+  padding-right: 0.5em;
+  padding-bottom: 0.3em;
+  vertical-align: top;
+}
+div.colist td img {
+  margin-top: 0.3em;
 }
 
-div#toc {
+@media print {
+  #footer-badges { display: none; }
+}
+
+#toc {
   margin-bottom: 2.5em;
 }
 
-div#toctitle {
+#toctitle {
   color: #527bbd;
-  font-family: sans-serif;
   font-size: 1.1em;
   font-weight: bold;
   margin-top: 1.0em;
   margin-bottom: 0.1em;
 }
 
-div.toclevel1, div.toclevel2, div.toclevel3, div.toclevel4 {
+div.toclevel0, div.toclevel1, div.toclevel2, div.toclevel3, div.toclevel4 {
   margin-top: 0;
   margin-bottom: 0;
 }
@@ -373,51 +371,235 @@ div.toclevel4 {
   margin-left: 6em;
   font-size: 0.9em;
 }
-/* Workarounds for IE6's broken and incomplete CSS2. */
 
-div.sidebar-content {
-  background: #ffffee;
-  border: 1px solid silver;
-  padding: 0.5em;
+span.aqua { color: aqua; }
+span.black { color: black; }
+span.blue { color: blue; }
+span.fuchsia { color: fuchsia; }
+span.gray { color: gray; }
+span.green { color: green; }
+span.lime { color: lime; }
+span.maroon { color: maroon; }
+span.navy { color: navy; }
+span.olive { color: olive; }
+span.purple { color: purple; }
+span.red { color: red; }
+span.silver { color: silver; }
+span.teal { color: teal; }
+span.white { color: white; }
+span.yellow { color: yellow; }
+
+span.aqua-background { background: aqua; }
+span.black-background { background: black; }
+span.blue-background { background: blue; }
+span.fuchsia-background { background: fuchsia; }
+span.gray-background { background: gray; }
+span.green-background { background: green; }
+span.lime-background { background: lime; }
+span.maroon-background { background: maroon; }
+span.navy-background { background: navy; }
+span.olive-background { background: olive; }
+span.purple-background { background: purple; }
+span.red-background { background: red; }
+span.silver-background { background: silver; }
+span.teal-background { background: teal; }
+span.white-background { background: white; }
+span.yellow-background { background: yellow; }
+
+span.big { font-size: 2em; }
+span.small { font-size: 0.6em; }
+
+span.underline { text-decoration: underline; }
+span.overline { text-decoration: overline; }
+span.line-through { text-decoration: line-through; }
+
+div.unbreakable { page-break-inside: avoid; }
+
+
+/*
+ * xhtml11 specific
+ *
+ * */
+
+div.tableblock {
+  margin-top: 1.0em;
+  margin-bottom: 1.5em;
 }
-div.sidebar-title, div.image-title {
-  color: #527bbd;
-  font-family: sans-serif;
+div.tableblock > table {
+  border: 3px solid #527bbd;
+}
+thead, p.table.header {
   font-weight: bold;
-  margin-top: 0.0em;
-  margin-bottom: 0.5em;
+  color: #527bbd;
+}
+p.table {
+  margin-top: 0;
+}
+/* Because the table frame attribute is overriden by CSS in most browsers. */
+div.tableblock > table[frame="void"] {
+  border-style: none;
+}
+div.tableblock > table[frame="hsides"] {
+  border-left-style: none;
+  border-right-style: none;
+}
+div.tableblock > table[frame="vsides"] {
+  border-top-style: none;
+  border-bottom-style: none;
 }
 
-div.listingblock div.content {
-  border: 1px solid silver;
-  background: #f4f4f4;
-  padding: 0.5em;
+
+/*
+ * html5 specific
+ *
+ * */
+
+table.tableblock {
+  margin-top: 1.0em;
+  margin-bottom: 1.5em;
+}
+thead, p.tableblock.header {
+  font-weight: bold;
+  color: #527bbd;
+}
+p.tableblock {
+  margin-top: 0;
+}
+table.tableblock {
+  border-width: 3px;
+  border-spacing: 0px;
+  border-style: solid;
+  border-color: #527bbd;
+  border-collapse: collapse;
+}
+th.tableblock, td.tableblock {
+  border-width: 1px;
+  padding: 4px;
+  border-style: solid;
+  border-color: #527bbd;
 }
 
-div.quoteblock-attribution {
-  padding-top: 0.5em;
+table.tableblock.frame-topbot {
+  border-left-style: hidden;
+  border-right-style: hidden;
+}
+table.tableblock.frame-sides {
+  border-top-style: hidden;
+  border-bottom-style: hidden;
+}
+table.tableblock.frame-none {
+  border-style: hidden;
+}
+
+th.tableblock.halign-left, td.tableblock.halign-left {
+  text-align: left;
+}
+th.tableblock.halign-center, td.tableblock.halign-center {
+  text-align: center;
+}
+th.tableblock.halign-right, td.tableblock.halign-right {
   text-align: right;
 }
 
-div.verseblock-content {
-  white-space: pre;
+th.tableblock.valign-top, td.tableblock.valign-top {
+  vertical-align: top;
 }
-div.verseblock-attribution {
-  padding-top: 0.75em;
-  text-align: left;
+th.tableblock.valign-middle, td.tableblock.valign-middle {
+  vertical-align: middle;
 }
-
-div.exampleblock-content {
-  border-left: 3px solid #dddddd;
-  padding-left: 0.5em;
+th.tableblock.valign-bottom, td.tableblock.valign-bottom {
+  vertical-align: bottom;
 }
 
-/* IE6 sets dynamically generated links as visited. */
-div#toc a:visited { color: blue; }
+
+/*
+ * manpage specific
+ *
+ * */
+
+body.manpage h1 {
+  padding-top: 0.5em;
+  padding-bottom: 0.5em;
+  border-top: 2px solid silver;
+  border-bottom: 2px solid silver;
+}
+body.manpage h2 {
+  border-style: none;
+}
+body.manpage div.sectionbody {
+  margin-left: 3em;
+}
+
+@media print {
+  body.manpage div#toc { display: none; }
+}
+.highlight .hll { background-color: #ffffcc }
+.highlight  { background: #f8f8f8; }
+.highlight .c { color: #408080; font-style: italic } /* Comment */
+.highlight .err { border: 1px solid #FF0000 } /* Error */
+.highlight .k { color: #008000; font-weight: bold } /* Keyword */
+.highlight .o { color: #666666 } /* Operator */
+.highlight .cm { color: #408080; font-style: italic } /* Comment.Multiline */
+.highlight .cp { color: #BC7A00 } /* Comment.Preproc */
+.highlight .c1 { color: #408080; font-style: italic } /* Comment.Single */
+.highlight .cs { color: #408080; font-style: italic } /* Comment.Special */
+.highlight .gd { color: #A00000 } /* Generic.Deleted */
+.highlight .ge { font-style: italic } /* Generic.Emph */
+.highlight .gr { color: #FF0000 } /* Generic.Error */
+.highlight .gh { color: #000080; font-weight: bold } /* Generic.Heading */
+.highlight .gi { color: #00A000 } /* Generic.Inserted */
+.highlight .go { color: #808080 } /* Generic.Output */
+.highlight .gp { color: #000080; font-weight: bold } /* Generic.Prompt */
+.highlight .gs { font-weight: bold } /* Generic.Strong */
+.highlight .gu { color: #800080; font-weight: bold } /* Generic.Subheading */
+.highlight .gt { color: #0040D0 } /* Generic.Traceback */
+.highlight .kc { color: #008000; font-weight: bold } /* Keyword.Constant */
+.highlight .kd { color: #008000; font-weight: bold } /* Keyword.Declaration */
+.highlight .kn { color: #008000; font-weight: bold } /* Keyword.Namespace */
+.highlight .kp { color: #008000 } /* Keyword.Pseudo */
+.highlight .kr { color: #008000; font-weight: bold } /* Keyword.Reserved */
+.highlight .kt { color: #B00040 } /* Keyword.Type */
+.highlight .m { color: #666666 } /* Literal.Number */
+.highlight .s { color: #BA2121 } /* Literal.String */
+.highlight .na { color: #7D9029 } /* Name.Attribute */
+.highlight .nb { color: #008000 } /* Name.Builtin */
+.highlight .nc { color: #0000FF; font-weight: bold } /* Name.Class */
+.highlight .no { color: #880000 } /* Name.Constant */
+.highlight .nd { color: #AA22FF } /* Name.Decorator */
+.highlight .ni { color: #999999; font-weight: bold } /* Name.Entity */
+.highlight .ne { color: #D2413A; font-weight: bold } /* Name.Exception */
+.highlight .nf { color: #0000FF } /* Name.Function */
+.highlight .nl { color: #A0A000 } /* Name.Label */
+.highlight .nn { color: #0000FF; font-weight: bold } /* Name.Namespace */
+.highlight .nt { color: #008000; font-weight: bold } /* Name.Tag */
+.highlight .nv { color: #19177C } /* Name.Variable */
+.highlight .ow { color: #AA22FF; font-weight: bold } /* Operator.Word */
+.highlight .w { color: #bbbbbb } /* Text.Whitespace */
+.highlight .mf { color: #666666 } /* Literal.Number.Float */
+.highlight .mh { color: #666666 } /* Literal.Number.Hex */
+.highlight .mi { color: #666666 } /* Literal.Number.Integer */
+.highlight .mo { color: #666666 } /* Literal.Number.Oct */
+.highlight .sb { color: #BA2121 } /* Literal.String.Backtick */
+.highlight .sc { color: #BA2121 } /* Literal.String.Char */
+.highlight .sd { color: #BA2121; font-style: italic } /* Literal.String.Doc */
+.highlight .s2 { color: #BA2121 } /* Literal.String.Double */
+.highlight .se { color: #BB6622; font-weight: bold } /* Literal.String.Escape */
+.highlight .sh { color: #BA2121 } /* Literal.String.Heredoc */
+.highlight .si { color: #BB6688; font-weight: bold } /* Literal.String.Interpol */
+.highlight .sx { color: #008000 } /* Literal.String.Other */
+.highlight .sr { color: #BB6688 } /* Literal.String.Regex */
+.highlight .s1 { color: #BA2121 } /* Literal.String.Single */
+.highlight .ss { color: #19177C } /* Literal.String.Symbol */
+.highlight .bp { color: #008000 } /* Name.Builtin.Pseudo */
+.highlight .vc { color: #19177C } /* Name.Variable.Class */
+.highlight .vg { color: #19177C } /* Name.Variable.Global */
+.highlight .vi { color: #19177C } /* Name.Variable.Instance */
+.highlight .il { color: #666666 } /* Literal.Number.Integer.Long */
+
+
 </style>
 <script type="text/javascript">
 /*<![CDATA[*/
-window.onload = function(){asciidoc.footnotes();}
 var asciidoc = {  // Namespace.
 
 /////////////////////////////////////////////////////////////////////
@@ -459,7 +641,7 @@ toc: function (toclevels) {
 
   function tocEntries(el, toclevels) {
     var result = new Array;
-    var re = new RegExp('[hH]([2-'+(toclevels+1)+'])');
+    var re = new RegExp('[hH]([1-'+(toclevels+1)+'])');
     // Function that scans the DOM tree for header elements (the DOM2
     // nodeIterator API would be a better technique but not supported by all
     // browsers).
@@ -479,6 +661,25 @@ toc: function (toclevels) {
   }
 
   var toc = document.getElementById("toc");
+  if (!toc) {
+    return;
+  }
+
+  // Delete existing TOC entries in case we're reloading the TOC.
+  var tocEntriesToRemove = [];
+  var i;
+  for (i = 0; i < toc.childNodes.length; i++) {
+    var entry = toc.childNodes[i];
+    if (entry.nodeName.toLowerCase() == 'div'
+     && entry.getAttribute("class")
+     && entry.getAttribute("class").match(/^toclevel/))
+      tocEntriesToRemove.push(entry);
+  }
+  for (i = 0; i < tocEntriesToRemove.length; i++) {
+    toc.removeChild(tocEntriesToRemove[i]);
+  }
+
+  // Rebuild TOC entries.
   var entries = tocEntries(document.getElementById("content"), toclevels);
   for (var i = 0; i < entries.length; ++i) {
     var entry = entries[i];
@@ -506,24 +707,44 @@ toc: function (toclevels) {
  */
 
 footnotes: function () {
-  var cont = document.getElementById("content");
+  // Delete existing footnote entries in case we're reloading the footnodes.
+  var i;
   var noteholder = document.getElementById("footnotes");
+  if (!noteholder) {
+    return;
+  }
+  var entriesToRemove = [];
+  for (i = 0; i < noteholder.childNodes.length; i++) {
+    var entry = noteholder.childNodes[i];
+    if (entry.nodeName.toLowerCase() == 'div' && entry.getAttribute("class") == "footnote")
+      entriesToRemove.push(entry);
+  }
+  for (i = 0; i < entriesToRemove.length; i++) {
+    noteholder.removeChild(entriesToRemove[i]);
+  }
+
+  // Rebuild footnote entries.
+  var cont = document.getElementById("content");
   var spans = cont.getElementsByTagName("span");
   var refs = {};
   var n = 0;
   for (i=0; i<spans.length; i++) {
     if (spans[i].className == "footnote") {
       n++;
-      // Use [\s\S] in place of . so multi-line matches work.
-      // Because JavaScript has no s (dotall) regex flag.
-      note = spans[i].innerHTML.match(/\s*\[([\s\S]*)]\s*/)[1];
+      var note = spans[i].getAttribute("data-note");
+      if (!note) {
+        // Use [\s\S] in place of . so multi-line matches work.
+        // Because JavaScript has no s (dotall) regex flag.
+        note = spans[i].innerHTML.match(/\s*\[([\s\S]*)]\s*/)[1];
+        spans[i].innerHTML =
+          "[<a id='_footnoteref_" + n + "' href='#_footnote_" + n +
+          "' title='View footnote' class='footnote'>" + n + "</a>]";
+        spans[i].setAttribute("data-note", note);
+      }
       noteholder.innerHTML +=
         "<div class='footnote' id='_footnote_" + n + "'>" +
         "<a href='#_footnoteref_" + n + "' title='Return to text'>" +
         n + "</a>. " + note + "</div>";
-      spans[i].innerHTML =
-        "[<a id='_footnoteref_" + n + "' href='#_footnote_" + n +
-        "' title='View footnote' class='footnote'>" + n + "</a>]";
       var id =spans[i].getAttribute("id");
       if (id != null) refs["#"+id] = n;
     }
@@ -543,18 +764,42 @@ footnotes: function () {
       }
     }
   }
+},
+
+install: function(toclevels) {
+  var timerId;
+
+  function reinstall() {
+    asciidoc.footnotes();
+    if (toclevels) {
+      asciidoc.toc(toclevels);
+    }
+  }
+
+  function reinstallAndRemoveTimer() {
+    clearInterval(timerId);
+    reinstall();
+  }
+
+  timerId = setInterval(reinstall, 500);
+  if (document.addEventListener)
+    document.addEventListener("DOMContentLoaded", reinstallAndRemoveTimer, false);
+  else
+    window.onload = reinstallAndRemoveTimer;
 }
 
 }
+asciidoc.install();
 /*]]>*/
 </script>
 </head>
-<body>
+<body class="article">
 <div id="header">
 <h1>Lab 02 : create a rpm package</h1>
 <span id="author">Louis Coilliot</span><br />
 </div>
 <div id="content">
+<div class="sect1">
 <h2 id="_introduction">1. Introduction</h2>
 <div class="sectionbody">
 <div class="paragraph"><p>This will be a guided tour.</p></div>
@@ -626,59 +871,55 @@ process.</p></div>
 <div class="paragraph"><p>We will create two very basic packages, a package containing a script and a
 package with a binary that we must compile during the build.</p></div>
 </div>
+</div>
+<div class="sect1">
 <h2 id="_install_the_required_packages">2. Install the required packages</h2>
 <div class="sectionbody">
 <div class="paragraph"><p>From the previous lab, you should have configured a yum repository.
 It could be a good idea to include it in your clean template machine.</p></div>
-<div class="paragraph"><p><tt>rpmbuild</tt> is the program used to build a source or binary package.</p></div>
+<div class="paragraph"><p><code>rpmbuild</code> is the program used to build a source or binary package.</p></div>
 <div class="listingblock">
-<div class="content"><!-- Generator: GNU source-highlight 3.1.3
-by Lorenzo Bettini
-http://www.lorenzobettini.it
-http://www.gnu.org/software/src-highlite -->
-<pre><tt>yum install rpm-build rpmdevtools rpmlint vim</tt></pre></div></div>
+<div class="content"><div class="highlight"><pre>yum install rpm-build rpmdevtools rpmlint vim
+</pre></div></div></div>
 </div>
+</div>
+<div class="sect1">
 <h2 id="_set_the_environment">3. Set the environment</h2>
 <div class="sectionbody">
 <div class="paragraph"><p>From the previous lab, you should have configured a yum repository.</p></div>
 <div class="paragraph"><p>Create a local account named pkgbuild</p></div>
 <div class="listingblock">
-<div class="content"><!-- Generator: GNU source-highlight 3.1.3
-by Lorenzo Bettini
-http://www.lorenzobettini.it
-http://www.gnu.org/software/src-highlite -->
-<pre><tt>adduser pkgbuild
-passwd pkgbuild</tt></pre></div></div>
+<div class="content"><div class="highlight"><pre>adduser pkgbuild
+passwd pkgbuild
+</pre></div></div></div>
 <div class="paragraph"><p>Switch to this user</p></div>
 <div class="listingblock">
-<div class="content"><!-- Generator: GNU source-highlight 3.1.3
-by Lorenzo Bettini
-http://www.lorenzobettini.it
-http://www.gnu.org/software/src-highlite -->
-<pre><tt>su - pkgbuild</tt></pre></div></div>
+<div class="content"><div class="highlight"><pre>su - pkgbuild
+</pre></div></div></div>
 <div class="paragraph"><p>Create the build tree</p></div>
 <div class="listingblock">
-<div class="content"><!-- Generator: GNU source-highlight 3.1.3
-by Lorenzo Bettini
-http://www.lorenzobettini.it
-http://www.gnu.org/software/src-highlite -->
-<pre><tt>cd
+<div class="content"><div class="highlight"><pre><span class="nb">cd</span>
 rpmdev-setuptree
-ls -l rpmbuild</tt></pre></div></div>
+ls -l rpmbuild
+</pre></div></div></div>
 </div>
+</div>
+<div class="sect1">
 <h2 id="_macroscopic_build_procedure">4. Macroscopic build procedure</h2>
 <div class="sectionbody">
-<div class="paragraph"><p>In <tt>SOURCES</tt>, create the target tree for the package.</p></div>
+<div class="paragraph"><p>In <code>SOURCES</code>, create the target tree for the package.</p></div>
 <div class="paragraph"><p>Create a folder with the name of the package.</p></div>
 <div class="paragraph"><p>Put the files of the software in this folder (like in a chrooted environment).</p></div>
-<div class="paragraph"><p>e.g. <tt>SOURCES/helloworldsh-1/usr/local/bin/helloworld.sh</tt>. The package is named
-helloworldsh, and the script will be installed in <tt>/usr/local/bin/helloworld.sh</tt></p></div>
-<div class="paragraph"><p>In <tt>SPECS</tt>, create the <tt>.spec</tt> file, from a template.</p></div>
-<div class="paragraph"><p>A <tt>.spec</tt> file is a specification file for building a rpm package, with the meta
+<div class="paragraph"><p>e.g. <code>SOURCES/helloworldsh-1/usr/bin/helloworld.sh</code>. The package is named
+helloworldsh, and the script will be installed in <code>/usr/bin/helloworld.sh</code></p></div>
+<div class="paragraph"><p>In <code>SPECS</code>, create the <code>.spec</code> file, from a template.</p></div>
+<div class="paragraph"><p>A <code>.spec</code> file is a specification file for building a rpm package, with the meta
 information and the recipe for the build.</p></div>
-<div class="paragraph"><p>Edit the entries in the <tt>.spec</tt> file.</p></div>
+<div class="paragraph"><p>Edit the entries in the <code>.spec</code> file.</p></div>
 <div class="paragraph"><p>Set the file and folder list, ownerships and permissions.</p></div>
 </div>
+</div>
+<div class="sect1">
 <h2 id="_first_package">5. First package</h2>
 <div class="sectionbody">
 <div class="paragraph"><p>To package some scripts, configuration files, data, there is no compilation
@@ -801,89 +1042,79 @@ EhMLafIpRCMusu8Oy9/Vf7HZzFU60RG++T8BBgAkirX2O+Vn5gAAAABJRU5ErkJggg==" />
 </tr></table>
 </div>
 <div class="paragraph"><p>We will create a package named helloworldsh, installing
-<tt>/usr/local/bin/helloworld.sh</tt></p></div>
+<code>/usr/bin/helloworld.sh</code></p></div>
 <div class="listingblock">
-<div class="content"><!-- Generator: GNU source-highlight 3.1.3
-by Lorenzo Bettini
-http://www.lorenzobettini.it
-http://www.gnu.org/software/src-highlite -->
-<pre><tt><span style="font-style: italic"><span style="color: #9A1900"># 1° Create the source tree</span></span>
-cd <span style="color: #990000">~</span>/rpmbuild/SOURCES
-mkdir -p helloworldsh-<span style="color: #993399">1</span>/usr/local/bin<span style="color: #990000">/</span>
-echo <span style="color: #FF0000">'echo Hello World'</span> <span style="color: #990000">&gt;</span> helloworldsh-<span style="color: #993399">1</span>/usr/local/bin/helloworld<span style="color: #990000">.</span>sh
-tar cvzf helloworldsh-<span style="color: #993399">1</span><span style="color: #990000">.</span>tgz helloworldsh-<span style="color: #993399">1</span>
-<span style="font-style: italic"><span style="color: #9A1900">#</span></span>
-<span style="font-style: italic"><span style="color: #9A1900"># 2° Create the spec file</span></span>
-cd <span style="color: #990000">~</span>/rpmbuild/SPECS
-rpmdev-newspec helloworldsh</tt></pre></div></div>
-<div class="paragraph"><p>To create a .spec skeleton, you can use <tt>rpmdev-newspec whatever.spec</tt>, or
-<tt>vim whatever.spec</tt>. <tt>vim</tt> has a plugin for creating/editing rpm spec files.</p></div>
+<div class="content"><div class="highlight"><pre><span class="c"># 1° Create the source tree</span>
+<span class="nb">cd</span> ~/rpmbuild/SOURCES
+mkdir -p helloworldsh-1/usr/bin/
+<span class="nb">echo</span> <span class="s1">&#39;echo Hello World&#39;</span> &gt; helloworldsh-1/usr/bin/helloworld.sh
+tar cvzf helloworldsh-1.tgz helloworldsh-1
+<span class="c">#</span>
+<span class="c"># 2° Create the spec file</span>
+<span class="nb">cd</span> ~/rpmbuild/SPECS
+rpmdev-newspec helloworldsh
+</pre></div></div></div>
+<div class="paragraph"><p>To create a .spec skeleton, you can use <code>rpmdev-newspec whatever.spec</code>, or
+<code>vim whatever.spec</code>. <code>vim</code> has a plugin for creating/editing rpm spec files.</p></div>
 <div class="paragraph"><p>Edit your spec file and set the entries.</p></div>
 <div class="paragraph"><p>This is a a basic working example (check also in the folder resources) :</p></div>
 <div class="listingblock">
-<div class="content"><!-- Generator: GNU source-highlight 3.1.3
-by Lorenzo Bettini
-http://www.lorenzobettini.it
-http://www.gnu.org/software/src-highlite -->
-<pre><tt><span style="font-weight: bold"><span style="color: #0000FF">Name:</span></span>               helloworldsh
-<span style="font-weight: bold"><span style="color: #0000FF">Version:</span></span>            <span style="color: #993399">1</span>
-<span style="font-weight: bold"><span style="color: #0000FF">Release:</span></span>            <span style="color: #993399">1</span>%{?dist}
-<span style="font-weight: bold"><span style="color: #0000FF">Summary:</span></span>            A script which says 'Hello World'
-<span style="font-weight: bold"><span style="color: #0000FF">Group:</span></span>              Misc
-<span style="font-weight: bold"><span style="color: #0000FF">License:</span></span>            GPL
-<span style="font-weight: bold"><span style="color: #0000FF">Source0:</span></span>            helloworldsh-<span style="color: #993399">1</span>.tgz
-<span style="font-weight: bold"><span style="color: #0000FF">BuildRoot:</span></span>          <span style="font-weight: bold"><span style="color: #000080">%{_tmppath}</span></span>/<span style="font-weight: bold"><span style="color: #000080">%{name}</span></span>-<span style="font-weight: bold"><span style="color: #000080">%{version}</span></span>-<span style="font-weight: bold"><span style="color: #000080">%{release}</span></span>-root-%(<span style="font-weight: bold"><span style="color: #000080">%{__id_u}</span></span> -n)
-<span style="font-weight: bold"><span style="color: #0000FF">BuildArchitectures:</span></span> noarch
-<span style="font-weight: bold"><span style="color: #0000FF">Requires:</span></span>           bash
+<div class="content"><div class="highlight"><pre><span class="gh">Name</span><span class="p">:</span>               helloworldsh
+<span class="gh">Version</span><span class="p">:</span>            1
+<span class="gh">Release</span><span class="p">:</span>            1<span class="nv">%{?dist}</span>
+<span class="gh">Summary</span><span class="p">:</span>            A script which says <span class="s1">&#39;Hello World&#39;</span>
+<span class="gh">Group</span><span class="p">:</span>              Misc
+<span class="gh">License</span><span class="p">:</span>            GPL
+<span class="gh">Source0</span><span class="p">:</span>            helloworldsh-1.tgz
+<span class="gh">BuildRoot</span><span class="p">:</span>          <span class="kp">%{_tmppath}</span>/<span class="kc">%{name}</span>-<span class="kc">%{version}</span>-<span class="kc">%{release}</span>-root-%(<span class="nf">%{__id_u}</span> -n)
+<span class="gh">BuildArchitectures</span><span class="p">:</span> noarch
+<span class="gh">Requires</span><span class="p">:</span>           bash
 
-<span style="font-weight: bold"><span style="color: #000080">%description</span></span>
+<span class="nd">%description</span>
 This package was made for the purpose a training lab.
 
-<span style="font-weight: bold"><span style="color: #000080">%prep</span></span>
-rm -rf <span style="color: #009900">$RPM_BUILD_ROOT</span>
-mkdir -p <span style="color: #009900">$RPM_BUILD_ROOT</span>
+<span class="nd">%prep</span>
+rm -rf <span class="vg">$RPM_BUILD_ROOT</span>
+mkdir -p <span class="vg">$RPM_BUILD_ROOT</span>
 
-<span style="font-weight: bold"><span style="color: #000080">%setup</span></span> -q
+<span class="k">%setup</span> -q
 
 
-<span style="font-weight: bold"><span style="color: #000080">%build</span></span>
-cp -ra * <span style="color: #009900">$RPM_BUILD_ROOT</span>
+<span class="nd">%build</span>
+cp -ra * <span class="vg">$RPM_BUILD_ROOT</span>
 
-<span style="font-style: italic"><span style="color: #9A1900">#configure</span></span>
+<span class="c">#configure</span>
 
-<span style="font-weight: bold"><span style="color: #000080">%install</span></span>
+<span class="nd">%install</span>
 
-<span style="font-weight: bold"><span style="color: #000080">%clean</span></span>
-rm -rf <span style="color: #009900">$RPM_BUILD_ROOT</span>
+<span class="nd">%clean</span>
+rm -rf <span class="vg">$RPM_BUILD_ROOT</span>
 
-<span style="font-weight: bold"><span style="color: #000080">%changelog</span></span>
-* Mon Apr  <span style="color: #993399">4</span> <span style="color: #993399">2011</span> Louis Coilliot
+<span class="nd">%changelog</span>
+<span class="gu">* Mon Apr  4 2011 Louis Coilliot</span>
 - creation
 
-<span style="font-weight: bold"><span style="color: #000080">%files</span></span>
-<span style="font-weight: bold"><span style="color: #000080">%defattr</span></span>(-,root,root,-)
-<span style="font-weight: bold"><span style="color: #000080">%attr</span></span>(<span style="color: #993399">0755</span>,root,root) /usr/local/bin/helloworld.sh</tt></pre></div></div>
+<span class="nd">%files</span>
+<span class="k">%defattr</span>(-,root,root,-)
+<span class="k">%attr</span>(0755,root,root) /usr/bin/helloworld.sh
+</pre></div></div></div>
 <div class="paragraph"><p>Then, build the package :</p></div>
 <div class="listingblock">
-<div class="content"><!-- Generator: GNU source-highlight 3.1.3
-by Lorenzo Bettini
-http://www.lorenzobettini.it
-http://www.gnu.org/software/src-highlite -->
-<pre><tt>cd <span style="color: #990000">~</span>/rpmbuild/SPECS
-rpmlint helloworldsh<span style="color: #990000">.</span>spec
-rpmbuild -bb helloworldsh<span style="color: #990000">.</span>spec
-find <span style="color: #990000">~</span>/rpmbuild/RPMS</tt></pre></div></div>
+<div class="content"><div class="highlight"><pre><span class="nb">cd</span> ~/rpmbuild/SPECS
+rpmlint helloworldsh.spec
+rpmbuild -bb helloworldsh.spec
+find ~/rpmbuild/RPMS
+</pre></div></div></div>
 </div>
+</div>
+<div class="sect1">
 <h2 id="_binary_package_from_source_code">6. Binary package from source code</h2>
 <div class="sectionbody">
 <div class="paragraph"><p>Now we will compile a source code and package the resulting binary.</p></div>
 <div class="paragraph"><p>Some prerequisites :</p></div>
 <div class="listingblock">
-<div class="content"><!-- Generator: GNU source-highlight 3.1.3
-by Lorenzo Bettini
-http://www.lorenzobettini.it
-http://www.gnu.org/software/src-highlite -->
-<pre><tt>yum -y install gcc make</tt></pre></div></div>
+<div class="content"><div class="highlight"><pre>yum -y install gcc make
+</pre></div></div></div>
 <div class="admonitionblock">
 <table><tr>
 <td class="icon">
@@ -1002,105 +1233,92 @@ EhMLafIpRCMusu8Oy9/Vf7HZzFU60RG++T8BBgAkirX2O+Vn5gAAAABJRU5ErkJggg==" />
 </tr></table>
 </div>
 <div class="paragraph"><p>We will create a package named helloworldbin, installing
-<tt>/usr/local/bin/helloworld</tt>.</p></div>
-<div class="paragraph"><p>This is compiled from a program written in C, <tt>helloworld.c</tt> :</p></div>
+<code>/usr/bin/helloworld</code>.</p></div>
+<div class="paragraph"><p>This is compiled from a program written in C, <code>helloworld.c</code> :</p></div>
 <div class="listingblock">
-<div class="content"><!-- Generator: GNU source-highlight 3.1.3
-by Lorenzo Bettini
-http://www.lorenzobettini.it
-http://www.gnu.org/software/src-highlite -->
-<pre><tt><span style="font-weight: bold"><span style="color: #000080">#include</span></span> <span style="color: #FF0000">&lt;stdio.h&gt;</span>
-<span style="color: #009900">void</span> <span style="font-weight: bold"><span style="color: #000000">main</span></span><span style="color: #990000">()</span> <span style="color: #FF0000">{</span> <span style="font-weight: bold"><span style="color: #000000">printf</span></span> <span style="color: #990000">(</span><span style="color: #FF0000">"Hello World</span><span style="color: #CC33CC">\n</span><span style="color: #FF0000">"</span><span style="color: #990000">);</span> <span style="color: #FF0000">}</span></tt></pre></div></div>
-<div class="paragraph"><p>We use a <tt>Makefile</tt> to compile and install it :</p></div>
+<div class="content"><div class="highlight"><pre><span class="cp">#include &lt;stdio.h&gt;</span>
+<span class="kt">void</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span> <span class="n">printf</span> <span class="p">(</span><span class="s">&quot;Hello World</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">);</span> <span class="p">}</span>
+</pre></div></div></div>
+<div class="paragraph"><p>We use a <code>Makefile</code> to compile and install it :</p></div>
 <div class="listingblock">
-<div class="content"><!-- Generator: GNU source-highlight 3.1.3
-by Lorenzo Bettini
-http://www.lorenzobettini.it
-http://www.gnu.org/software/src-highlite -->
-<pre><tt>helloworld<span style="color: #990000">:</span> helloworld<span style="color: #990000">.</span>c
-        gcc helloworld<span style="color: #990000">.</span>c -o helloworld
-<span style="font-style: italic"><span style="color: #9A1900">#   ^-- you need a tab here, not spaces</span></span>
+<div class="content"><div class="highlight"><pre>helloworld: helloworld.c
+        gcc helloworld.c -o helloworld
+<span class="c">#   ^-- you need a tab here, not spaces</span>
 
-<span style="color: #009900">INST_LOCATION</span><span style="color: #990000">=</span>/usr/local/bin
+<span class="nv">INST_LOCATION</span><span class="o">=</span>/usr/bin
 
-install<span style="color: #990000">:</span> helloworld-install
+install: helloworld-install
 
-helloworld-install<span style="color: #990000">:</span>
-        mkdir -p <span style="color: #009900">$(BUILDROOT)$(INST_LOCATION)</span>
-        cp helloworld <span style="color: #009900">$(BUILDROOT)$(INST_LOCATION)</span>
-        chmod <span style="color: #993399">755</span> <span style="color: #009900">$(BUILDROOT)$(INST_LOCATION)</span>/helloworld
-<span style="font-style: italic"><span style="color: #9A1900">#   ^-- you need a tab here, not spaces</span></span></tt></pre></div></div>
-<div class="paragraph"><p>You can get <tt>helloworld.c</tt> and <tt>Makefile</tt> in the resources for this lab.</p></div>
-<div class="paragraph"><p>Put <tt>helloworld.c</tt> and <tt>Makefile</tt> in the user&#8217;s home directory.</p></div>
+helloworld-install:
+        mkdir -p <span class="k">$(</span>BUILDROOT<span class="k">)$(</span>INST_LOCATION<span class="k">)</span>
+        cp helloworld <span class="k">$(</span>BUILDROOT<span class="k">)$(</span>INST_LOCATION<span class="k">)</span>
+        chmod <span class="m">755</span> <span class="k">$(</span>BUILDROOT<span class="k">)$(</span>INST_LOCATION<span class="k">)</span>/helloworld
+<span class="c">#   ^-- you need a tab here, not spaces</span>
+</pre></div></div></div>
+<div class="paragraph"><p>You can get <code>helloworld.c</code> and <code>Makefile</code> in the resources for this lab.</p></div>
+<div class="paragraph"><p>Put <code>helloworld.c</code> and <code>Makefile</code> in the user&#8217;s home directory.</p></div>
 <div class="listingblock">
-<div class="content"><!-- Generator: GNU source-highlight 3.1.3
-by Lorenzo Bettini
-http://www.lorenzobettini.it
-http://www.gnu.org/software/src-highlite -->
-<pre><tt><span style="font-style: italic"><span style="color: #9A1900"># 1° Create the source tree</span></span>
-cd <span style="color: #990000">~</span>/rpmbuild/SOURCES
-mkdir -p helloworldbin-<span style="color: #993399">1</span>
-cp <span style="color: #990000">~/</span>{helloworld<span style="color: #990000">.</span>c<span style="color: #990000">,</span>Makefile} helloworldbin-<span style="color: #993399">1</span><span style="color: #990000">/</span>
-<span style="font-style: italic"><span style="color: #9A1900"># Just in case :</span></span>
-sed -i <span style="color: #FF0000">'s/^[ ][ ]*/</span><span style="color: #CC33CC">\t</span><span style="color: #FF0000">/g'</span> helloworldbin-<span style="color: #993399">1</span>/Makefile
-tar cvzf helloworldbin-<span style="color: #993399">1</span><span style="color: #990000">.</span>tgz helloworldbin-<span style="color: #993399">1</span>
-<span style="font-style: italic"><span style="color: #9A1900">#</span></span>
-<span style="font-style: italic"><span style="color: #9A1900"># 2° Create the spec file</span></span>
-cd <span style="color: #990000">~</span>/rpmbuild/SPECS
-rpmdev-newspec helloworldbin</tt></pre></div></div>
+<div class="content"><div class="highlight"><pre><span class="c"># 1° Create the source tree</span>
+<span class="nb">cd</span> ~/rpmbuild/SOURCES
+mkdir -p helloworldbin-1
+cp ~/<span class="o">{</span>helloworld.c,Makefile<span class="o">}</span> helloworldbin-1/
+<span class="c"># Just in case :</span>
+sed -i <span class="s1">&#39;s/^[ ][ ]*/\t/g&#39;</span> helloworldbin-1/Makefile
+tar cvzf helloworldbin-1.tgz helloworldbin-1
+<span class="c">#</span>
+<span class="c"># 2° Create the spec file</span>
+<span class="nb">cd</span> ~/rpmbuild/SPECS
+rpmdev-newspec helloworldbin
+</pre></div></div></div>
 <div class="paragraph"><p>This time, we need to handle the compilation. The spec file is slighly different
-in <tt>%build</tt> and <tt>%install</tt>. The installation in the build root is based on our
-<tt>Makefile</tt>.</p></div>
+in <code>%build</code> and <code>%install</code>. The installation in the build root is based on our
+<code>Makefile</code>.</p></div>
 <div class="listingblock">
-<div class="content"><!-- Generator: GNU source-highlight 3.1.3
-by Lorenzo Bettini
-http://www.lorenzobettini.it
-http://www.gnu.org/software/src-highlite -->
-<pre><tt><span style="font-weight: bold"><span style="color: #0000FF">Name:</span></span>               helloworldbin
-<span style="font-weight: bold"><span style="color: #0000FF">Version:</span></span>            <span style="color: #993399">1</span>
-<span style="font-weight: bold"><span style="color: #0000FF">Release:</span></span>            <span style="color: #993399">1</span>%{?dist}
-<span style="font-weight: bold"><span style="color: #0000FF">Summary:</span></span>            A program wich says 'Hello World'
-<span style="font-weight: bold"><span style="color: #0000FF">Group:</span></span>              Misc
-<span style="font-weight: bold"><span style="color: #0000FF">License:</span></span>            GPL
-<span style="font-weight: bold"><span style="color: #0000FF">Source0:</span></span>            helloworldbin-<span style="color: #993399">1</span>.tgz
-<span style="font-weight: bold"><span style="color: #0000FF">BuildRoot:</span></span>          <span style="font-weight: bold"><span style="color: #000080">%{_tmppath}</span></span>/<span style="font-weight: bold"><span style="color: #000080">%{name}</span></span>-<span style="font-weight: bold"><span style="color: #000080">%{version}</span></span>-<span style="font-weight: bold"><span style="color: #000080">%{release}</span></span>-root-%(<span style="font-weight: bold"><span style="color: #000080">%{__id_u}</span></span> -n)
+<div class="content"><div class="highlight"><pre><span class="gh">Name</span><span class="p">:</span>               helloworldbin
+<span class="gh">Version</span><span class="p">:</span>            1
+<span class="gh">Release</span><span class="p">:</span>            1<span class="nv">%{?dist}</span>
+<span class="gh">Summary</span><span class="p">:</span>            A program wich says <span class="s1">&#39;Hello World&#39;</span>
+<span class="gh">Group</span><span class="p">:</span>              Misc
+<span class="gh">License</span><span class="p">:</span>            GPL
+<span class="gh">Source0</span><span class="p">:</span>            helloworldbin-1.tgz
+<span class="gh">BuildRoot</span><span class="p">:</span>          <span class="kp">%{_tmppath}</span>/<span class="kc">%{name}</span>-<span class="kc">%{version}</span>-<span class="kc">%{release}</span>-root-%(<span class="nf">%{__id_u}</span> -n)
 
-<span style="font-weight: bold"><span style="color: #000080">%description</span></span>
+<span class="nd">%description</span>
 This package was made for the purpose a training lab.
 
-<span style="font-weight: bold"><span style="color: #000080">%prep</span></span>
-rm -rf <span style="color: #009900">$RPM_BUILD_ROOT</span>
-mkdir -p <span style="color: #009900">$RPM_BUILD_ROOT</span>
+<span class="nd">%prep</span>
+rm -rf <span class="vg">$RPM_BUILD_ROOT</span>
+mkdir -p <span class="vg">$RPM_BUILD_ROOT</span>
 
-<span style="font-weight: bold"><span style="color: #000080">%setup</span></span> -q
+<span class="k">%setup</span> -q
 
-<span style="font-weight: bold"><span style="color: #000080">%build</span></span>
+<span class="nd">%build</span>
 make
 
-<span style="font-weight: bold"><span style="color: #000080">%install</span></span>
-make BUILDROOT=<span style="font-weight: bold"><span style="color: #000080">%buildroot</span></span> install
+<span class="nd">%install</span>
+make BUILDROOT=%buildroot install
 
-<span style="font-weight: bold"><span style="color: #000080">%clean</span></span>
-rm -rf <span style="color: #009900">$RPM_BUILD_ROOT</span>
+<span class="nd">%clean</span>
+rm -rf <span class="vg">$RPM_BUILD_ROOT</span>
 
-<span style="font-weight: bold"><span style="color: #000080">%changelog</span></span>
-* Mon Apr  <span style="color: #993399">4</span> <span style="color: #993399">2011</span> Louis Coilliot
+<span class="nd">%changelog</span>
+<span class="gu">* Mon Apr  4 2011 Louis Coilliot</span>
 - creation
 
-<span style="font-weight: bold"><span style="color: #000080">%files</span></span>
-<span style="font-weight: bold"><span style="color: #000080">%defattr</span></span>(-,root,root,-)
-<span style="font-weight: bold"><span style="color: #000080">%attr</span></span>(<span style="color: #993399">0755</span>,root,root) /usr/local/bin/helloworld</tt></pre></div></div>
+<span class="nd">%files</span>
+<span class="k">%defattr</span>(-,root,root,-)
+<span class="k">%attr</span>(0755,root,root) /usr/bin/helloworld
+</pre></div></div></div>
 <div class="paragraph"><p>Then, build the package :</p></div>
 <div class="listingblock">
-<div class="content"><!-- Generator: GNU source-highlight 3.1.3
-by Lorenzo Bettini
-http://www.lorenzobettini.it
-http://www.gnu.org/software/src-highlite -->
-<pre><tt>cd <span style="color: #990000">~</span>/rpmbuild/SPECS
-rpmlint helloworldbin<span style="color: #990000">.</span>spec
-rpmbuild -bb helloworldbin<span style="color: #990000">.</span>spec
-find <span style="color: #990000">~</span>/rpmbuild/RPMS</tt></pre></div></div>
+<div class="content"><div class="highlight"><pre><span class="nb">cd</span> ~/rpmbuild/SPECS
+rpmlint helloworldbin.spec
+rpmbuild -bb helloworldbin.spec
+find ~/rpmbuild/RPMS
+</pre></div></div></div>
 </div>
+</div>
+<div class="sect1">
 <h2 id="_sign_your_packages">7. Sign your packages</h2>
 <div class="sectionbody">
 <div class="paragraph"><p>The rpm packages can be signed, so you can verify the authenticity.</p></div>
@@ -1225,7 +1443,7 @@ EhMLafIpRCMusu8Oy9/Vf7HZzFU60RG++T8BBgAkirX2O+Vn5gAAAABJRU5ErkJggg==" />
 <td class="content">LAB 02-3 : sign your 2 packages</td>
 </tr></table>
 </div>
-<div class="paragraph"><p>Check with <tt>rpm --checksig</tt></p></div>
+<div class="paragraph"><p>Check with <code>rpm --checksig</code></p></div>
 <div class="admonitionblock">
 <table><tr>
 <td class="icon">
@@ -1298,6 +1516,8 @@ get the private part of the key.</td>
 <a href="http://pgp.mit.edu:11371/pks/lookup?search=coilliot&amp;op=index">here</a>.</p></div>
 <div class="paragraph"><p>It is also very useful for signing and/or encrypting mails.</p></div>
 </div>
+</div>
+<div class="sect1">
 <h2 id="_publish_the_packages_in_a_yum_repository">8. Publish the packages in a yum repository</h2>
 <div class="sectionbody">
 <div class="admonitionblock">
@@ -1421,13 +1641,12 @@ EhMLafIpRCMusu8Oy9/Vf7HZzFU60RG++T8BBgAkirX2O+Vn5gAAAABJRU5ErkJggg==" />
 <div class="paragraph"><p>Use it in the lab vm.</p></div>
 <div class="paragraph"><p>This time for the repository, you&#8217;ll have to create the meta data with</p></div>
 <div class="listingblock">
-<div class="content"><!-- Generator: GNU source-highlight 3.1.3
-by Lorenzo Bettini
-http://www.lorenzobettini.it
-http://www.gnu.org/software/src-highlite -->
-<pre><tt>createrepo <span style="color: #990000">.</span></tt></pre></div></div>
+<div class="content"><div class="highlight"><pre>createrepo .
+</pre></div></div></div>
 <div class="paragraph"><p>in the repository folder.</p></div>
 </div>
+</div>
+<div class="sect1">
 <h2 id="_great_tutorials">9. Great tutorials</h2>
 <div class="sectionbody">
 <div class="paragraph"><p><a href="http://fedoraproject.org/wiki/How_to_create_an_RPM_package#Creating_packages_HOWTO">
@@ -1438,10 +1657,12 @@ Communauté Fedora Fr - La création de RPM pour les nuls</a></p></div>
 Fabrication de paquetage rpm</a></p></div>
 </div>
 </div>
+</div>
 <div id="footnotes"><hr /></div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2011-04-06 18:33:47 CEST
+Last updated
+ 2015-06-09 10:56:23 CEST
 </div>
 </div>
 </body>
